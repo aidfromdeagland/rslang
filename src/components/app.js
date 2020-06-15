@@ -27,7 +27,7 @@ export class App extends Component {
         <div className="App">
           <header>
             <Nav />
-            <p>{text}</p>
+            {/* <p>{text}</p> */}
           </header>
           <main>
             <Switch>
