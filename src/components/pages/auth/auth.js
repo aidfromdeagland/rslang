@@ -19,25 +19,34 @@ export class Auth extends Component {
         window.location.href = '/main'; // TODO не самый удачный вариант редиректа, но лучше реализовать не получилось
     }
 
-    static checkAuthorized() {
+    constructor(props) {
+        super(props);
+        this.state = {
+            isAuthentication: true,
+            errorMain: undefined,
+            errorPassword: undefined,
+            errorEmail: undefined,
+        };
+    }
+
+    componentDidMount() {
+        this.checkAuthorized();
+    }
+
+    checkAuthorized() {
         if (!Settings.token) return;
 
         // todo включить загрузку
         Api.getUser(Settings.userId, Settings.token).then(() => {
-            Auth.redirectStartPage();
             // todo выключить загрузку
+            Auth.redirectStartPage();
         }).catch((error) => {
-            Settings.clearSettings();
+            Settings.token = null;
             this.setState({
-                error2: error.message,
+                errorMain: error.message,
             });
             // todo выключить загрузку
         });
-    }
-
-    constructor(props) {
-        super(props);
-        this.state = { error2: undefined, errorPassword: undefined, errorEmail: undefined };
     }
 
     submit(event) {
@@ -47,41 +56,92 @@ export class Auth extends Component {
         if (!Auth.checkPassword(password.value)) {
             this.setState({
                 errorPassword: 'the password must contain at least 8 characters, at least one uppercase letter, one uppercase letter, one digit, and one special character',
-                error2: undefined,
+                errorMain: undefined,
             });
         } else if (!Auth.validateEmail(login.value)) {
             this.setState({
                 errorEmail: 'email is not correct',
                 errorPassword: undefined,
-                error2: undefined,
+                errorMain: undefined,
             });
         } else {
             this.setState({
                 errorEmail: undefined,
                 errorPassword: undefined,
-                error2: undefined,
+                errorMain: undefined,
             });
             // todo включить загрузку
-            Api.logIn(login.value, password.value).then((user) => {
-                Settings.saveSettings(user.userId, user.token);
-                // todo выключить загрузку
-                Auth.redirectStartPage();
-            }).catch((error) => {
-                // todo выключить загрузку
-                this.setState({
-                    error2: error.message,
-                });
-            });
+            const { isAuthentication } = this.state;
+            if (isAuthentication) {
+                this.authentication(login.value, password.value);
+            } else {
+                this.registration(login.value, password.value);
+            }
         }
     }
 
-    render() {
-        const { error2, errorPassword, errorEmail } = this.state;
-        Auth.checkAuthorized();
+    authentication(login, password) {
+        Api.logIn(login, password).then((user) => {
+            Settings.saveSettings(user.userId, user.token);
+            // todo выключить загрузку
+            Auth.redirectStartPage();
+        }).catch((error) => {
+            // todo выключить загрузку
+            this.setState({
+                errorMain: error.message,
+            });
+        });
+    }
 
+    registration(login, password) {
+        Api.registration(login, password).then(() => {
+            this.authentication(login, password);
+        }).catch((error) => {
+            // todo выключить загрузку
+            this.setState({
+                errorMain: error.message,
+            });
+        });
+    }
+
+    showRegistration() {
+        this.setState({ isAuthentication: false });
+    }
+
+    showAuthentication() {
+        this.setState({ isAuthentication: true });
+    }
+
+    render() {
+        const {
+            isAuthentication, errorMain, errorPassword, errorEmail,
+        } = this.state;
+
+        if (isAuthentication) {
+            return (
+                <div className="auth">
+                    <h1>Authentication</h1>
+                    <form className="auth-form" onSubmit={(e) => this.submit(e)}>
+                        <label className="auth-form__label" htmlFor="auth-email">
+                            Email
+                            <input id="auth-email" className="auth-form__input" name="login" type="email" />
+                        </label>
+                        { errorEmail && <span className="auth-form__error">{ errorEmail }</span> }
+                        <label className="auth-form__label" htmlFor="auth-password">
+                            Password
+                            <input id="auth-password" className="auth-form__input" name="password" type="password" />
+                        </label>
+                        { errorPassword && <span className="auth-form__error">{ errorPassword }</span> }
+                        { errorMain && <span className="auth-form__error">{ errorMain }</span> }
+                        <button className="auth__button button__log-in" type="submit">log in</button>
+                    </form>
+                    <button className="auth__button button__registration" type="button" onClick={() => this.showRegistration()}>registration</button>
+                </div>
+            );
+        }
         return (
             <div className="auth">
-                <h1>Authentication</h1>
+                <h1>Registration</h1>
                 <form className="auth-form" onSubmit={(e) => this.submit(e)}>
                     <label className="auth-form__label" htmlFor="auth-email">
                         Email
@@ -93,10 +153,10 @@ export class Auth extends Component {
                         <input id="auth-password" className="auth-form__input" name="password" type="password" />
                     </label>
                     { errorPassword && <span className="auth-form__error">{ errorPassword }</span> }
-                    { error2 && <span className="auth-form__error">{ error2 }</span> }
-                    <button className="auth__button button__log-in" type="submit">log in</button>
+                    { errorMain && <span className="auth-form__error">{ errorMain }</span> }
+                    <button className="auth__button button__log-in" type="submit">register</button>
                 </form>
-                <button className="auth__button button__registration" type="button">registration</button>
+                <button className="auth__button button__registration" type="button" onClick={() => this.showAuthentication()}>authentication</button>
             </div>
         );
     }

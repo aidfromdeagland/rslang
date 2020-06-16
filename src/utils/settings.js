@@ -11,15 +11,16 @@ export class Settings {
     return Settings.settings && Settings.settings.token;
   }
 
+  static set token(value) {
+    if (!Settings.settings) Settings.settings = {};
+    Settings.settings.token = value;
+    localStorage.setItem('rs-lang-31-settings', JSON.stringify(Settings.settings));
+  }
+
   static saveSettings(userId, token) {
     const settings = { userId, token }
     localStorage.setItem('rs-lang-31-settings', JSON.stringify(settings));
     Settings.privateSettings = settings;
-  }
-
-  static clearSettings() {
-    localStorage.removeItem('rs-lang-31-settings');
-    Settings.privateSettings = undefined;
   }
 
   //#endregion public methods
