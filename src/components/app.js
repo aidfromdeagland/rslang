@@ -4,7 +4,7 @@ import './app.scss';
 import {
   BrowserRouter as Router, Route, Switch,
 } from 'react-router-dom';
-import { Nav } from './nav';
+import { Nav } from './nav/nav';
 import { AboutTeam } from './pages/aboutTeam/aboutTeam';
 import { Auth } from './pages/auth/auth';
 import { Main } from './pages/main/main';
