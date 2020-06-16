@@ -1,4 +1,4 @@
-import avatar from "../../../images/avatar/avatar.png";
+import avatar from "../../../assets/images/avatars/avatar.png";
 
 const dataAboutTeam = [
     {

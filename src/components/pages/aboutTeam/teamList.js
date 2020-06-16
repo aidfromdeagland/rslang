@@ -17,7 +17,10 @@ export class TeamList extends Component {
       return (
         <div className="team-container">
             {this.props.team.map((person, index) =>
-                <Person data = {index, person} />
+                <Person
+                data = {person}
+                key = { index }
+                />
             )}
         </div>
       );

@@ -15,6 +15,7 @@ export class Person extends Component {
                 </div>
                 <div className='person-name'> { this.props.data.name } </div>
                 <div className='person-description'>{ this.props.data.description }</div>
+                <div className='github-link'><div className='github-icon'></div><a href={this.props.data.github}>Github</a></div>
             </div>
         )
     }

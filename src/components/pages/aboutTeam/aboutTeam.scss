@@ -16,8 +16,11 @@
         flex-wrap: wrap;
         overflow: hidden;
         .person-description {
-        width: 56%;
+          width: 56%;
         }
+      }
+      .person-description {
+        margin-bottom: 20px;
       }
       transition: all 0.5s ease-out;
       // height: 294px;
@@ -48,5 +51,15 @@
         margin-bottom: 7px;
       }
     }
+  }
+}
+
+.github-link {
+  display: flex;
+  .github-icon {
+    background-image: url(../../../assets/icons/github.png);
+    background-repeat: no-repeat;
+    height: 64px;
+    width: 64px;
   }
 }
