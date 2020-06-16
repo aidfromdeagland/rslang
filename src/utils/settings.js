@@ -1,26 +1,33 @@
-export default class Settings {
-  static settings;
+export class Settings {
+  static privateSettings; // { token: string; userId: string }
 
   //#region public methods
 
-  static getSettings() {
-    if (!Settings.settings) Settings.settings = Settings.loadSettings();
-    if (!Settings.settings) Settings.settings = Settings.defaultSettings();
-    return Settings.settings; // { token	string; userId	string }
+  static get userId() {
+    return Settings.settings && Settings.settings.userId;
+  }
+
+  static get token() {
+    return Settings.settings && Settings.settings.token;
   }
 
   static saveSettings(userId, token) {
     const settings = { userId, token }
     localStorage.setItem('rs-lang-31-settings', JSON.stringify(settings));
-    Settings.settings = settings;
+    Settings.privateSettings = settings;
   }
 
   static clearSettings() {
     localStorage.removeItem('rs-lang-31-settings');
-    Settings.settings = Settings.defaultSettings();
+    Settings.privateSettings = undefined;
   }
 
   //#endregion public methods
+
+  static get settings() {
+    if (!Settings.privateSettings) Settings.privateSettings = Settings.loadSettings();
+    return Settings.privateSettings;
+  }
 
   static loadSettings() {
     const settings = localStorage.getItem('rs-lang-31-settings');
@@ -28,12 +35,5 @@ export default class Settings {
       return JSON.parse(settings);
     }
     return null;
-  }
-
-  static defaultSettings() {
-    return {
-      userId: undefined,
-      token: undefined,
-    };
   }
 }
