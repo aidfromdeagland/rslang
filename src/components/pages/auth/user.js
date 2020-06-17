@@ -18,4 +18,8 @@ export class User {
             return false;
         }
     }
+
+    static logOut() {
+        Storage.clearToken();
+    }
 }

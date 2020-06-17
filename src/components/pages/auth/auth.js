@@ -116,11 +116,21 @@ export class Auth extends Component {
     }
 
     showRegistration() {
-        this.setState({ isAuthentication: false });
+        this.setState({ 
+            isAuthentication: false,
+            errorEmail: undefined,
+            errorPassword: undefined,
+            errorMain: undefined,
+        });
     }
 
     showAuthentication() {
-        this.setState({ isAuthentication: true });
+        this.setState({ 
+            isAuthentication: true,
+            errorEmail: undefined,
+            errorPassword: undefined,
+            errorMain: undefined,
+        });
     }
 
     render() {
@@ -131,43 +141,41 @@ export class Auth extends Component {
         if (isAuthentication) {
             return (
                 <div className="auth">
-                    <h1>Authentication</h1>
+                    <h1 className="auth-header">Authentication</h1>
+                    <span className="auth-description">Insert your e-mail and password.</span>
                     <form className="auth-form" onSubmit={(e) => this.submit(e)}>
-                        <label className="auth-form__label" htmlFor="auth-email">
-                            Email
-                            <input id="auth-email" className="auth-form__input" name="login" type="email" />
-                        </label>
-                        { errorEmail && <span className="auth-form__error">{ errorEmail }</span> }
-                        <label className="auth-form__label" htmlFor="auth-password">
-                            Password
-                            <input id="auth-password" className="auth-form__input" name="password" type="password" />
-                        </label>
-                        { errorPassword && <span className="auth-form__error">{ errorPassword }</span> }
-                        { errorMain && <span className="auth-form__error">{ errorMain }</span> }
-                        <button className="auth__button button__log-in" type="submit">log in</button>
+                        <div className="auth__inputs">
+                            <input id="auth-email" className="auth-form__input auth-form__login-input" name="login" type="email" placeholder="youremail@domain.com" />
+                            { errorEmail && <span className="auth-form__error">{ errorEmail }</span> }
+                            <input id="auth-password" className="auth-form__input auth-form__password-input" name="password" type="password" placeholder="**************" />
+                            { errorPassword && <span className="auth-form__error">{ errorPassword }</span> }
+                            { errorMain && <span className="auth-form__error">{ errorMain }</span> }
+                        </div>
+                        <div className="auth__buttons">
+                            <button className="auth__button button__registration" type="button" onClick={() => this.showRegistration()}>Register</button>
+                            <button className="auth__button button__log-in" type="submit">Login</button>
+                        </div>
                     </form>
-                    <button className="auth__button button__registration" type="button" onClick={() => this.showRegistration()}>registration</button>
                 </div>
             );
         }
         return (
             <div className="auth">
-                <h1>Registration</h1>
+                <h1 className="auth-header">Registration</h1>
+                <span className="auth-description">Insert your e-mail and password.</span>
                 <form className="auth-form" onSubmit={(e) => this.submit(e)}>
-                    <label className="auth-form__label" htmlFor="auth-email">
-                        Email
-                        <input id="auth-email" className="auth-form__input" name="login" type="email" />
-                    </label>
-                    { errorEmail && <span className="auth-form__error">{ errorEmail }</span> }
-                    <label className="auth-form__label" htmlFor="auth-password">
-                        Password
-                        <input id="auth-password" className="auth-form__input" name="password" type="password" />
-                    </label>
-                    { errorPassword && <span className="auth-form__error">{ errorPassword }</span> }
-                    { errorMain && <span className="auth-form__error">{ errorMain }</span> }
-                    <button className="auth__button button__log-in" type="submit">register</button>
+                    <div className="auth__inputs">
+                        <input id="auth-email" className="auth-form__input auth-form__login-input" name="login" type="email" placeholder="youremail@domain.com" />
+                        { errorEmail && <span className="auth-form__error">{ errorEmail }</span> }
+                        <input id="auth-password" className="auth-form__input auth-form__password-input" name="password" type="password" placeholder="**************" />
+                        { errorPassword && <span className="auth-form__error">{ errorPassword }</span> }
+                        { errorMain && <span className="auth-form__error">{ errorMain }</span> }
+                    </div>
+                    <div className="auth__buttons">
+                        <button className="auth__button button__registration" type="button" onClick={() => this.showAuthentication()}>Authentication</button>
+                        <button className="auth__button button__log-in" type="submit">Register</button>
+                    </div>
                 </form>
-                <button className="auth__button button__registration" type="button" onClick={() => this.showAuthentication()}>authentication</button>
             </div>
         );
     }
