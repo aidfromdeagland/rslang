@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import './auth.scss';
 import { Api } from '../../../services/userServices';
-import { Settings } from '../../../utils/settings';
+import { Storage } from './storage';
+import { User } from './user';
 
 export class Auth extends Component {
     static propTypes = {
@@ -12,7 +13,7 @@ export class Auth extends Component {
     static defaultProps = {
         redirectPage: '/main',
     };
-    
+
     static checkPassword(password) {
         const re = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,15}$/;
         return re.test(password);
@@ -25,7 +26,8 @@ export class Auth extends Component {
     }
 
     static redirectPage(href) {
-        window.location.href = href; // TODO не самый удачный вариант редиректа, но лучше реализовать не получилось
+        // TODO не самый удачный вариант редиректа, но лучше реализовать не получилось
+        window.location.href = href;
     }
 
     constructor(props) {
@@ -43,14 +45,14 @@ export class Auth extends Component {
     }
 
     checkAuthorized() {
-        if (!Settings.token) return;
+        if (!User.token) return;
 
         // todo включить загрузку
-        Api.getUser(Settings.userId, Settings.token).then(() => {
+        Api.getUser(User.userId, User.token).then(() => {
             // todo выключить загрузку
             Auth.redirectPage(this.props.redirectPage);
         }).catch((error) => {
-            Settings.token = null;
+            Storage.clearToken();
             this.setState({
                 errorMain: error.message,
             });
@@ -91,7 +93,7 @@ export class Auth extends Component {
 
     authentication(login, password) {
         Api.logIn(login, password).then((user) => {
-            Settings.saveSettings(user.userId, user.token);
+            Storage.saveUser(user.userId, user.token);
             // todo выключить загрузку
             Auth.redirectPage(this.props.redirectPage);
         }).catch((error) => {
@@ -170,7 +172,3 @@ export class Auth extends Component {
         );
     }
 }
-
-// Auth.propTypes = {
-//     redirectPage: PropTypes.string,
-// };
