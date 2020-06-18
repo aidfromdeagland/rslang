@@ -80,10 +80,20 @@
         background-color: #092C70;
         border-radius: 7px;
         border: none;
+        @media (hover: hover) {
+            &:hover {
+                background-color: #0F4AB4;
+            }
+        }
     }
     .button__registration {
         color: #092C70;
         background-color: #ffffff;
         border: none;
+        @media (hover: hover) {
+            &:hover {
+                color: #0F4AB4;
+            }
+        }
     }
 }
