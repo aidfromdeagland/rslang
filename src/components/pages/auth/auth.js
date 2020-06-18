@@ -43,6 +43,7 @@ export class Auth extends Component {
     }
 
     componentDidMount() {
+        // если пользователь авторизован, то уходим с авторизации на страницу 'redirectPage'
         this.checkAuthorized();
     }
 
@@ -95,7 +96,7 @@ export class Auth extends Component {
 
     authentication(login, password) {
         Api.logIn(login, password).then((user) => {
-            Storage.saveUser(user.userId, user.token);
+            Storage.saveUser(user.userId, user.token, login);
             this.setState({ isLoading: false });
             Auth.redirectPage(this.props.redirectPage);
         }).catch((error) => {
@@ -146,9 +147,11 @@ export class Auth extends Component {
                 <button className="auth__button button__log-in" type="submit">Login</button>
             </div> :
             <div className="auth__buttons">
-                <button className="auth__button button__registration" type="button" onClick={() => this.showAuthentication()}>Authentication</button>
+                <button className="auth__button button__registration" type="button" onClick={() => this.showAuthentication()}>Login</button>
                 <button className="auth__button button__log-in" type="submit">Register</button>
             </div>;
+
+        const login = isAuthentication ? Storage.login : undefined;
 
         return (
             <div className="auth">
@@ -157,7 +160,7 @@ export class Auth extends Component {
                 <span className="auth-description">Insert your e-mail and password.</span>
                 <form className="auth-form" onSubmit={(e) => this.submit(e)}>
                     <div className="auth__inputs">
-                        <input id="auth-email" className="auth-form__input auth-form__login-input" name="login" type="email" placeholder="youremail@domain.com" />
+                        <input id="auth-email" className="auth-form__input auth-form__login-input" name="login" type="email" placeholder="youremail@domain.com" defaultValue={login}/>
                         { errorEmail && <span className="auth-form__error">{ errorEmail }</span> }
                         <input id="auth-password" className="auth-form__input auth-form__password-input" name="password" type="password" placeholder="**************" />
                         { errorPassword && <span className="auth-form__error">{ errorPassword }</span> }

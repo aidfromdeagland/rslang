@@ -1,5 +1,9 @@
 export class Storage {
-    // static privateStorage; { token: string; userId: string }
+    // static privateStorage; { token: string; userId: string; login?: string }
+
+    static get login() {
+        return Storage.settings && Storage.settings.login;
+    }
 
     static clearToken() {
         if (!Storage.privateStorage) Storage.privateStorage = {};
@@ -7,8 +11,13 @@ export class Storage {
         localStorage.setItem('rs-lang-31-settings', JSON.stringify(Storage.privateStorage));
     }
 
-    static saveUser(userId, token) {
-        const settings = { userId, token };
+    static clearUser() {
+        Storage.privateStorage = undefined;
+        localStorage.removeItem('rs-lang-31-settings');
+    }
+
+    static saveUser(userId, token, login) {
+        const settings = { userId, token, login };
         localStorage.setItem('rs-lang-31-settings', JSON.stringify(settings));
         Storage.privateStorage = settings;
     }
