@@ -11,16 +11,15 @@ export class Slogans extends Component {
         return (
             <section className="promo__slogans slogans">
                 <div className="content-container">
-                <h1 className="slogans__heading">
-                    <span className="slogans__heading_first-part">i</span>
-                    <span className="slogans__heading_last-part">Know</span>
-                </h1>
-                <ul className="promo__slogans-list slogans-list">
-                    <Slogan text="more than Patrick" image={patrickImg} />
-                    <Slogan text="more than Homer" image={homerImg} />
-                    <Slogan text="more than Mr. Mutko" image={mutkoImg} />
-                    <Slogan text="more than yesterday!" image={progressImg} />
-                </ul>
+                    <h1 className="slogans__heading">
+                        <span className="brand">iKnow</span>
+                    </h1>
+                    <ul className="promo__slogans-list slogans-list">
+                        <Slogan text="more than Patrick" image={patrickImg} />
+                        <Slogan text="more than Homer" image={homerImg} />
+                        <Slogan text="more than Mr. Mutko" image={mutkoImg} />
+                        <Slogan text="more than yesterday!" image={progressImg} />
+                    </ul>
                 </div>
             </section>
         );

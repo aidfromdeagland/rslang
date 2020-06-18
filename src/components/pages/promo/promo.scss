@@ -2,7 +2,8 @@
   width: 100%;
   display: grid;
   grid-template-columns: 1fr;
-  gap: 50px;
+  color: #111111;
+  background-color: #FAEDE7;
 
   &__slogan {
 
@@ -30,4 +31,14 @@
   flex-direction: column;
   max-width: 1020px;
   text-align: center;
+}
+
+.brand {
+  display: inline-block;
+  color: #092C70;
+  font-weight: 700;
+
+  &:first-letter {
+    color: #f00002;
+  }
 }

@@ -1,8 +1,10 @@
 .slogan__item {
+  min-width: 300px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  border-bottom: 2px solid #092C70;
 
   .slogan__text {
     margin: 0;
@@ -25,11 +27,13 @@
     justify-content: center;
     min-height: 90px;
     font-size: 24px;
+    border-bottom:none;
 
     .slogan__text {
       position: absolute;
       z-index: 1;
       font-size: 30px;
+      color: #092C70;
     }
 
     .slogan__image {
