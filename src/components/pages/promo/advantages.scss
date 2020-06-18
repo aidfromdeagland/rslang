@@ -1,0 +1,19 @@
+.promo__advantages {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  &-heading {
+    font-size: 30px;
+  }
+
+  &-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    padding: 0;
+    list-style: none;
+  }
+}
+
+

@@ -1,0 +1,24 @@
+.slogans {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  &__heading {
+    margin: 0;
+    font-size: 30px;
+
+    &_first-part {
+      color: #f00002;
+    }
+    &_last-part {
+      color: #092C70;
+    }
+  }
+
+  &-list {
+    padding: 0;
+    list-style: none;
+  }
+}
+
+

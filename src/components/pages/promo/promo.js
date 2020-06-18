@@ -1,19 +1,19 @@
 import React, { Component } from 'react';
 import './promo.scss';
+import { Slogans } from './slogans';
+import { Advantages } from './advantages';
 
 export class Promo extends Component {
     render() {
         return (
             <div className="promo">
-                <h1 className="promo__heading">iKnow</h1>
-                <section className="promo__about">
-                    <h2>О чем речь?</h2>
+                <Slogans />
+                <Advantages />
+                <section className="promo__instructions">
+                    <h2>Instructions</h2>
                 </section>
-                <section className="promo__advantages">
-                    <h2>Преимущества</h2>
-                </section>
-                <section className="promo__feedback">
-                    <h2>Пользователи о нас</h2>
+                <section className="promo__presentation">
+                    <h2>Presentation</h2>
                 </section>
             </div>
         );
