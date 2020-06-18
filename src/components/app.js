@@ -15,11 +15,6 @@ import { Vocabulary } from './pages/vocabulary/vocabulary';
 import { NotFound } from './pages/notFound/notFound';
 
 export class App extends Component {
-    constructor(props) {
-        super(props);
-        this.props = props;
-    }
-
     render() {
         const { text } = this.props;
         return (
@@ -64,7 +59,7 @@ export class App extends Component {
 }
 
 App.defaultProps = {
-    text: '',
+    text: PropTypes.string.isRequered,
 };
 
 App.propTypes = {
