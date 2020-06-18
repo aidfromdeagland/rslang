@@ -21,13 +21,11 @@ export class App extends Component {
   }
 
   render() {
-    const { text } = this.props;
     return (
       <Router>
         <div className="App">
           <header>
             <Nav />
-            {/* <p>{text}</p> */}
           </header>
           <main>
             <Switch>

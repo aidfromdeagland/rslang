@@ -4,43 +4,37 @@ const dataAboutTeam = [
     {
         photo: avatar,
         name: 'Gleb',
-        description: 'some text some text some text some text some text some text some text some text some text some text ',
+        description: 'Here you will find information about you and your contribution to this project.',
         gitHub: '#'
     },
     {
         photo: avatar,
         name: 'Stanislav',
-        description: 'some text some text some text some text some text some text some text some text some text some text ',
+        description: 'Here you will find information about you and your contribution to this project.',
         gitHub: '#'
     },
     {
         photo: avatar,
         name: 'Natalia',
-        description: 'some text some text some text some text some text some text some text some text some text some text ',
+        description: 'Here you will find information about you and your contribution to this project.',
         gitHub: '#'
     },
     {
         photo: avatar,
         name: 'Oleg',
-        description: 'some text some text some text some text some text some text some text some text some text some text ',
+        description: 'Here you will find information about you and your contribution to this project.',
         gitHub: '#'
     },
     {
         photo: avatar,
         name: 'Yulia',
-        description: 'some text some text some text some text some text some text some text some text some text some text ',
+        description: 'Here you will find information about you and your contribution to this project.',
         gitHub: '#'
     },
     {
         photo: avatar,
         name: 'Artem',
-        description: 'some text some text some text some text some text some text some text some text some text some text ',
-        gitHub: '#'
-    },
-    {
-        photo: avatar,
-        name: 'name',
-        description: 'some text some text some text some text some text some text some text some text some text some text ',
+        description: 'Here you will find information about you and your contribution to this project.',
         gitHub: '#'
     },
 ]

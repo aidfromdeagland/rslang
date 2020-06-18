@@ -1,43 +1,46 @@
+@font-face {
+  font-family: "Literata";
+  src: url("../../../assets/fonts/Literata-Bold.ttf") format("ttf"),
+    url("../../../assets/fonts/Literata-Regular.ttf") format("ttf"),
+    url("../../../assets/fonts/Literata-VariableFont.ttf") format("ttf");
+  font-weight: normal;
+  font-style: normal;
+}
+
 .about-team {
-  max-width: 1300px;
+  max-width: 1020px;
   margin: auto;
-  font-size: 2rem;
+  font-size: 30px;
   h1 {
     text-align: center;
+    font-family: "Literata-Bold", serif;
+    font-size: 45px;
+    line-height: 67px;
+    color: #092c70;
   }
   .team-container {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
+    justify-content: space-around;
     .team-person {
-      &:first-child {
-        width: 100%;
-        height: 365px;
-        flex-wrap: wrap;
-        overflow: hidden;
-        .person-description {
-          width: 56%;
-        }
-      }
-      .person-description {
-        margin-bottom: 20px;
-      }
-      transition: all 0.5s ease-out;
-      // height: 294px;
+      font-family: "Literata-Regular", serif;
       overflow: hidden;
-      min-width: 400px;
+      width: 300px;
       display: flex;
       align-items: center;
       flex-direction: column;
       width: 280px;
       box-sizing: border-box;
-      padding: 40px 21px 44px 30px;
+      padding: 40px 21px 15px 30px;
       background: #fff;
       box-shadow: 5px 9px 30px 0 rgba(0, 0, 0, 0.19);
+      margin: 4px;
       margin-bottom: 30px;
-      // &:hover {
-      //   height: 100%;
-      // }
+      font-size: 25px;
+      border-radius: 5px;
+      .person-description {
+        margin-bottom: 30px;
+      }
       .person-photo-container {
         margin-bottom: 10px;
         img {
@@ -45,10 +48,14 @@
         }
       }
       .person-name {
+        font-size: 30px;
         color: #000;
         text-align: left;
         letter-spacing: 0.027em;
         margin-bottom: 7px;
+        font-family: "Literata-Bold", serif;
+        font-weight: 700;
+        line-height: 45px;
       }
     }
   }
@@ -56,6 +63,7 @@
 
 .github-link {
   display: flex;
+  align-items: center;
   .github-icon {
     background-image: url(../../../assets/icons/github.png);
     background-repeat: no-repeat;
