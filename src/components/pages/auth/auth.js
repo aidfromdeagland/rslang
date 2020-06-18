@@ -4,6 +4,7 @@ import './auth.scss';
 import { Api } from '../../../services/userServices';
 import { Storage } from './storage';
 import { User } from './user';
+import { Spinner } from '../../shared/spinner';
 
 export class Auth extends Component {
     static propTypes = {
@@ -26,13 +27,14 @@ export class Auth extends Component {
     }
 
     static redirectPage(href) {
-        // TODO не самый удачный вариант редиректа, но лучше реализовать не получилось
+        // TODO не самый удачный вариант редиректа, но лучше реализовать не получилось. Возможно вообще не потребуется
         window.location.href = href;
     }
 
     constructor(props) {
         super(props); // указать на какую страницу перемещаться по завершению
         this.state = {
+            isLoading: false,
             isAuthentication: true,
             errorMain: undefined,
             errorPassword: undefined,
@@ -47,16 +49,16 @@ export class Auth extends Component {
     checkAuthorized() {
         if (!User.token) return;
 
-        // todo включить загрузку
+        this.setState({ isLoading: true });
         Api.getUser(User.userId, User.token).then(() => {
-            // todo выключить загрузку
+            this.setState({ isLoading: false });
             Auth.redirectPage(this.props.redirectPage);
         }).catch((error) => {
             Storage.clearToken();
             this.setState({
+                isLoading: false,
                 errorMain: error.message,
             });
-            // todo выключить загрузку
         });
     }
 
@@ -77,11 +79,11 @@ export class Auth extends Component {
             });
         } else {
             this.setState({
+                isLoading: true,
                 errorEmail: undefined,
                 errorPassword: undefined,
                 errorMain: undefined,
             });
-            // todo включить загрузку
             const { isAuthentication } = this.state;
             if (isAuthentication) {
                 this.authentication(login.value, password.value);
@@ -94,11 +96,11 @@ export class Auth extends Component {
     authentication(login, password) {
         Api.logIn(login, password).then((user) => {
             Storage.saveUser(user.userId, user.token);
-            // todo выключить загрузку
+            this.setState({ isLoading: false });
             Auth.redirectPage(this.props.redirectPage);
         }).catch((error) => {
-            // todo выключить загрузку
             this.setState({
+                isLoading: false,
                 errorMain: error.message,
             });
         });
@@ -108,8 +110,8 @@ export class Auth extends Component {
         Api.registration(login, password).then(() => {
             this.authentication(login, password);
         }).catch((error) => {
-            // todo выключить загрузку
             this.setState({
+                isLoading: false,
                 errorMain: error.message,
             });
         });
@@ -135,33 +137,23 @@ export class Auth extends Component {
 
     render() {
         const {
-            isAuthentication, errorMain, errorPassword, errorEmail,
+            isLoading, isAuthentication, errorMain, errorPassword, errorEmail,
         } = this.state;
 
-        if (isAuthentication) {
-            return (
-                <div className="auth">
-                    <h1 className="auth-header">Authentication</h1>
-                    <span className="auth-description">Insert your e-mail and password.</span>
-                    <form className="auth-form" onSubmit={(e) => this.submit(e)}>
-                        <div className="auth__inputs">
-                            <input id="auth-email" className="auth-form__input auth-form__login-input" name="login" type="email" placeholder="youremail@domain.com" />
-                            { errorEmail && <span className="auth-form__error">{ errorEmail }</span> }
-                            <input id="auth-password" className="auth-form__input auth-form__password-input" name="password" type="password" placeholder="**************" />
-                            { errorPassword && <span className="auth-form__error">{ errorPassword }</span> }
-                            { errorMain && <span className="auth-form__error">{ errorMain }</span> }
-                        </div>
-                        <div className="auth__buttons">
-                            <button className="auth__button button__registration" type="button" onClick={() => this.showRegistration()}>Register</button>
-                            <button className="auth__button button__log-in" type="submit">Login</button>
-                        </div>
-                    </form>
-                </div>
-            );
-        }
+        const buttons = isAuthentication ?
+            <div className="auth__buttons">
+                <button className="auth__button button__registration" type="button" onClick={() => this.showRegistration()}>Register</button>
+                <button className="auth__button button__log-in" type="submit">Login</button>
+            </div> :
+            <div className="auth__buttons">
+                <button className="auth__button button__registration" type="button" onClick={() => this.showAuthentication()}>Authentication</button>
+                <button className="auth__button button__log-in" type="submit">Register</button>
+            </div>;
+
         return (
             <div className="auth">
-                <h1 className="auth-header">Registration</h1>
+                { isLoading && <Spinner/> } 
+                <h1 className="auth-header">{ isAuthentication ? 'Authentication' : 'Registration' }</h1>
                 <span className="auth-description">Insert your e-mail and password.</span>
                 <form className="auth-form" onSubmit={(e) => this.submit(e)}>
                     <div className="auth__inputs">
@@ -171,10 +163,7 @@ export class Auth extends Component {
                         { errorPassword && <span className="auth-form__error">{ errorPassword }</span> }
                         { errorMain && <span className="auth-form__error">{ errorMain }</span> }
                     </div>
-                    <div className="auth__buttons">
-                        <button className="auth__button button__registration" type="button" onClick={() => this.showAuthentication()}>Authentication</button>
-                        <button className="auth__button button__log-in" type="submit">Register</button>
-                    </div>
+                    { buttons }
                 </form>
             </div>
         );

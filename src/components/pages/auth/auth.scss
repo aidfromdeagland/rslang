@@ -20,6 +20,7 @@
     align-items: center;
     width: 100vw;
     max-width: 1000px;
+    position: relative;
     &-header {
         font-family: 'Literata', sans-serif;
         font-size: 33px;
@@ -28,6 +29,10 @@
     &-description {
         margin: 20px 10px;
         font-size: 16px;
+    }
+    .spinner {
+        position: absolute;
+        top: 61px;
     }
     .auth-form {
         display: flex;

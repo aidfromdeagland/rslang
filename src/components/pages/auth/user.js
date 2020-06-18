@@ -1,6 +1,7 @@
 import { Storage } from './storage';
 import { Api } from '../../../services/userServices';
 
+// class for use in services
 export class User {
     static get userId() {
         return Storage.settings && Storage.settings.userId;
