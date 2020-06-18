@@ -1,35 +1,40 @@
-import english from '../../../assets/images/learn-english.jpg';
+import speakitImg from '../../../assets/images/images-for-games-catalog/speakit.png';
+import englishPuzzleImg from '../../../assets/images/images-for-games-catalog/english-puzzle.png';
+import savannahImg from '../../../assets/images/images-for-games-catalog/savannah.png';
+import audioCallImg from '../../../assets/images/images-for-games-catalog/audio-call.png';
+import sprintImg from '../../../assets/images/images-for-games-catalog/sprint.png';
+import hangmanImg from '../../../assets/images/images-for-games-catalog/hangman.png';
 
 const dataGames = [
     {
         title: 'SpeakIt',
         link: '/speakit',
-        imageSrc: `${english}`
+        imageSrc: `${speakitImg}`
     },
     {
         title: 'English-puzzle',
         link: '/english-puzzle',
-        imageSrc: `${english}`
+        imageSrc: `${englishPuzzleImg}`
     },
     {
         title: 'Savannah',
         link: '/savannah',
-        imageSrc: `${english}`
+        imageSrc: `${savannahImg}`
     },
     {
         title: 'Audio call',
         link: '/audio-call',
-        imageSrc: `${english}`
+        imageSrc: `${audioCallImg}`
     },
     {
         title: 'Sprint',
         link: '/sprint',
-        imageSrc: `${english}`
+        imageSrc: `${sprintImg}`
     },
     {
         title: 'Hangman',
         link: '/hangman',
-        imageSrc: `${english}`
+        imageSrc: `${hangmanImg}`
     },
 ]
 

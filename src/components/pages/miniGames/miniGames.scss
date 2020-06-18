@@ -1,33 +1,45 @@
+@font-face {
+  font-family: "Literata";
+  src: url("../../../assets/fonts/Literata-Bold.ttf") format("ttf"),
+    url("../../../assets/fonts/Literata-Regular.ttf") format("ttf"),
+    url("../../../assets/fonts/Literata-VariableFont.ttf") format("ttf");
+  font-weight: normal;
+  font-style: normal;
+}
+
 .mini-games {
   display: flex;
   flex-direction: column;
   h1 {
     text-align: center;
+    font-family: "Literata-Bold", serif;
+    font-size: 45px;
+    line-height: 67px;
+    color: #092c70;
   }
 }
 
 .games-catalog {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: space-around;
   padding: 20px 15px;
-  max-width: 1440px;
+  max-width: 1020px;
   margin: auto;
   .game-card {
-    width: 350px;
-    height: 280px;
+    width: 300px;
+    height: 250px;
     border-radius: 5px;
     box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
-    color: #212529;
+    color: #fff;
     flex-direction: column;
-    font-family: Roboto;
-    font-size: 2.4rem;
     line-height: 36px;
     font-weight: 400;
     text-align: center;
     text-decoration: none;
-    background: linear-gradient(36deg, #83bd66cc, #040b0c 100%, #fff 0, #fff);
-    margin: 20px 25px;
+    background: linear-gradient(36deg, #092c70, #040b0c 100%, #fff 0, #fff);
+    margin: 20px 5px;
+    padding: 3px;
     cursor: pointer;
     transition: 0.3s;
     &:hover {
@@ -35,8 +47,13 @@
     }
     img {
       width: 100%;
-      margin-bottom: 20px;
+      margin-bottom: 7px;
       border-radius: 5px;
+    }
+    h2 {
+      font-family: "Literata-Regular", serif;
+      font-size: 30px;
+      margin: 0;
     }
   }
 }
