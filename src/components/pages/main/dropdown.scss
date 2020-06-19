@@ -1,0 +1,36 @@
+.mainmenubtn {
+  background: #ffffff;
+  font-size: 15px;
+  color: #092c70;
+  &:hover {
+    background-color: #0f4ab4;
+    color: #ffffff;
+  }
+}
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+.dropdown-child {
+  background-color: black;
+  min-width: 200px;
+  position: absolute;
+  z-index: 100;
+  max-height: 220px;
+  opacity: .9;
+  overflow-y: scroll;
+  left: 23%;
+}
+.dropdown-child div {
+  color: white;
+  padding: 20px;
+  text-decoration: none;
+  display: block;
+  text-align: center;
+  background-color:#ffffff;
+  color: #092c70;
+  &:hover {
+    cursor: pointer;
+    background-color: #0f4ab4;
+  }
+}

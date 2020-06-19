@@ -60,11 +60,3 @@ export class App extends Component {
     );
   }
 }
-
-App.defaultProps = {
-  text: '',
-};
-
-App.propTypes = {
-  text: PropTypes.string,
-};

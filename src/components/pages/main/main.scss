@@ -48,6 +48,9 @@ h2 {
   }
   .progress-container_level {
     width: 30%;
+    .level-rank {
+      margin-bottom: 20px;
+    }
   }
 }
 
@@ -57,7 +60,7 @@ h2 {
   background-color: #dcdcdc;
   border-radius: 0.125rem;
   width: 180px;
-  .primary {
+  .progress-percent {
     border-radius: 0.125rem;
     position: absolute;
     left: 0;

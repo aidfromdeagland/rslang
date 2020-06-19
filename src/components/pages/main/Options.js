@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './main.scss';
 import { Button } from '../../shared/button';
 import { Modal } from './Modal';
-import { Select } from './Select';
+import { Dropdown } from './Dropdown';
 
 export class Options extends Component {
     constructor(props) {
@@ -31,7 +31,7 @@ export class Options extends Component {
                 {this.state.isOpenModal ? <Modal closeModal={this.handleCloseModal} /> : null}
                 <div className="options-settings">
                     <Button className="button" title='Settings' onClick={this.handleClickSettings} />
-                    <Select />
+                    <Dropdown />
                 </div>
                 <div className="options-learning">
                     <Button className="button" title='Learn new words' />
