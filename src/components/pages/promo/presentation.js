@@ -11,9 +11,9 @@ export class Presentation extends Component {
                         Just watch the presentation below and click the Register button!
                     </p>
                     <iframe
-                      title="presentation"
-                      className="presentation__video"
-                      src="https://www.youtube.com/embed/VSW7cSMdKiA"
+                        title="presentation"
+                        className="presentation__video"
+                        src="https://www.youtube.com/embed/VSW7cSMdKiA"
                     />
                 </div>
             </section>
