@@ -1,0 +1,98 @@
+$bg-color: #e5e5e5;
+$secondary-color: #092c70;
+.header {
+    background-color: $bg-color;
+    height: 100px;
+
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    &__navigation {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    &__hamburger {
+        position: relative;
+        z-index: 3;
+        cursor: pointer;
+        width: 1.8rem;
+        height: 1.8rem;
+        margin: 1.5rem 1rem 0 0;
+        padding: 1rem 2rem 0 0;
+
+        &-open {
+            cursor: pointer;
+            position: relative;
+            width: 100%;
+            height: 1.5px;
+            background: $secondary-color;
+            align-items: center;
+            margin-left: 2rem;
+
+            &:before,
+            &:after {
+                cursor: pointer;
+                content: "";
+                position: absolute;
+                z-index: 3;
+                top: -9px;
+                width: 100%;
+                height: 100%;
+                background: inherit;
+                transition: all 0.3s ease-in-out;
+            }
+
+            &:after {
+                top: 9px;
+                transition: all 0.3s ease-in-out;
+            }
+        }
+
+        &-close {
+            cursor: pointer;
+            position: relative;
+            width: 100%;
+            height: 0;
+            background: $secondary-color;
+            align-items: center;
+            margin-left: 2rem;
+
+            &:before,
+            &:after {
+                content: "";
+                position: absolute;
+                z-index: 3;
+                top: 0;
+                width: 100%;
+                height: 1.5px;
+                background: inherit;
+                transform: rotate(45deg);
+                transition: all 0.5s ease-in-out;
+            }
+
+            &:after {
+                top: 0;
+                transform: rotate(-45deg);
+                transition: all 0.5s ease-in-out;
+            }
+        }
+    }
+    &__logo {
+        width: 80px;
+        height: 80px;
+        background-image: url("./../../assets/images/iKnow.png");
+        background-size: contain;
+    }
+    &__logout {
+        background-color: $secondary-color;
+        color: #fff;
+        border-radius: 7px;
+        text-align: center;
+        height: 30px;
+        padding: 0.6rem 1.6rem 0.1rem;
+        margin-right: 2rem;
+    }
+}
