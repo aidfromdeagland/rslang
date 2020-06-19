@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import './app.scss';
 import {
     BrowserRouter as Router, Route, Switch,
@@ -26,13 +25,12 @@ import { Hangman } from './games/hangman/Hangman';
 export class App extends Component {
     constructor(props) {
         super(props);
-        this.props = props;
     }
 
     render() {
         return (
             <Router>
-                <div className="App">
+                <div className="app">
                     <header>
                         <Nav />
                     </header>
@@ -87,11 +85,3 @@ export class App extends Component {
         );
     }
 }
-
-App.defaultProps = {
-    text: '',
-};
-
-App.propTypes = {
-    text: PropTypes.string,
-};
