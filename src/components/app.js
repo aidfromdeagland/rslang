@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import './app.scss';
 import {
   BrowserRouter as Router, Route, Switch,
@@ -60,11 +59,3 @@ export class App extends Component {
     );
   }
 }
-
-App.defaultProps = {
-  text: '',
-};
-
-App.propTypes = {
-  text: PropTypes.string,
-};

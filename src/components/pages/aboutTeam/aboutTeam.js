@@ -8,7 +8,7 @@ export class AboutTeam extends Component {
     return (
       <div className="about-team">
         <h1>About team</h1>
-        <div><TeamList team = {dataAboutTeam} /></div>
+        <div><TeamList team={dataAboutTeam} /></div>
       </div>
     );
   }
