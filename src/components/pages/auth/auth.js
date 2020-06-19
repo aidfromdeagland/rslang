@@ -32,7 +32,7 @@ export class Auth extends Component {
     }
 
     constructor(props) {
-        super(props); // указать на какую страницу перемещаться по завершению
+        super(props); // можно указать на какую страницу перемещаться по завершению (если это будет отдельной страницей)
         this.state = {
             isLoading: false,
             isAuthentication: true,
