@@ -1,0 +1,21 @@
+.presentation {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: linear-gradient(to bottom, #DACDC7, #FAEDE7, #DACDC7);
+  border-bottom: 3px solid #092C70;
+
+  &__heading {
+    margin: 0;
+    font-size: 30px;
+    color: #092C70;
+  }
+
+  &__video {
+    border-radius: 10px;
+    min-width: 300px;
+    min-height: 240px;
+  }
+}
+
+
