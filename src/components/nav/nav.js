@@ -44,6 +44,7 @@ export class Nav extends Component {
                             <span>About team</span>
                         </Link>
                     </li>
+                <ul>
             </nav>
         );
     }
