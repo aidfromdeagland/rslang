@@ -7,12 +7,12 @@ export class DropdownList extends Component {
         return (
             <div className="dropdown-child">
                 {Numbers.map((number, index) => {
-                    return <div onClick={() => {
+                    return (<div onClick={() => {
                         this.props.chooseNumber(index + 1);
                         this.props.closeDropdown();
-                        }}>
+                    }}>
                         {index + 1}
-                    </div>
+                    </div>)
                 })}
             </div>
         );
