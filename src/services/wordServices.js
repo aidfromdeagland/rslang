@@ -178,15 +178,14 @@ export class WordService {
         throw new ServiceError(errorText, rawResponse.status);
     }
 
-    static async getUserAggWords(page, filter = undefined, wordsPerPage = 20) {
-        let url = `${backend}/users/${User.userId}/aggregatedWords?page=${page}&wordsPerPage=${wordsPerPage}`;
+    static async getUserAggWords(group, onlyUserWords = true, filter = null, wordsPerPage = 20) {
+        let url = `${backend}/users/${User.userId}/aggregatedWords`
+            + `?group=${group}&wordsPerPage=${wordsPerPage}&onlyUserWords=${onlyUserWords}`;
         if (filter) {
             // exemple: {"difficulty":"hard", "optional.key":"value"}
             url += `&filter=${JSON.stringify(filter)}`;
         }
-        // url = 'https://afternoon-falls-25894.herokuapp.com/users/5edcc9c356c3d600176edc54/aggregatedWords?page=0&wordsPerPage=20&filter={difficulty:"hard"}';
-        // url = 'https://afternoon-falls-25894.herokuapp.com/users/5edcc9c356c3d600176edc54/aggregatedWords?page=0&wordsPerPage=20';
-        // url = 'https://afternoon-falls-25894.herokuapp.com/users/5edcc9c356c3d600176edc54/aggregatedWords?page=0&wordsPerPage=20&filter=%7B%22difficulty%22%3A%22weak%22%7D';
+        // url = 'https://afternoon-falls-25894.herokuapp.com/users/5edcc9c356c3d600176edc54/aggregatedWords?group=0&wordsPerPage=20&onlyUserWords=true&filter={"userWord.difficulty":"weak"}';
         const rawResponse = await fetch(url, {
             method: 'GET',
             withCredentials: true,
