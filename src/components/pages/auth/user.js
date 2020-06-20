@@ -1,5 +1,5 @@
 import { Storage } from './storage';
-import { Api } from '../../../services/userServices';
+import { UserService } from '../../../services/userServices';
 
 // class for use in services
 export class User {
@@ -13,7 +13,7 @@ export class User {
 
     static async checkToken() {
         try {
-            await Api.getUser(User.userId, User.token);
+            await UserService.getUser(User.userId, User.token);
             return true;
         } catch (e) {
             return false;

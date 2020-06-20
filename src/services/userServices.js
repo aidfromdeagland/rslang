@@ -1,6 +1,6 @@
 import { backend } from '../constants/globalConstants';
 
-export class Api {
+export class UserService {
     static async registration(email, password) {
         const rawResponse = await fetch(`${backend}/users`, {
             method: 'POST',

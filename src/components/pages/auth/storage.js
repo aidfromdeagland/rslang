@@ -1,3 +1,5 @@
+import { userItemLocalStorage } from './constants';
+
 export class Storage {
     // static privateStorage; { token: string; userId: string; login?: string }
 
@@ -6,29 +8,33 @@ export class Storage {
     }
 
     static clearToken() {
-        if (!Storage.privateStorage) Storage.privateStorage = {};
+        if (!Storage.privateStorage) {
+            Storage.privateStorage = {};
+        }
         Storage.privateStorage.token = null;
-        localStorage.setItem('rs-lang-31-settings', JSON.stringify(Storage.privateStorage));
+        localStorage.setItem(userItemLocalStorage, JSON.stringify(Storage.privateStorage));
     }
 
     static clearUser() {
         Storage.privateStorage = undefined;
-        localStorage.removeItem('rs-lang-31-settings');
+        localStorage.removeItem(userItemLocalStorage);
     }
 
     static saveUser(userId, token, login) {
         const settings = { userId, token, login };
-        localStorage.setItem('rs-lang-31-settings', JSON.stringify(settings));
+        localStorage.setItem(userItemLocalStorage, JSON.stringify(settings));
         Storage.privateStorage = settings;
     }
 
     static get settings() {
-        if (!Storage.privateStorage) Storage.privateStorage = Storage.loadStorage();
+        if (!Storage.privateStorage) {
+            Storage.privateStorage = Storage.loadStorage();
+        }
         return Storage.privateStorage;
     }
 
     static loadStorage() {
-        const settings = localStorage.getItem('rs-lang-31-settings');
+        const settings = localStorage.getItem(userItemLocalStorage);
         if (settings) {
             return JSON.parse(settings);
         }
