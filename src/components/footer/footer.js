@@ -4,9 +4,9 @@ import './footer.scss';
 export class Footer extends Component {
     render() {
         return (
-            <div className="footer">
-                &copy;iKnow 2020
-            </div>
+            <footer className="footer">
+                <p>&copy;iKnow 2020</p>
+            </footer>
         );
     }
 }
