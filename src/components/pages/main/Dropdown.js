@@ -27,7 +27,7 @@ export class Dropdown extends Component {
         const defaultNumber = 1;
         return (
             <div className="settings__options_container">
-                <div className="dropdown">
+                <div className={`dropdown ${this.state.isDropOpen ? 'open' : ''}`}>
                     <Button className="mainmenubtn button" title={`Learn words a day: ${this.state.numberWords}`} onClick={this.handleClickDropdown} />
                     {this.state.isDropOpen ? <DropdownList chooseNumber={this.chooseNumberWords} closeDropdown={this.handleClickDropdown} /> : null}
                 </div>

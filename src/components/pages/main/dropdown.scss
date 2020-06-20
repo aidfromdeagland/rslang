@@ -6,10 +6,29 @@
     background-color: #0f4ab4;
     color: #ffffff;
   }
+
 }
 .dropdown {
   position: relative;
   display: inline-block;
+  &::after {
+    position: absolute;
+    top: 50%;
+    right: 14px;
+    content: "";
+    background: url(https://image.flaticon.com/icons/svg/271/271210.svg);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: 50%;
+    height: 16px;
+    width: 16px;
+    color: #f5f6fa;
+    transform: translateY(-50%);
+    transition: all .4s;
+  }
+  &.open::after {
+    transform: translateY(-50%) rotate(180deg);
+  }
 }
 .dropdown-child {
   background-color: black;

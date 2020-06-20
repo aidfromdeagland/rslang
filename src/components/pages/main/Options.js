@@ -38,11 +38,9 @@ export class Options extends Component {
                     <NavLink to={`/main/study`} className='learning-words'>
                         <Button className="button" title='Learn new words' />
                     </NavLink>
-                    {/* <Button className="button" title='Learn new words' /> */}
                     <NavLink to={`/main/study`} className='learning-words'>
                         <Button className="button" title='Repeat words' />
                     </NavLink>
-                    {/* <Button className="button" title='Repeat words' /> */}
                 </div>
             </div>
         );
