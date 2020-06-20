@@ -4,7 +4,6 @@ import './app.scss';
 import {
     BrowserRouter as Router, Route, Switch,
 } from 'react-router-dom';
-import { Nav } from './nav/nav';
 import { Header } from './header/header';
 import { AboutTeam } from './pages/aboutTeam/aboutTeam';
 import { Auth } from './pages/auth/auth';
@@ -21,12 +20,9 @@ export class App extends Component {
         return (
             <Router>
                 <div className="App">
-                    <header>
-                        <Header />
-                        <Nav />
-                        <p>{text}</p>
-                    </header>
+                    <Header />
                     <main>
+                        <p>{text}</p>
                         <Switch>
                             <Route path="/auth">
                                 <Auth />
