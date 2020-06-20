@@ -28,7 +28,7 @@ $text-color: #111111;
 
     li {
       display: flex;
-      padding: 1rem 2.5rem;
+     
       &:hover {
         background: #fff;
       }
@@ -40,6 +40,10 @@ $text-color: #111111;
       font-family: "OpenSans", sans-serif;
       font-size: 20px;
       text-transform: uppercase;
+      padding: 1rem 2.5rem;
+      display: flex;
+      align-items: center;
+      width: 100%;
     }
   }
 
