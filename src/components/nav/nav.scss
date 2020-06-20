@@ -1,13 +1,82 @@
-.navigation {
+@font-face {
+  font-family: "OpenSans";
+  src: url("./../../assets/fonts/OpenSans-Bold.ttf");
+}
 
+$bg-color: #faede7;
+$main-color: #e08d9d;
+$text-color: #111111;
+
+.navigation {
   &__list {
+    background: $bg-color;
+    width: 17rem;
     position: absolute;
-    left: 0;
+    left: -1000px;
     top: 0;
+    list-style: none;
     margin: 0;
+    padding: 0;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
+
+    &-showed {
+      left: 0;
+    }
+
+    li {
+      display: flex;
+     
+      &:hover {
+        background: #fff;
+      }
+    }
+
+    a {
+      text-decoration: none;
+      color: $text-color;
+      font-family: "OpenSans", sans-serif;
+      font-size: 20px;
+      text-transform: uppercase;
+      padding: 1rem 2.5rem;
+      display: flex;
+      align-items: center;
+      width: 100%;
+    }
+  }
+
+  &__icon {
+    background-color: $main-color;
+    width: 33px;
+    height: 33px;
+    background-size: 21px 21px;
+    background-repeat: no-repeat;
+    background-position: center;
+    margin-right: 1rem;
+    border-radius: 50%;
+  }
+
+  .main {
+    background-image: url("./../../assets/icons/main.svg");
+  }
+  .vocabulary {
+    background-image: url("./../../assets/icons/vocabulary.svg");
+  }
+  .minigames {
+    background-image: url("./../../assets/icons/minigames.svg");
+  }
+  .statistics {
+    background-image: url("./../../assets/icons/statistics.svg");
+  }
+  .promo {
+    background-image: url("./../../assets/icons/promo.svg");
+  }
+  .aboutteam {
+    background-image: url("./../../assets/icons/aboutteam.svg");
+  }
+  .logout {
+    background-image: url("./../../assets/icons/logout.svg");
   }
 }

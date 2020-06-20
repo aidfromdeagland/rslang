@@ -24,7 +24,6 @@ export class App extends Component {
                     <Header />
                     <main>
                         <p>{text}</p>
-
                         <Switch>
                             <Route path="/auth">
                                 <Auth />
@@ -52,9 +51,7 @@ export class App extends Component {
                             </Route>
                         </Switch>
                     </main>
-
                     <Footer />
-
                 </div>
             </Router>
         );
