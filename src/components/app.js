@@ -13,6 +13,7 @@ import { Promo } from './pages/promo/promo';
 import { Stats } from './pages/stats/stats';
 import { Vocabulary } from './pages/vocabulary/vocabulary';
 import { NotFound } from './pages/notFound/notFound';
+import { Footer } from './footer/footer';
 
 export class App extends Component {
     render() {
@@ -23,6 +24,7 @@ export class App extends Component {
                     <Header />
                     <main>
                         <p>{text}</p>
+
                         <Switch>
                             <Route path="/auth">
                                 <Auth />
@@ -50,6 +52,9 @@ export class App extends Component {
                             </Route>
                         </Switch>
                     </main>
+
+                    <Footer />
+
                 </div>
             </Router>
         );
