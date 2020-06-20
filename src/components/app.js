@@ -4,7 +4,7 @@ import './app.scss';
 import {
     BrowserRouter as Router, Route, Switch,
 } from 'react-router-dom';
-import { Nav } from './nav/nav';
+import { Header } from './header/header';
 import { AboutTeam } from './pages/aboutTeam/aboutTeam';
 import { Auth } from './pages/auth/auth';
 import { Main } from './pages/main/main';
@@ -16,21 +16,15 @@ import { NotFound } from './pages/notFound/notFound';
 import { Footer } from './footer/footer';
 
 export class App extends Component {
-    constructor(props) {
-        super(props);
-        this.props = props;
-    }
-
     render() {
         const { text } = this.props;
         return (
             <Router>
                 <div className="App">
-                    <header>
-                        <Nav />
-                        <p>{text}</p>
-                    </header>
+                    <Header />
                     <main>
+                        <p>{text}</p>
+
                         <Switch>
                             <Route path="/auth">
                                 <Auth />
@@ -58,7 +52,9 @@ export class App extends Component {
                             </Route>
                         </Switch>
                     </main>
+
                     <Footer />
+
                 </div>
             </Router>
         );
@@ -66,7 +62,7 @@ export class App extends Component {
 }
 
 App.defaultProps = {
-    text: '',
+    text: PropTypes.string.isRequered,
 };
 
 App.propTypes = {
