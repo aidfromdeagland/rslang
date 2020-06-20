@@ -6,7 +6,7 @@ export class Nav extends Component {
     render() {
         return (
             <nav className="navigation">
-                <ul className="navigation__list navigation__list-showed">
+                <ul className="navigation__list navigation__list">
                     <li>
                         <div className="navigation__icon main" />
                         <Link to="/main">Main</Link>
