@@ -13,14 +13,14 @@ export class Answer extends Component {
         const total = context.map((word) => {
             if (/<i>(.*?)<\/i>/.test(word) || /<b>(.*?)<\/b>/.test(word) || context.length === 1) {
                 const newWord = word.replace(/(\<(\/?[^>]+)>)/g, '');
-                return (<form>
+                return (<form className="answer-form">
                     <input className="answer-input" type="text" style={{ width: `${130}px` }} placeholder={newWord} autoFocus={true} />
                 </form>)
             }
             if (word !== ' ') {
                 return <span className="word">{word}</span>
             }
-            return <span className="space"> </span>
+            return <span className="space">  </span>
         })
         return total;
     }

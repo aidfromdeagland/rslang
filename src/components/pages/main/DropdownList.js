@@ -3,6 +3,7 @@ import './dropdown.scss';
 
 export class DropdownList extends Component {
     dropdownChildHandle = (index) => {
+        console.log(index)
         this.props.chooseNumber(index + 1);
         this.props.closeDropdown();
     }
@@ -12,8 +13,10 @@ export class DropdownList extends Component {
         return (
             <div className="dropdown-child">
                 {Numbers.map((number, index) => {
+                    const i = index;
                     return (<div
-                        onClick={(index) => {
+                        onClick={(i) => {
+                            console.log(index)
                             this.dropdownChildHandle(index);
                         }}>
                         {index + 1}

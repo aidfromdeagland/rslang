@@ -61,6 +61,11 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  .answer-container {
+    .answer-form {
+      display: inline-block;
+    }
+  }
 }
 
 .answer-input {
