@@ -1,4 +1,6 @@
 import { WordService } from './wordServices';
+import { SettingService } from './settingServices';
+import { StatisticService } from './statisticServices';
 
 export const wordServiceTest = async function wordServiceTest() {
     try {
@@ -50,6 +52,42 @@ export const wordServiceTest = async function wordServiceTest() {
         const userAggWord = await WordService.getUserAggWord(userWordPut.wordId);
         debugger;
         const userWordDel = await WordService.deleteWord(userWordPut.wordId);
+    } catch (error) {
+        const { message, status } = error;
+        debugger;
+    }
+};
+
+export const settingServiceTest = async function settingServiceTest() {
+    try {
+        let setting;
+        try {
+            setting = await SettingService.get();
+        } catch (error) {
+            const { message, status } = error;
+            debugger;
+        }
+        const settingPut = await SettingService.put(SettingService.createObject(1, 'test'));
+        const setting2 = await SettingService.get();
+        debugger;
+    } catch (error) {
+        const { message, status } = error;
+        debugger;
+    }
+};
+
+export const statisticServiceTest = async function statisticServiceTest() {
+    try {
+        let statistic;
+        try {
+            statistic = await StatisticService.get();
+        } catch (error) {
+            const { message, status } = error;
+            debugger;
+        }
+        const statisticPut = await StatisticService.put(StatisticService.createObject(1, true));
+        const statistic2 = await StatisticService.get();
+        debugger;
     } catch (error) {
         const { message, status } = error;
         debugger;

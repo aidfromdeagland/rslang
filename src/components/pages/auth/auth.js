@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import './auth.scss';
-import { wordServiceTest } from '../../../services/wordServicesTest';
+import { wordServiceTest, settingServiceTest, statisticServiceTest } from '../../../services/wordServicesTest';
 
 export class Auth extends Component {
     constructor() {
         super();
-        wordServiceTest();
+        // wordServiceTest();
+        settingServiceTest();
+        // statisticServiceTest();
     }
 
     render() {
