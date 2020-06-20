@@ -11,7 +11,7 @@ $text-color: #111111;
   &__list {
     background: $bg-color;
     width: 17rem;
-    position: absolute;
+    position: fixed;
     left: -1000px;
     top: 0;
     list-style: none;
@@ -56,27 +56,24 @@ $text-color: #111111;
     background-position: center;
     margin-right: 1rem;
     border-radius: 50%;
-  }
 
-  .main {
-    background-image: url("./../../assets/icons/main.svg");
-  }
-  .vocabulary {
-    background-image: url("./../../assets/icons/vocabulary.svg");
-  }
-  .minigames {
-    background-image: url("./../../assets/icons/minigames.svg");
-  }
-  .statistics {
-    background-image: url("./../../assets/icons/statistics.svg");
-  }
-  .promo {
-    background-image: url("./../../assets/icons/promo.svg");
-  }
-  .aboutteam {
-    background-image: url("./../../assets/icons/aboutteam.svg");
-  }
-  .logout {
-    background-image: url("./../../assets/icons/logout.svg");
-  }
+    &_main {
+      background-image: url("./../../assets/icons/main.svg");
+    }
+    &_vocabulary {
+      background-image: url("./../../assets/icons/vocabulary.svg");
+    }
+    &_minigames {
+      background-image: url("./../../assets/icons/minigames.svg");
+    }
+    &_statistics {
+      background-image: url("./../../assets/icons/statistics.svg");
+    }
+    &_promo {
+      background-image: url("./../../assets/icons/promo.svg");
+    }
+    &_aboutteam {
+      background-image: url("./../../assets/icons/aboutteam.svg");
+    }
+     }  
 }
