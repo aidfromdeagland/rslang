@@ -3,6 +3,7 @@ import './main.scss';
 import { Button } from '../../shared/button';
 import { Modal } from './Modal';
 import { Dropdown } from './Dropdown';
+import { NavLink } from 'react-router-dom';
 
 export class Options extends Component {
     constructor(props) {
@@ -34,8 +35,14 @@ export class Options extends Component {
                     <Dropdown />
                 </div>
                 <div className="options-learning">
-                    <Button className="button" title='Learn new words' />
-                    <Button className="button" title='Repeat words' />
+                    <NavLink to={`/main/study`} className='learning-words'>
+                        <Button className="button" title='Learn new words' />
+                    </NavLink>
+                    {/* <Button className="button" title='Learn new words' /> */}
+                    <NavLink to={`/main/study`} className='learning-words'>
+                        <Button className="button" title='Repeat words' />
+                    </NavLink>
+                    {/* <Button className="button" title='Repeat words' /> */}
                 </div>
             </div>
         );

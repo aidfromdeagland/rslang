@@ -19,7 +19,9 @@
   max-height: 220px;
   opacity: .9;
   overflow-y: scroll;
-  left: 23%;
+  left: 11px;
+  width: 100%;
+  border-radius: 5px;
 }
 .dropdown-child div {
   color: white;
@@ -29,6 +31,7 @@
   text-align: center;
   background-color:#ffffff;
   color: #092c70;
+  border-bottom: 1px solid;
   &:hover {
     cursor: pointer;
     background-color: #0f4ab4;
