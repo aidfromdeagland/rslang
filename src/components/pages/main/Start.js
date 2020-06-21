@@ -8,7 +8,7 @@ export class Start extends Component {
     render() {
         return (
             <div className="start-learn">
-                <NavLink to={`/main/study`} className='learning-words'>
+                <NavLink to="/main/study" className="learning-words">
                     <Button className="button btn-start" title="START" />
                 </NavLink>
             </div>

@@ -13,9 +13,9 @@ export class DropdownList extends Component {
         return (
             <div className="dropdown-child">
                 {Numbers.map((number, index) => {
-                    const i = index;
+                    // const i = index;
                     return (<div
-                        onClick={(i) => {
+                        onClick={() => {
                             console.log(index)
                             this.dropdownChildHandle(index);
                         }}>

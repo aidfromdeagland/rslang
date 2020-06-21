@@ -49,9 +49,6 @@ export class Modal extends Component {
                                 <Checkbox text='Show transcription' />
                                 <Checkbox text='Show picture' />
                             </div>
-                            {/* <Checkbox text='Show translation' />
-                            <Checkbox text='Show example sentences' />
-                            <Checkbox text='Show offer translation' /> */}
                         </div>
                         <Button className="close-modal-ok button" onClick={this.checkSettings} title="OK" />
                     </div>

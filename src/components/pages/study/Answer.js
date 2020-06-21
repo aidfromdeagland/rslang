@@ -5,6 +5,18 @@ export class Answer extends Component {
     constructor(props) {
         super(props);
         this.props = props;
+        this.state = {
+            value: '',
+        }
+    }
+
+    handleSubmit(event) {
+        event.preventDefault();
+        console.log(event)
+    }
+
+    handleChange(event) {
+        this.setState({ value: event.target.value });
     }
 
     createContext = () => {
@@ -13,8 +25,16 @@ export class Answer extends Component {
         const total = context.map((word) => {
             if (/<i>(.*?)<\/i>/.test(word) || /<b>(.*?)<\/b>/.test(word) || context.length === 1) {
                 const newWord = word.replace(/(\<(\/?[^>]+)>)/g, '');
-                return (<form className="answer-form">
-                    <input className="answer-input" type="text" style={{ width: `${130}px` }} placeholder={newWord} autoFocus={true} />
+                return (<form className="answer-form" onSubmit={(e) => this.handleSubmit(e)}>
+                    <input
+                        className="answer-input"
+                        type="text"
+                        style={{ width: `${130}px` }}
+                        placeholder={newWord}
+                        autoFocus={true}
+                        value={this.state.value}
+                        onChange={(e) => this.handleChange(e)}
+                    />
                 </form>)
             }
             if (word !== ' ') {

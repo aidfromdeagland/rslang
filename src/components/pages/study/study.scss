@@ -1,3 +1,14 @@
+@font-face {
+  font-family: "Literata", "Roboto";
+  src: url("../../../assets/fonts/Literata-Bold.ttf") format("ttf"),
+    url("../../../assets/fonts/Literata-Regular.ttf") format("ttf"),
+    url("../../../assets/fonts/Literata-VariableFont.ttf") format("ttf"),
+    url("../../../assets/fonts/RobotoMono-Bold.ttf") format("ttf"),
+    url("../../../assets/fonts/RobotoMono-Regular.ttf") format("ttf");
+  font-weight: normal;
+  font-style: normal;
+}
+
 .study-page {
   display: flex;
   justify-content: center;
@@ -62,6 +73,8 @@
   justify-content: center;
   align-items: center;
   .answer-container {
+    font-family: "RobotoMono-Regular", serif;
+    font-size: 25px;
     .answer-form {
       display: inline-block;
     }
@@ -73,12 +86,12 @@
   border: 0 none;
   outline: none;
   background: #5196a67a;
-  font-size: 30px;
+  font-size: 25px;
   border-radius: 5px;
 }
 
 .translation-container {
-  font-size: 2rem;
+  font-size: 40px;
   display: flex;
   justify-content: space-between;
   margin: 0 auto;
@@ -89,6 +102,9 @@
   border-top: 1px solid #efe6e1;
   box-sizing: border-box;
   align-self: center;
+  .translation {
+    font-family: "RobotoMono-Bold", serif;
+  }
 }
 
 .dynamic-icon {

@@ -7,9 +7,6 @@ import { Button } from '../../shared/button';
 import { Answer } from './Answer';
 
 export class Study extends Component {
-    constructor(props) {
-        super(props);
-    }
 
     render() {
         const dataForExample = {
@@ -57,13 +54,7 @@ export class Study extends Component {
                         </div>
                         <div className="learn-content">
                             <div className="card-input">
-                                {/* <div className="answer-container">
-                                    <span>fdfdfdf</span>
-                                    <form>
-                                        <input className="answer-input" type="text" style={{ width: `${130}px` }} />
-                                    </form>
-                                </div> */}
-                                <Answer context={dataForExample.textExample} />
+                                <Answer context={dataForExample.textExample} word={dataForExample.word} />
                             </div>
                             <div className="translation-container">
                                 <div className="translation">{dataForExample.wordTranslate}</div>
