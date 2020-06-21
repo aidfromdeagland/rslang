@@ -23,17 +23,14 @@ export class Header extends Component {
                 <Nav isOpen={isOpen} closeMenu={this.closeMenu} />
                 <div className="header__container">
                     <div
-                      className="header__hamburger"
-                      aria-hidden
-                      onClick={() => this.setState({ isOpen: !isOpen })}
+                        className="header__hamburger"
+                        aria-hidden
+                        onClick={() => this.setState({ isOpen: !isOpen })}
                     >
                         <div className={isOpen ? 'header__hamburger-close' : 'header__hamburger-open'} />
                     </div>
                     <div className="header__logo" />
-
-                    <div
-                      className="header__logout"
-                    >
+                    <div className="header__logout">
                         Logout
                     </div>
                 </div>

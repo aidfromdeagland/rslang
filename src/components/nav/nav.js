@@ -4,8 +4,8 @@ import PropTypes from 'prop-types';
 import './nav.scss';
 
 export class Nav extends Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.handleClick = this.handleClick.bind(this);
         this.closeByLink = this.closeByLink.bind(this);
     }
@@ -37,7 +37,7 @@ export class Nav extends Component {
         return (
             <nav className="navigation" ref={(node) => this.node = node}>
                 <ul
-                  className={isOpen ? 'navigation__list navigation__list-showed' : 'navigation__list'}
+                    className={isOpen ? 'navigation__list navigation__list-showed' : 'navigation__list'}
                 >
                     <li aria-hidden onClick={this.closeByLink}>
                         <NavLink exact activeClassName="link_active" to="/main">
@@ -83,6 +83,6 @@ export class Nav extends Component {
 }
 
 Nav.propTypes = {
-    isOpen: PropTypes.bool,
-    closeMenu: PropTypes.func,
+    isOpen: PropTypes.bool.isRequired,
+    closeMenu: PropTypes.func.isRequired,
 };
