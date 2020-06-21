@@ -3,6 +3,7 @@
   src: url("./../../assets/fonts/OpenSans-Bold.ttf");
 }
 
+
 $bg-color: #faede7;
 $main-color: #e08d9d;
 $text-color: #111111;
@@ -12,6 +13,7 @@ $text-color: #111111;
     background: $bg-color;
     width: 17rem;
     position: fixed;
+    z-index: 10;
     left: -1000px;
     top: 0;
     list-style: none;
@@ -21,6 +23,7 @@ $text-color: #111111;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    transition: all 0.5s ease-in-out;
 
     &-showed {
       left: 0;
@@ -31,6 +34,10 @@ $text-color: #111111;
      
       &:hover {
         background: #fff;
+      }
+
+      .link_active {
+        background-color: #fff;
       }
     }
 
@@ -74,6 +81,6 @@ $text-color: #111111;
     }
     &_aboutteam {
       background-image: url("./../../assets/icons/aboutteam.svg");
-    }
-     }  
+    } 
+  }
 }

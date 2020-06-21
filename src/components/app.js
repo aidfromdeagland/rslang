@@ -3,7 +3,6 @@ import './app.scss';
 import {
     BrowserRouter as Router, Route, Switch,
 } from 'react-router-dom';
-import { PropTypes } from 'prop-types';
 import { Header } from './header/header';
 import { AboutTeam } from './pages/aboutTeam/aboutTeam';
 import { Auth } from './pages/auth/auth';
@@ -24,13 +23,11 @@ import { Study } from './pages/study/study';
 
 export class App extends Component {
     render() {
-        const { text } = this.props;
         return (
             <Router>
                 <div className="app">
                     <Header />
                     <main>
-                        <p>{text}</p>
                         <Switch>
                             <Route path="/auth">
                                 <Auth />
@@ -85,10 +82,3 @@ export class App extends Component {
         );
     }
 }
-App.defaultProps = {
-    text: PropTypes.string.isRequired,
-};
-
-App.propTypes = {
-    text: PropTypes.string,
-};
