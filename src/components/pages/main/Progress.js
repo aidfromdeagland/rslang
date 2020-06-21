@@ -36,6 +36,8 @@ export class Progress extends Component {
                     <div className="level-rank">Master</div>
                     <div className="stars-container">
                         <img src={starImg} alt="starImg" />
+                        <img src={starImg} alt="starImg" />
+                        <img src={starImg} alt="starImg" />
                     </div>
                 </div>
             </div>

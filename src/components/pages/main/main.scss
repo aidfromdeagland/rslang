@@ -5,19 +5,23 @@
 .main-page {
   min-width: 1020px;
   margin: 0 20px;
-  h2 {
-    font-family: "Literata", sans-serif;
-    font-size: 32px;
-    line-height: 48px;
-    color: #092c70;
+  .main-page-container {
+    margin-bottom: 30px;
+    h2 {
+      font-family: "Literata", sans-serif;
+      font-size: 32px;
+      line-height: 48px;
+      color: #092c70;
+    }
   }
+
   .main-page_options {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
     background-color: #faede7;
     margin-bottom: 50px;
-    margin-top: 50px;
+    margin-top: 30px;
     padding: 10px 60px;
     border-radius: 5px;
     .options-settings {

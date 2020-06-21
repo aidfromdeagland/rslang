@@ -23,7 +23,6 @@ export class Options extends Component {
         this.setState(prev => ({
             isOpenModal: !prev.isOpenModal
         }));
-        console.log(this.state.isOpenModal)
     }
 
     render() {

@@ -34,6 +34,7 @@ export class Study extends Component {
                 image: true,
             },
         };
+
         return (
             <div className="study-page">
                 <div className="card-container">

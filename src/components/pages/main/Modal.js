@@ -22,14 +22,13 @@ export class Modal extends Component {
     checkSettings = () => {
         const settingsValues = Object.values(this.state);
         if (!settingsValues.includes(true)) {
-            alert('choose main settings')
+            alert('choose main settings');
             return;
         }
         this.props.closeModal();
     }
 
     render() {
-        console.log(this.state)
         return (
             <div id="openModal" className="modal">
                 <div className="modal-dialog">

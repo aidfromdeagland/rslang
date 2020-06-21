@@ -22,7 +22,6 @@ import { Hangman } from './games/hangman/Hangman';
 import { Footer } from './footer/footer';
 import { Study } from './pages/study/study';
 
-
 export class App extends Component {
     render() {
         const { text } = this.props;

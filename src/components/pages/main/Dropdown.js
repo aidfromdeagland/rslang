@@ -8,8 +8,10 @@ export class Dropdown extends Component {
         super(props);
         this.props = props;
         this.state = {
-            isDropOpen: false,
-            numberWords: 1
+            isDropWordOpen: false,
+            isDropCardsOpen: false,
+            numberWords: 1,
+            numberCards: 1
         }
     }
 
@@ -17,19 +19,32 @@ export class Dropdown extends Component {
         this.setState({numberWords: number});
     }
 
-    handleClickDropdown = () => {
+    chooseNumberCards = (number) => {
+        this.setState({numberCards: number});
+    }
+
+    handleClickDropdownWords = () => {
         this.setState(prev => ({
-            isDropOpen: !prev.isDropOpen
+            isDropWordOpen: !prev.isDropWordOpen
+        }));
+    }
+
+    handleClickDropdownCards = () => {
+        this.setState(prev => ({
+            isDropCardsOpen: !prev.isDropCardsOpen
         }));
     }
 
     render() {
-        const defaultNumber = 1;
         return (
             <div className="settings__options_container">
-                <div className={`dropdown ${this.state.isDropOpen ? 'open' : ''}`}>
-                    <Button className="mainmenubtn button" title={`Learn words a day: ${this.state.numberWords}`} onClick={this.handleClickDropdown} />
-                    {this.state.isDropOpen ? <DropdownList chooseNumber={this.chooseNumberWords} closeDropdown={this.handleClickDropdown} /> : null}
+                <div className={`dropdown ${this.state.isDropWordOpen ? 'open' : ''}`}>
+                    <Button className="mainmenubtn button" title={`Learn words a day: ${this.state.numberWords}`} onClick={this.handleClickDropdownWords} />
+                    {this.state.isDropWordOpen ? <DropdownList chooseNumber={this.chooseNumberWords} closeDropdown={this.handleClickDropdownWords} /> : null}
+                </div>
+                <div className={`dropdown ${this.state.isDropCardsOpen ? 'open' : ''}`}>
+                    <Button className="mainmenubtn button" title={`Number of cards a day: ${this.state.numberCards}`} onClick={this.handleClickDropdownCards} />
+                    {this.state.isDropCardsOpen ? <DropdownList chooseNumber={this.chooseNumberCards} closeDropdown={this.handleClickDropdownCards} /> : null}
                 </div>
             </div>
         );

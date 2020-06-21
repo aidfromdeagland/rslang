@@ -1,7 +1,12 @@
 .mainmenubtn {
   background: #ffffff;
-  font-size: 15px;
+  font-size: 12px;
   color: #092c70;
+  width: 114px;
+  padding: 0;
+  padding-left: 3px;
+  padding-right: 20px;
+  text-align: left;
   &:hover {
     background-color: #0f4ab4;
     color: #ffffff;
@@ -32,7 +37,6 @@
 }
 .dropdown-child {
   background-color: black;
-  min-width: 200px;
   position: absolute;
   z-index: 100;
   max-height: 220px;
@@ -54,5 +58,6 @@
   &:hover {
     cursor: pointer;
     background-color: #0f4ab4;
+    color: #ffffff;
   }
 }
