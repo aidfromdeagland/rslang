@@ -3,7 +3,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import './vocabulary.scss';
 import { WordList } from './wordList';
-import { wordsTempMock } from './tempMock';
+import { wordsMockLearned, wordsMockDifficult, wordsMockDeleted } from './tempMock';
+import { NavLink } from 'react-router-dom';
 
 export class Vocabulary extends Component {
     constructor(props) {
@@ -18,27 +19,16 @@ export class Vocabulary extends Component {
             <div className="vocabulary">
                 <ul className="vocabulary__tabs">
                     <li className="vocabulary__tab">
-                        <label htmlFor="tab-learned" className="vocabulary__label">
-                            Learned words
-                        </label>
-                        <input type="radio" name="tab-radio" defaultChecked id="tab-learned" />
-                        <WordList words={wordsTempMock} />
+                        <NavLink to="vocabulary/learned">Learned words</NavLink>
                     </li>
                     <li className="vocabulary__tab">
-                        <label htmlFor="tab-difficult" className="vocabulary__label">
-                            Difficult words
-                        </label>
-                        <input type="radio" name="tab-radio" id="tab-difficult" />
-                        <WordList words={wordsTempMock} />
+                        <NavLink to="vocabulary/difficult">Difficult words</NavLink>
                     </li>
                     <li className="vocabulary__tab">
-                        <label htmlFor="tab-removed" className="vocabulary__label">
-                            Removed words
-                        </label>
-                        <input type="radio" name="tab-radio" id="tab-removed" />
-                        <WordList words={wordsTempMock} />
+                        <NavLink to="vocabulary/deleted">Difficult words</NavLink>
                     </li>
                 </ul>
+                <WordList words={wordsMockLearned} />
             </div>
         );
     }
