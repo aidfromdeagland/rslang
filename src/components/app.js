@@ -3,7 +3,8 @@ import './app.scss';
 import {
     BrowserRouter as Router, Route, Switch,
 } from 'react-router-dom';
-import { Nav } from './nav/nav';
+import { PropTypes } from 'prop-types';
+import { Header } from './header/header';
 import { AboutTeam } from './pages/aboutTeam/aboutTeam';
 import { Auth } from './pages/auth/auth';
 import { Main } from './pages/main/main';
@@ -18,23 +19,18 @@ import { Savannah } from './games/savannah/Savannah';
 import { AudioCall } from './games/audioCall/AudioCall';
 import { Sprint } from './games/sprint/Sprint';
 import { Hangman } from './games/hangman/Hangman';
-
-
-
+import { Footer } from './footer/footer';
 
 export class App extends Component {
-    constructor(props) {
-        super(props);
-    }
-
     render() {
+        const { text } = this.props;
         return (
             <Router>
                 <div className="app">
-                    <header>
-                        <Nav />
-                    </header>
+                    <Header />
                     <main>
+                        <p>{text}</p>
+
                         <Switch>
                             <Route path="/auth">
                                 <Auth />
@@ -80,8 +76,19 @@ export class App extends Component {
                             </Route>
                         </Switch>
                     </main>
+
+                    <Footer />
+
                 </div>
             </Router>
         );
     }
 }
+
+App.defaultProps = {
+    text: PropTypes.string.isRequired,
+};
+
+App.propTypes = {
+    text: PropTypes.string,
+};
