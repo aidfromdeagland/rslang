@@ -3,6 +3,7 @@
   src: url("./../../assets/fonts/OpenSans-Bold.ttf");
 }
 
+
 $bg-color: #faede7;
 $main-color: #e08d9d;
 $text-color: #111111;
@@ -12,7 +13,7 @@ $text-color: #111111;
     background: $bg-color;
     width: 17rem;
     position: fixed;
-    z-index: 3;
+    z-index: 10;
     left: -1000px;
     top: 0;
     list-style: none;
@@ -33,6 +34,10 @@ $text-color: #111111;
      
       &:hover {
         background: #fff;
+      }
+
+      .link_active {
+        background-color: #fff;
       }
     }
 
