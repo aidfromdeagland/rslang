@@ -1,0 +1,45 @@
+#start-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  max-width: 1020px;
+  margin: auto;
+  height: 100%;
+  .title {
+    text-transform: uppercase;
+    font-size: 6rem;
+    margin-bottom: 20px;
+    font-weight: 300;
+  }
+  .description {
+    margin-bottom: 20px;
+    font-size: 3rem;
+    font-weight: 100;
+    p {
+      text-align: center;
+    }
+  }
+}
+
+.btn-start {
+  width: 150px;
+}
+
+.button {
+  height: 40px;
+  padding: 12px;
+  outline: 0;
+  border: none;
+  border-radius: 8px;
+  margin-left: 20px;
+  background-color: rgb(187, 67, 59);
+  color: white;
+  cursor: pointer;
+  transition: background 0.3s;
+  &:hover {
+    cursor: pointer;
+    background-color: rgb(255, 252, 241);
+    color: black;
+  }
+}
