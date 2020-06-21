@@ -5,7 +5,7 @@ import { App } from './components/app';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App text="random text for props example" />
+    <App />
   </React.StrictMode>,
   document.getElementById('root'),
 );

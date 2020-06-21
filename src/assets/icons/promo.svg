@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 1000 1000" enable-background="new 0 0 1000 1000" xml:space="preserve">
+  <style type="text/css" >
+    <![CDATA[
+    .promo {
+      stroke: none;
+      fill:   #fff;
+    }
+    ]]>
+  </style>
+<g class="promo"><path d="M347,101.9c-10.2-17.6-32.8-23.6-50.5-13.5c-17.6,10.2-23.7,32.7-13.5,50.2s32.8,23.6,50.6,13.4C351.2,142,357.4,119.5,347,101.9z M860.4,635L491.2,846L171.5,298.1L249.4,10l291.2,77.1L860.4,635z M152,370.1L471.7,918l369.2-210.9l26.7,45.7L452.2,990L132.4,442.2L152,370.1z"/></g>
+</svg>
