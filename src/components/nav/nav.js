@@ -49,10 +49,9 @@ export class Nav extends Component {
                             <div className="navigation__icon navigation__icon_main" />
                             <span>Main</span>
                         </NavLink>
-                    </li>
-
+                   </li>
                     <li aria-hidden onClick={this.closeByLink}>
-                        <NavLink exact activeClassName="link_active" to="/vocabulary">
+                        <NavLink exact activeClassName="link_active" to="/vocabulary">                                     
                             <div className="navigation__icon navigation__icon_vocabulary" />
                             <span>Vocabulary</span>
                         </NavLink>
