@@ -1,3 +1,4 @@
+/* eslint-disable react/destructuring-assignment */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import './auth.scss';
@@ -124,11 +125,7 @@ export class Auth extends Component {
     }
 
     render() {
-        const {
-            isLoading, isAuthentication, errorMain, errorPassword, errorEmail,
-        } = this.state;
-
-        const buttons = isAuthentication
+        const buttons = this.state.isAuthentication
             ? (
                 <div className="auth__buttons">
                     <button className="auth__button button__registration" type="button" onClick={() => this.showRegistration()}>Register</button>
@@ -142,20 +139,20 @@ export class Auth extends Component {
                 </div>
             );
 
-        const login = isAuthentication ? Storage.login : undefined;
+        const login = this.state.isAuthentication ? Storage.login : undefined;
 
         return (
             <div className="auth">
-                { isLoading && <Spinner /> }
-                <h1 className="auth-header">{ isAuthentication ? 'Authentication' : 'Registration' }</h1>
+                { this.state.isLoading && <Spinner /> }
+                <h1 className="auth-header">{ this.state.isAuthentication ? 'Authentication' : 'Registration' }</h1>
                 <span className="auth-description">Insert your e-mail and password.</span>
                 <form className="auth-form" onSubmit={(e) => this.handleSubmit(e)}>
                     <div className="auth__inputs">
                         <input id="auth-email" className="auth-form__input auth-form__login-input" name="login" type="email" placeholder="youremail@domain.com" defaultValue={login} />
-                        { errorEmail && <span className="auth-form__error">{ errorEmail }</span> }
+                        { this.state.errorEmail && <span className="auth-form__error">{ this.state.errorEmail }</span> }
                         <input id="auth-password" className="auth-form__input auth-form__password-input" name="password" type="password" placeholder="**************" />
-                        { errorPassword && <span className="auth-form__error">{ errorPassword }</span> }
-                        { errorMain && <span className="auth-form__error">{ errorMain }</span> }
+                        { this.state.errorPassword && <span className="auth-form__error">{ this.state.errorPassword }</span> }
+                        { this.state.errorMain && <span className="auth-form__error">{ this.state.errorMain }</span> }
                     </div>
                     { buttons }
                 </form>
