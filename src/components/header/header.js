@@ -3,26 +3,36 @@ import { Nav } from '../nav/nav';
 import './header.scss';
 
 export class Header extends Component {
-    state = {
-        isOpen: false,
-          };
+    constructor(props) {
+        super(props);
+        this.closeMenu = this.closeMenu.bind(this);
+        this.state = {
+            isOpen: false,
 
-     render() {
+        };
+    }
+
+    closeMenu(value) {
+        this.setState({ isOpen: value });
+    }
+
+    render() {
         const { isOpen } = this.state;
         return (
             <header className="header">
-                <Nav noOverlay isOpen={this.state.isOpen} />
+                <Nav isOpen={isOpen} closeMenu={this.closeMenu} />
                 <div className="header__container">
-                                           <div 
-                        className="header__hamburger"
-                        onClick={() => this.setState({ isOpen: !isOpen })}
-                                               >
-                            <div className={isOpen ? 'header__hamburger-close': 'header__hamburger-open'}/>
-                        </div>
-                        <div className="header__logo" />
-                  
-                    <div className="header__logout"
-                    onClick={this.handleClick}
+                    <div
+                      className="header__hamburger"
+                      aria-hidden
+                      onClick={() => this.setState({ isOpen: !isOpen })}
+                    >
+                        <div className={isOpen ? 'header__hamburger-close' : 'header__hamburger-open'} />
+                    </div>
+                    <div className="header__logo" />
+
+                    <div
+                      className="header__logout"
                     >
                         Logout
                     </div>
