@@ -6,7 +6,6 @@ import { DropdownList } from './DropdownList';
 export class Dropdown extends Component {
     constructor(props) {
         super(props);
-        this.props = props;
         this.state = {
             isDropWordOpen: false,
             isDropCardsOpen: false,

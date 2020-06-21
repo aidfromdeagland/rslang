@@ -5,36 +5,11 @@ import exampleImg from '../../../assets/images/example.jpg';
 import next from '../../../assets/images/next-arrow.png';
 import { Button } from '../../shared/button';
 import { Answer } from './Answer';
+import { dataForExample, settingsForExample } from './dataForExample';
 
 export class Study extends Component {
 
     render() {
-        const dataForExample = {
-            "word": "agree",
-            "image": "files/01_0001.jpg",
-            "audio": "files/01_0001.mp3",
-            "audioMeaning": "files/01_0001_meaning.mp3",
-            "audioExample": "files/01_0001_example.mp3",
-            "textMeaning": "To <i>agree</i> is to have the same opinion or belief as another person",
-            "textExample": "The students <b>agree</b> they have too much homework",
-            "transcription": "[əgríː]",
-            "wordTranslate": "согласна",
-            "textMeaningTranslate": "Согласиться - значит иметь то же мнение или убеждение, что и другой человек",
-            "textExampleTranslate": "Студенты согласны, что у них слишком много домашней работы",
-            "id": 1
-        };
-        const settingsForExample = {
-            mainSettings: {
-                word: true,
-                sentence: false,
-                textMeaning: false,
-            },
-            additionalSettings: {
-                transcription: true,
-                image: true,
-            },
-        };
-
         return (
             <div className="study-page">
                 <div className="card-container">
@@ -55,7 +30,7 @@ export class Study extends Component {
                         </div>
                         <div className="learn-content">
                             <div className="card-input">
-                                <Answer context={dataForExample.textExample} word={dataForExample.word} />
+                                <Answer context={dataForExample.textMeaning} word={dataForExample.word} />
                             </div>
                             <div className="translation-container">
                                 <div className="translation">{dataForExample.wordTranslate}</div>

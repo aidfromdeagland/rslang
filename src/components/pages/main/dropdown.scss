@@ -30,6 +30,7 @@
     color: #f5f6fa;
     transform: translateY(-50%);
     transition: all .4s;
+    pointer-events: none;
   }
   &.open::after {
     transform: translateY(-50%) rotate(180deg);

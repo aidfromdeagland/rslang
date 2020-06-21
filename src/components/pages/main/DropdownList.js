@@ -8,11 +8,10 @@ export class DropdownList extends Component {
     }
 
     render() {
-        const Numbers = Array(30).fill(null);
+        const numbers = Array(30).fill(null);
         return (
             <div className="dropdown-child">
-                {Numbers.map((number, index) => {
-                    // const i = index;
+                {numbers.map((number, index) => {
                     return (<div
                         onClick={() => {
                             this.dropdownChildHandle(index);

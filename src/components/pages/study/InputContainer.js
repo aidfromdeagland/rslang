@@ -3,8 +3,7 @@ import React, { Component } from 'react'
 export class InputContainer extends Component {
     constructor(props) {
         super(props);
-        this.props = props;
-        this.input = React.createRef();
+        this.prevValue = '';
         this.state = {
             valueInput: '',
             isCorrectWord: true,
@@ -17,34 +16,35 @@ export class InputContainer extends Component {
     }
 
     checkWord = () => {
-        const actualValue = this.input.current.value.toLocaleLowerCase();
-
+        const actualValue = this.prevValue.toLocaleLowerCase();
         const studiedWord = this.props.word;
 
-        const word =  studiedWord.split('').map((letter, index) => {
+        const word = studiedWord.split('').map((letter, index) => {
             return <span className={letter === actualValue[index] ? 'correct-letter' : 'uncorrect-letter'} key={index}>{letter}</span>;
         });
-
-        this.input.current.value = '';
         return word;
     }
 
     handleSubmit(event) {
         event.preventDefault();
+        const actualValue = this.state.valueInput.toLocaleLowerCase();
 
-        const actualValue = this.input.current.value.toLocaleLowerCase();
         if (actualValue === this.props.word) {
             alert('correct');
             return;
         }
-        this.setState({isCorrectWord: false});
+        this.prevValue = this.state.valueInput;
+        this.setState({
+            isCorrectWord: false,
+            valueInput: ''
+        });
     }
 
     handleChange(event) {
-        this.setState(prev => ({
-            isCorrectWord: true
-        }));
-        this.input.current.value = event.target.value;
+        this.setState({
+            isCorrectWord: true,
+            valueInput: event.target.value
+        });
     }
 
     render() {
@@ -62,7 +62,7 @@ export class InputContainer extends Component {
                         className="answer-input"
                         type="text"
                         autoFocus={true}
-                        ref={this.input}
+                        value={this.state.valueInput}
                         onChange={(e) => this.handleChange(e)}
                     />
                 </form>
