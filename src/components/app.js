@@ -23,13 +23,13 @@ import { Footer } from './footer/footer';
 
 export class App extends Component {
     render() {
-        const { text } = this.props;
+       
         return (
             <Router>
                 <div className="app">
                     <Header />
                     <main>
-                        <p>{text}</p>
+                     
                         <Switch>
                             <Route path="/auth">
                                 <Auth />

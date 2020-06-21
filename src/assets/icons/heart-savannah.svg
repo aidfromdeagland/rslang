@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 1000 1000" enable-background="new 0 0 1000 1000" xml:space="preserve">
+  <style type="text/css" >
+    <![CDATA[
+    .heart {
+      stroke: none;
+      fill:   #d82d00;
+    }
+    ]]>
+  </style>
+<g class="heart" ><path d="M745.3,73C870.2,73,990,192.9,990,364.3c0,192.9-171.7,265-286.9,342.1C591.5,781.1,512.5,883.4,500,927c-10.7-42.6-99.7-147.9-203.1-222.8C183.8,622.3,10,555,10,362.1C10,195.5,129.8,77,254.2,77C349.3,77,438,94.2,500,217.7C571.9,95,651.7,73,745.3,73L745.3,73z"/></g>
+</svg>
