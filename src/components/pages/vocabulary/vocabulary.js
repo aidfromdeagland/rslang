@@ -2,6 +2,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import './vocabulary.scss';
+import { WordList } from './wordList';
+import { wordsTempMock } from './tempMock';
 
 export class Vocabulary extends Component {
     constructor(props) {
@@ -20,27 +22,21 @@ export class Vocabulary extends Component {
                             Learned words
                         </label>
                         <input type="radio" name="tab-radio" defaultChecked id="tab-learned" />
-                        <ul className="vocabulary__words" words={this.learnedWords}>
-                            <li className="vocabulary__word">MISSUR</li>
-                        </ul>
+                        <WordList words={wordsTempMock} />
                     </li>
                     <li className="vocabulary__tab">
                         <label htmlFor="tab-difficult" className="vocabulary__label">
                             Difficult words
                         </label>
                         <input type="radio" name="tab-radio" id="tab-difficult" />
-                        <ul className="vocabulary__words" words={this.difficultWords}>
-                            <li className="vocabulary__word">FISSOR</li>
-                        </ul>
+                        <WordList words={wordsTempMock} />
                     </li>
                     <li className="vocabulary__tab">
                         <label htmlFor="tab-removed" className="vocabulary__label">
                             Removed words
                         </label>
                         <input type="radio" name="tab-radio" id="tab-removed" />
-                        <ul className="vocabulary__words" words={this.removedWords}>
-                            <li className="vocabulary__word">TOPOR</li>
-                        </ul>
+                        <WordList words={wordsTempMock} />
                     </li>
                 </ul>
             </div>
