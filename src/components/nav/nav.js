@@ -35,7 +35,12 @@ export class Nav extends Component {
         const { isOpen } = this.props;
 
         return (
-            <nav className="navigation" ref={(node) => this.node = node}>
+            <nav
+                className="navigation"
+                ref={(node) => {
+                    this.node = node;
+                }}
+            >
                 <ul
                     className={isOpen ? 'navigation__list navigation__list-showed' : 'navigation__list'}
                 >
