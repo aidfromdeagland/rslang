@@ -19,14 +19,16 @@ export class Nav extends Component {
     }
 
     handleClick(e) {
+        const { closeMenu } = this.props;
         if (this.node.parentElement.contains(e.target)) {
             return;
         }
-        this.props.closeMenu(false);
+        closeMenu(false);
     }
 
     closeByLink() {
-        this.props.closeMenu(false);
+        const { closeMenu } = this.props;
+        closeMenu(false);
     }
 
     render() {
@@ -35,7 +37,7 @@ export class Nav extends Component {
         return (
             <nav className="navigation" ref={(node) => this.node = node}>
                 <ul
-                    className={isOpen ? 'navigation__list navigation__list-showed' : 'navigation__list'}
+                  className={isOpen ? 'navigation__list navigation__list-showed' : 'navigation__list'}
                 >
                     <li aria-hidden onClick={this.closeByLink}>
                         <NavLink exact activeClassName="link_active" to="/main">
@@ -79,11 +81,6 @@ export class Nav extends Component {
         );
     }
 }
-
-Nav.defaultProps = {
-    isOpen: PropTypes.bool.isRequered,
-    closeMenu: PropTypes.func.isRequired,
-};
 
 Nav.propTypes = {
     isOpen: PropTypes.bool,
