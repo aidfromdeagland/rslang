@@ -15,7 +15,7 @@ import { Vocabulary } from './pages/vocabulary/vocabulary';
 import { NotFound } from './pages/notFound/notFound';
 import { SpeakIt } from './games/speackit/SpeakIt';
 import { EnglishPuzzle } from './games/englishPuzzle/EnglishPuzzle';
-import { Savannah } from './games/savannah/Savannah';
+import { Savannah } from './games/savannah/savannah';
 import { AudioCall } from './games/audioCall/AudioCall';
 import { Sprint } from './games/sprint/Sprint';
 import { Hangman } from './games/hangman/Hangman';
@@ -23,13 +23,12 @@ import { Footer } from './footer/footer';
 
 export class App extends Component {
     render() {
-       
         return (
             <Router>
                 <div className="app">
                     <Header />
                     <main>
-                     
+
                         <Switch>
                             <Route path="/auth">
                                 <Auth />
