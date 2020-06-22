@@ -29,14 +29,14 @@ export class SettingService {
             throw new ServiceError('Access token is missing or invalid', rawResponse.status);
         }
         if (rawResponse.status === 404) {
-            throw new ServiceError('Statistics not found', rawResponse.status);
+            throw new ServiceError('Settings not found', rawResponse.status);
         }
 
         const errorText = await rawResponse.text();
         throw new ServiceError(errorText, rawResponse.status);
     }
 
-    static async put(statistic /* ISettings */) {
+    static async put(settings /* ISettings */) {
         const rawResponse = await fetch(`${backend}/users/${User.userId}/settings`, {
             method: 'PUT',
             withCredentials: true,
@@ -45,7 +45,7 @@ export class SettingService {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(statistic),
+            body: JSON.stringify(settings),
         });
         if (rawResponse.ok) {
             const content = await rawResponse.json();
