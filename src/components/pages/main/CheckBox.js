@@ -6,7 +6,7 @@ export class Checkbox extends Component {
         const {onClick, text} = this.props;
         return (
             <label>
-                <input type="checkbox" className="option-input checkbox" onClick={onClick} />
+                <input type="checkbox" className="option-input checkbox" onClick={onClick} checked={this.props.checked} />
                 {text}
             </label>
         );

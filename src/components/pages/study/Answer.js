@@ -8,7 +8,16 @@ export class Answer extends Component {
         const total = context.map((word, index) => {
             if (/<i>(.*?)<\/i>/.test(word) || /<b>(.*?)<\/b>/.test(word) || context.length === 1) {
                 word.replace(/(\<(\/?[^>]+)>)/g, '');
-                return (<InputContainer word={this.props.word} wordAudio={this.props.wordAudio} contextAudio={this.props.contextAudio} key={index} />);
+                return (<InputContainer
+                    word={this.props.word}
+                    wordAudio={this.props.wordAudio}
+                    contextAudio={this.props.contextAudio}
+                    checkWord={this.props.checkWord}
+                    handleChange={this.props.handleChange}
+                    handleSubmit={this.props.handleSubmit}
+                    valueInput={this.props.valueInput}
+                    isCorrectWord={this.props.isCorrectWord}
+                    key={index} />);
             }
             if (word !== ' ') {
                 return <span className="word" key={index}>{word}</span>

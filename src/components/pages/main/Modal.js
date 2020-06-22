@@ -7,7 +7,7 @@ export class Modal extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isWord: false,
+            isWord: true,
             isSentence: false,
             isMeaning: false,
         };
@@ -39,9 +39,9 @@ export class Modal extends Component {
                         <div className="modal-body">
                             <div className="main-settings">
                                 <h3>Main settings</h3>
-                                <Checkbox text="learn by word" onClick={() => this.checkboxHandle('isWord')} arg="isWord" />
-                                <Checkbox text="learn on offer" onClick={() => this.checkboxHandle('isSentence')} />
-                                <Checkbox text="learn by the meaning" onClick={() => this.checkboxHandle('isMeaning')} />
+                                <Checkbox text="learn by word" onClick={() => this.checkboxHandle('isWord')} arg="isWord" checked={this.state.isWord} />
+                                <Checkbox text="learn on offer" onClick={() => this.checkboxHandle('isSentence')} checked={this.state.isSentence} />
+                                <Checkbox text="learn by the meaning" onClick={() => this.checkboxHandle('isMeaning')} checked={this.state.isMeaning} />
                             </div>
                             <div className="additional-settings">
                                 <h3>Additional settings</h3>
