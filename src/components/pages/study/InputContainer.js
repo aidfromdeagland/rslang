@@ -6,14 +6,14 @@ export class InputContainer extends Component {
         this.prevValue = '';
         this.state = {
             valueInput: '',
-            isCorrectWord: true,
+            isCorrectWord: null,
         }
     }
 
-    createBackgroundContainer = () => {
-        const word = this.props.word;
-        return <span className='hidden'>{word}</span>;
-    }
+    // createBackgroundContainer = () => {
+    //     const word = this.props.word;
+    //     return <span className={`hidden ${this.state ? 'correct' : ''}`}>{word}</span>;
+    // }
 
     checkWord = () => {
         const actualValue = this.prevValue.toLocaleLowerCase();
@@ -30,9 +30,14 @@ export class InputContainer extends Component {
         const actualValue = this.state.valueInput.toLocaleLowerCase();
 
         if (actualValue === this.props.word) {
-            alert('correct');
+            this.setState({
+                isCorrectWord: true,
+            });
+            this.playAudio(this.props.contextAudio);
+            // alert('correct');
             return;
         }
+        this.playAudio(this.props.wordAudio);
         this.prevValue = this.state.valueInput;
         this.setState({
             isCorrectWord: false,
@@ -42,20 +47,25 @@ export class InputContainer extends Component {
 
     handleChange(event) {
         this.setState({
-            isCorrectWord: true,
+            isCorrectWord: null,
             valueInput: event.target.value
         });
+    }
+
+    playAudio = (url) => {
+        const audio = new Audio(url);
+        audio.play();
     }
 
     render() {
 
         return (
             <span className="input-container">
-                <span className="background">
-                    {this.createBackgroundContainer()}
+                <span className={`background ${this.state.isCorrectWord ? 'correct' : ''}`}>
+                    <span className='hidden'>{this.props.word}</span>
                 </span>
                 <span className="word-container">
-                    {!this.state.isCorrectWord ? this.checkWord() : null}
+                    {this.state.isCorrectWord === false ? this.checkWord() : null}
                 </span>
                 <form className="answer-form" onSubmit={(e) => this.handleSubmit(e)}>
                     <input

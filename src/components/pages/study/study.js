@@ -35,7 +35,8 @@ export class Study extends Component {
 
     render() {
         const context = this.chooseLearnMethod();
-        const audioContext = `audio${context.slice(4) || 'audio'}`
+        const audioContext = `audio${context.slice(4)}` || 'audio';
+        console.log(audioContext)
         const dataForCard = {
             context: dataForExample[context],
             word: dataForExample.word,
@@ -70,7 +71,7 @@ export class Study extends Component {
                         </div>
                         <div className="learn-content">
                             <div className="card-input">
-                                <Answer context={dataForCard.context} word={dataForCard.word} />
+                                <Answer context={dataForCard.context} word={dataForCard.word} wordAudio={dataForCard.audioWord} contextAudio={dataForCard.audioContext} />
                             </div>
                             <div className="translation-container">
                                 <div className="translation">{dataForCard.wordTranslate}</div>
@@ -78,8 +79,9 @@ export class Study extends Component {
                             </div>
                         </div>
                         <div className="buttons-block">
-                            <Button className="button delete-btn" title="Delete" />
-                            <Button className="button hard-btn" title="Add to hard" />
+                            <Button className="button delete-btn learn-btn" title="Delete" />
+                            <Button className="button hard-btn learn-btn" title="Add to hard" />
+                            <Button className="button answer-btn learn-btn" title="Show Answer" />
                         </div>
                     </section>
                     <div className="navigate-next">

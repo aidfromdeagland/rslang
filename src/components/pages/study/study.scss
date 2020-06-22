@@ -85,6 +85,9 @@
     background: #5196a67a;
     border-radius: 5px;
     font-size: 27px;
+    &.correct {
+      background: #1fda4e7a;
+    }
   }
   .word-container {
     position: absolute;
@@ -153,12 +156,17 @@
 }
 
 .buttons-block {
+  display: flex;
+  justify-content: space-around;
   margin: 10px 0;
   .delete-btn {
     background: #af0001;
     &:hover {
       background: #da3d3dd7;
     }
+  }
+  .learn-btn {
+    width: 170px;
   }
   .button {
     margin: 0 10px;
