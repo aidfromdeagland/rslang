@@ -1,31 +1,28 @@
 @font-face {
     font-family: "OpenSans";
     src: url("./../../assets/fonts/OpenSans-Bold.ttf");
-  }
-  
+}
+
 $bg-color: #e5e5e5;
 $secondary-color: #092c70;
 .header {
     position: relative;
     width: 100%;
 
-&__container {
-    background-color: $bg-color;
-    height: 100px;
-    margin: 0 auto;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-    &__navigation {
+    &__container {
+        background-color: $bg-color;
+        height: 100px;
+        margin: 0 auto;
         display: flex;
+        align-items: center;
         justify-content: space-between;
     }
 
     &__hamburger {
-        position: relative;
-        z-index: 3;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 11;
         cursor: pointer;
         width: 1.8rem;
         height: 1.8rem;
@@ -51,12 +48,12 @@ $secondary-color: #092c70;
                 width: 100%;
                 height: 100%;
                 background: inherit;
-                transition: all 0.3s ease-in-out;
+                transition: all 0.5s ease-in-out;
             }
 
             &:after {
                 top: 9px;
-                transition: all 0.3s ease-in-out;
+                transition: all 0.5s ease-in-out;
             }
         }
 
@@ -94,6 +91,7 @@ $secondary-color: #092c70;
         height: 80px;
         background-image: url("./../../assets/images/iKnow.png");
         background-size: contain;
+        margin-left: 5rem;
     }
     &__logout {
         background-color: $secondary-color;
@@ -104,6 +102,5 @@ $secondary-color: #092c70;
         padding: 0.6rem 1.6rem 0.1rem;
         margin-right: 2rem;
         font-family: "OpenSans", sans-serif;
-    
-}
+    }
 }

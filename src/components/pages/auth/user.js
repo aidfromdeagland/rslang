@@ -1,9 +1,26 @@
+import { Storage } from './storage';
+import { UserService } from '../../../services/userServices';
+
+// class for use in services
 export class User {
     static get userId() {
-        return '5edcc9c356c3d600176edc54';
+        return Storage.settings && Storage.settings.userId;
     }
 
     static get token() {
-        return 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlZGNjOWMzNTZjM2Q2MDAxNzZlZGM1NCIsImlhdCI6MTU5MjY3NjgxMywiZXhwIjoxNTkyNjkxMjEzfQ.6aegdvmvunjnW3OjZPXWhpT-bNG-NGbRtoCAbnVz62w';
+        return Storage.settings && Storage.settings.token;
+    }
+
+    static async checkToken() {
+        try {
+            await UserService.getUser(User.userId, User.token);
+            return true;
+        } catch (e) {
+            return false;
+        }
+    }
+
+    static logOut() {
+        Storage.clearUser();
     }
 }
