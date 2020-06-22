@@ -19,6 +19,7 @@ import { AudioCall } from './games/audioCall/AudioCall';
 import { Sprint } from './games/sprint/Sprint';
 import { Hangman } from './games/hangman/Hangman';
 import { Footer } from './footer/footer';
+import { Study } from './pages/study/study';
 
 export class App extends Component {
     render() {
@@ -52,8 +53,11 @@ export class App extends Component {
                             <Route path="/mini-games/hangman">
                                 <Hangman />
                             </Route>
-                            <Route path="/main">
+                            <Route exact path="/main">
                                 <Main />
+                            </Route>
+                            <Route path="/main/study">
+                                <Study />
                             </Route>
                             <Route path="/stats">
                                 <Stats />

@@ -1,3 +1,25 @@
 .button {
-
+  width: 250px;
+  height: 50px;
+  background: #092c70;
+  border: none !important;
+  border-radius: 7px;
+  font-family: "OpenSans", sans-serif;
+  font-weight: bold;
+  margin: 10px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 20px;
+  line-height: 27px;
+  color: #ffffff;
+  &:hover {
+    cursor: pointer;
+    background-color: #0f4ab4;
+  }
+  &:active,
+  &:focus {
+    outline: none !important;
+  }
 }
