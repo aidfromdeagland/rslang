@@ -1,5 +1,42 @@
 .word-card {
   display: flex;
   flex-direction: column;
-  border-bottom: 2px solid red;
+  align-items: center;
+  padding: 5px;
+  border-bottom: 2px solid #092c70;
+
+
+  &__mainContainer {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-around;
+  }
+
+  &__mainTextContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+  }
+
+  &__image {
+    max-height: 195px;
+    width: auto;
+    border-radius: 7px;
+    box-shadow: 0 0 3px 1px #111111;
+  }
+
+  &__additionalContainer {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+  }
+
+  &__training-info {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+  }
 }

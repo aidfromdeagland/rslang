@@ -1,35 +1,42 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import './vocabulary.scss';
-import { WordList } from './wordList';
+
+import {
+    Tab, Tabs, TabList, TabPanel,
+} from 'react-tabs';
+import 'react-tabs/style/react-tabs.css';
+
 import { wordsMockLearned, wordsMockDifficult, wordsMockDeleted } from './tempMock';
-import { NavLink } from 'react-router-dom';
+import { WordList } from './wordList';
 
 export class Vocabulary extends Component {
     constructor(props) {
         super(props);
-        this.learnedWords = props.learnedWords;
-        this.difficultWords = props.difficultWords;
-        this.removedWords = props.removedWords;
+        this.learnedWords = wordsMockLearned;
+        this.difficultWords = wordsMockDifficult;
+        this.deletedWords = wordsMockDeleted;
     }
 
     render() {
         return (
-            <div className="vocabulary">
-                <ul className="vocabulary__tabs">
-                    <li className="vocabulary__tab">
-                        <NavLink to="vocabulary/learned">Learned words</NavLink>
-                    </li>
-                    <li className="vocabulary__tab">
-                        <NavLink to="vocabulary/difficult">Difficult words</NavLink>
-                    </li>
-                    <li className="vocabulary__tab">
-                        <NavLink to="vocabulary/deleted">Difficult words</NavLink>
-                    </li>
-                </ul>
-                <WordList words={wordsMockLearned} />
-            </div>
+            <Tabs className="vocabulary" selectedTabClassName="vocabulary__tab_active" defaultFocus>
+                <TabList className="vocabulary__tab-list">
+                    <Tab className="vocabulary__tab">Learned</Tab>
+                    <Tab className="vocabulary__tab">Difficult</Tab>
+                    <Tab className="vocabulary__tab">Deleted</Tab>
+                </TabList>
+
+                <TabPanel className="vocabulary__panel">
+                    <WordList words={this.learnedWords} />
+                </TabPanel>
+                <TabPanel className="vocabulary__panel">
+                    <WordList words={this.difficultWords} />
+                </TabPanel>
+                <TabPanel className="vocabulary__panel">
+                    <WordList words={this.deletedWords} />
+                </TabPanel>
+            </Tabs>
         );
     }
 }
@@ -38,10 +45,4 @@ Vocabulary.defaultProps = {
     learnedWords: [],
     difficultWords: [],
     removedWords: [],
-};
-
-Vocabulary.propTypes = {
-    learnedWords: PropTypes.arrayOf(PropTypes.object),
-    difficultWords: PropTypes.arrayOf(PropTypes.object),
-    removedWords: PropTypes.arrayOf(PropTypes.object),
 };
