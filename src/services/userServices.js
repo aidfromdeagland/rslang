@@ -1,4 +1,5 @@
 import { backend } from '../constants/globalConstants';
+import { ServiceError } from './serviceError';
 
 export class UserService {
     static async registration(email, password) {
@@ -15,7 +16,9 @@ export class UserService {
             const content = await rawResponse.json();
             return content; // { email: string; password: string; }
         }
-        if (rawResponse.status === 422) throw Error('Incorrect e-mail or password');
+        if (rawResponse.status === 422) {
+            throw new ServiceError('Incorrect e-mail or password', rawResponse.status);
+        }
         const errorText = await rawResponse.text();
         throw Error(errorText);
     }
@@ -34,7 +37,9 @@ export class UserService {
             const content = await rawResponse.json();
             return content; // { message: string; token: string; userId: string; }
         }
-        if (rawResponse.status === 403) throw Error('Incorrect e-mail or password');
+        if (rawResponse.status === 403) {
+            throw new ServiceError('Incorrect e-mail or password', rawResponse.status);
+        }
         const errorText = await rawResponse.text();
         throw Error(errorText);
     }
@@ -53,8 +58,12 @@ export class UserService {
             const content = await rawResponse.json();
             return content; // { message: string; token: string; userId: string; }
         }
-        if (rawResponse.status === 401) throw Error('Access token is missing or invalid');
-        if (rawResponse.status === 404) throw Error('User not found');
+        if (rawResponse.status === 401) {
+            throw new ServiceError('Access token is missing or invalid', rawResponse.status);
+        }
+        if (rawResponse.status === 404) {
+            throw new ServiceError('User not found', rawResponse.status);
+        }
         const errorText = await rawResponse.text();
         throw Error(errorText);
     }
