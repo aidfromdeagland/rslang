@@ -4,10 +4,9 @@ import { StatisticService } from './statisticServices';
 
 export const wordServiceTest = async function wordServiceTest() {
     try {
-        const userAggWords22 = await WordService.getUserAggWords(0, true, { difficulty: 'weak' });
-        const userAggWords2 = await WordService.getUserAggWords(0, true, { 'userWord.difficulty': 'hard' });
-        const userAggWords3 = await WordService.getUserAggWords(0, true, { difficulty: 'weak', 'optional.row': 2 });
-        const userAggWords32 = await WordService.getUserAggWords(0, true, {
+        const userAggWords2 = await WordService.getUserAggWords(0, { 'userWord.difficulty': 'hard' });
+        const userAggWords3 = await WordService.getUserAggWords(0, { $or: [{ 'userWord.difficulty': 'easy' }, { userWord: null }] });
+        const userAggWords32 = await WordService.getUserAggWords(0, {
             $and: [
                 {
                     $or: [

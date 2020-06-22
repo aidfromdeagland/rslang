@@ -178,13 +178,9 @@ export class WordService {
         throw new ServiceError(errorText, rawResponse.status);
     }
 
-    static async getUserAggWords(group, onlyUserWords = true, filter = null, wordsPerPage = 20) {
-        let url = `${backend}/users/${User.userId}/aggregatedWords`
-            + `?group=${group}&wordsPerPage=${wordsPerPage}&onlyUserWords=${onlyUserWords}`;
-        if (filter) {
-            // exemple: {"difficulty":"hard", "optional.key":"value"}
-            url += `&filter=${JSON.stringify(filter)}`;
-        }
+    static async getUserAggWords(group, filter, wordsPerPage = 20) {
+        const url = `${backend}/users/${User.userId}/aggregatedWords`
+            + `?group=${group}&filter=${JSON.stringify(filter)}&wordsPerPage=${wordsPerPage}`;
         // url = 'https://afternoon-falls-25894.herokuapp.com/users/5edcc9c356c3d600176edc54/aggregatedWords?group=0&wordsPerPage=20&onlyUserWords=true&filter={"userWord.difficulty":"weak"}';
         const rawResponse = await fetch(url, {
             method: 'GET',
@@ -217,7 +213,7 @@ export class WordService {
         });
         if (rawResponse.ok) {
             const content = await rawResponse.json();
-            return content; // IWord // TODO Проверить
+            return content; // IAggWord
         }
         if (rawResponse.status === 401) {
             throw new ServiceError('Access token is missing or invalid', rawResponse.status);
