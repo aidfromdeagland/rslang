@@ -2,29 +2,28 @@ import React, { Component } from 'react';
 import './main.scss';
 import { Button } from '../../shared/button';
 import { Modal } from './Modal';
-import { Dropdown } from './Dropdown';
-import { NavLink } from 'react-router-dom';
-
-import {Modal2} from './Modal2';
+import { Dropdown } from './dropDown/Dropdown';
+// import { NavLink } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Link, NavLink } from "react-router-dom";
 
 export class Options extends Component {
     constructor(props) {
         super(props);
         this.state = {
             isOpenModal: false,
-            notWordForLearn: false
-        }
+            notWordForLearn: false,
+        };
     }
 
     handleCloseModal = () => {
         this.setState(prev => ({
-            isOpenModal: !prev.isOpenModal
+            isOpenModal: !prev.isOpenModal,
         }));
     }
 
     handleClickSettings = () => {
         this.setState(prev => ({
-            isOpenModal: !prev.isOpenModal
+            isOpenModal: !prev.isOpenModal,
         }));
     }
 
@@ -35,7 +34,7 @@ export class Options extends Component {
                 notWordForLearn: true
             });
             this.setState(prev => ({
-                isOpenModal: !prev.isOpenModal
+                isOpenModal: !prev.isOpenModal,
             }));
         }
     }
@@ -52,14 +51,19 @@ export class Options extends Component {
                     <Dropdown />
                 </div>
                 <div className="options-learning">
-                    <NavLink to={`/main/study`} className='learning-words' >
+                    <NavLink to={{
+                        pathname: `/main/study`,
+                        title: {about: 'info'},
+                    }}
+                        // className='learning-words'
+                    >
                         <Button className="button" title='Learn new words' />
                     </NavLink>
                     <NavLink to={`/main/study`} className='learning-words'>
                         <Button className="button" title='Repeat words' />
                     </NavLink>
                 </div>
-            </div>
+            </div >
         );
     }
 }

@@ -4,6 +4,7 @@ import { InputContainer } from './InputContainer';
 export class Answer extends Component {
 
     createContext = () => {
+        console.log(this.props)
         const context = this.props.context.split(/(\s+)/);
         const total = context.map((word, index) => {
             if (/<i>(.*?)<\/i>/.test(word) || /<b>(.*?)<\/b>/.test(word) || context.length === 1) {

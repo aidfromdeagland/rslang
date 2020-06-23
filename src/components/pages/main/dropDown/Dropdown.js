@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './dropdown.scss';
-import { Button } from '../../shared/button';
+import { Button } from '../../../shared/button';
 import { DropdownList } from './DropdownList';
 
 export class Dropdown extends Component {
@@ -10,8 +10,8 @@ export class Dropdown extends Component {
             isDropWordOpen: false,
             isDropCardsOpen: false,
             numberWords: 1,
-            numberCards: 1
-        }
+            numberCards: 1,
+        };
     }
 
     chooseNumberWords = (number) => {

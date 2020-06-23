@@ -47,7 +47,7 @@ export class Progress extends Component {
                     </div>
                     <div className="all-learned-words">
                         All words you learned:
-        <em>{this.state.allLearnedWords}</em>
+                        <em>{this.state.allLearnedWords}</em>
                     </div>
                 </div>
                 <div className="progress-container_level">
