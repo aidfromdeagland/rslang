@@ -20,7 +20,7 @@ export class Nav extends Component {
 
     handleClick(e) {
         const { closeMenu } = this.props;
-        if (this.node.parentElement.contains(e.target)) {
+        if (this.node.parentElement.contains(e.target) && e.target.className !== 'header__container') {
             return;
         }
         closeMenu(false);
@@ -49,9 +49,9 @@ export class Nav extends Component {
                             <div className="navigation__icon navigation__icon_main" />
                             <span>Main</span>
                         </NavLink>
-                   </li>
+                    </li>
                     <li aria-hidden onClick={this.closeByLink}>
-                        <NavLink exact activeClassName="link_active" to="/vocabulary">                                     
+                        <NavLink exact activeClassName="link_active" to="/vocabulary">
                             <div className="navigation__icon navigation__icon_vocabulary" />
                             <span>Vocabulary</span>
                         </NavLink>
