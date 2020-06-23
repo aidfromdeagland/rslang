@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './word.scss';
 import PropTypes from 'prop-types';
+import { Button } from '../../shared/button';
 
 const mediaPrefixUrl = 'https://raw.githubusercontent.com/aidfromdeagland/rslang-data/master/';
 
@@ -25,12 +26,19 @@ export class VocabularyWord extends Component {
         this.repetitions = `${Math.floor(Math.random() * 15) + 1}`;
     }
 
+    onAudioClickHandler = () => {
+        const audioElem = document.querySelector('.vocabulary__speaker');
+        audioElem.src = this.audio;
+        audioElem.play();
+    }
+
     render() {
         return (
             <li className="vocabulary__word word-card">
                 <div className="word-card__mainContainer">
-                    <div className="word-card__mainTextContent">
+                    <div className="word-card__mainTextContainer">
                         <h4>{ this.word }</h4>
+                        <Button title="" className="vocabulary__button vocabulary__button_audio" isDisabled={false} onClick={this.onAudioClickHandler} />
                         <p>{ this.transcription }</p>
                         <p>{ this.wordTranslate }</p>
                     </div>

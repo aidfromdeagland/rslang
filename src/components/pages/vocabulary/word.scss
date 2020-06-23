@@ -15,14 +15,18 @@
 
   &__mainTextContainer {
     display: flex;
+    height: 100%;
     flex-direction: column;
-    justify-content: space-between;
-
+    justify-content: space-around;
+    align-items: center;
+    flex-grow: 1;
   }
 
   &__image {
-    max-height: 195px;
-    width: auto;
+    max-width: 50%;
+    min-width: 100px;
+    height: auto;
+    height: auto;
     border-radius: 7px;
     box-shadow: 0 0 3px 1px #111111;
   }
@@ -35,6 +39,7 @@
   }
 
   &__training-info {
+    margin-top: 5px;
     display: flex;
     width: 100%;
     justify-content: space-between;
