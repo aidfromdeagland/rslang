@@ -9,20 +9,25 @@ export class Progress extends Component {
             choseToStudy: 30,
             learnedToday: 10,
             needLearn: 20,
-            allLearnedWords: 189
+            allLearnedWords: 189,
         };
         this.state = {
             learnedPercent: this.calculatePercentageWords(this.progressForExample.choseToStudy, this.progressForExample.learnedToday),
             needLearnPercent: this.calculatePercentageWords(this.progressForExample.choseToStudy, this.progressForExample.needLearn),
-            allLearnedWords: this.progressForExample.allLearnedWords
+            allLearnedWords: this.progressForExample.allLearnedWords,
         };
     }
 
     calculatePercentageWords = (allWord, words) => {
-        return words * 100 / allWord;
+        return (words * 100) / allWord;
     }
 
     render() {
+        const {
+            learnedPercent,
+            needLearnPercent,
+            allLearnedWords,
+        } = this.state;
         return (
             <div className="main-page_progress-container">
                 <div className="progress-container_progress">
@@ -33,7 +38,7 @@ export class Progress extends Component {
                             <em>10</em>
                         </div>
                         <div className="progress-bar progress-bar_learned">
-                            <div className="progress-percent" style={{ width: `${this.state.learnedPercent}%` }} />
+                            <div className="progress-percent" style={{ width: `${learnedPercent}%` }} />
                         </div>
                     </div>
                     <div className="need-words">
@@ -42,12 +47,12 @@ export class Progress extends Component {
                             <em>10</em>
                         </div>
                         <div className="progress-bar progress-bar_need-learn">
-                            <div className="progress-percent" style={{ width: `${this.state.needLearnPercent}%` }} />
+                            <div className="progress-percent" style={{ width: `${needLearnPercent}%` }} />
                         </div>
                     </div>
                     <div className="all-learned-words">
                         All words you learned:
-                        <em>{this.state.allLearnedWords}</em>
+                        <em>{allLearnedWords}</em>
                     </div>
                 </div>
                 <div className="progress-container_level">

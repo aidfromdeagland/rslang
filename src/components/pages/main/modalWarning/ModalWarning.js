@@ -1,19 +1,18 @@
 import React, { Component } from 'react';
-import './modal.scss';
-import { Checkbox } from './CheckBox';
-import { Button } from '../../shared/button';
+import '../modal.scss';
+import { Button } from '../../../shared/button';
 
 export class Modal2 extends Component {
     constructor(props) {
         super(props);
         this.state = {
             isOpenModal: false,
-        }
+        };
     }
 
     handleCloseModal = () => {
-        this.setState(prev => ({
-            isOpenModal: !prev.isOpenModal
+        this.setState((prev) => ({
+            isOpenModal: !prev.isOpenModal,
         }));
     }
 

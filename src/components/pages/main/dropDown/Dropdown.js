@@ -15,35 +15,41 @@ export class Dropdown extends Component {
     }
 
     chooseNumberWords = (number) => {
-        this.setState({numberWords: number});
+        this.setState({ numberWords: number });
     }
 
     chooseNumberCards = (number) => {
-        this.setState({numberCards: number});
+        this.setState({ numberCards: number });
     }
 
     handleClickDropdownWords = () => {
-        this.setState(prev => ({
-            isDropWordOpen: !prev.isDropWordOpen
+        this.setState((prev) => ({
+            isDropWordOpen: !prev.isDropWordOpen,
         }));
     }
 
     handleClickDropdownCards = () => {
-        this.setState(prev => ({
-            isDropCardsOpen: !prev.isDropCardsOpen
+        this.setState((prev) => ({
+            isDropCardsOpen: !prev.isDropCardsOpen,
         }));
     }
 
     render() {
+        const {
+            isDropWordOpen,
+            numberWords,
+            numberCards,
+            isDropCardsOpen,
+        } = this.state;
         return (
             <div className="settings__options_container">
-                <div className={`dropdown ${this.state.isDropWordOpen ? 'open' : ''}`}>
-                    <Button className="mainmenubtn button" title={`Learn words a day: ${this.state.numberWords}`} onClick={this.handleClickDropdownWords} />
-                    {this.state.isDropWordOpen ? <DropdownList chooseNumber={this.chooseNumberWords} closeDropdown={this.handleClickDropdownWords} /> : null}
+                <div className={`dropdown ${isDropWordOpen ? 'open' : ''}`}>
+                    <Button className="mainmenubtn button" title={`Learn words a day: ${numberWords}`} onClick={this.handleClickDropdownWords} />
+                    {isDropWordOpen ? <DropdownList chooseNumber={this.chooseNumberWords} closeDropdown={this.handleClickDropdownWords} /> : null}
                 </div>
-                <div className={`dropdown ${this.state.isDropCardsOpen ? 'open' : ''}`}>
-                    <Button className="mainmenubtn button" title={`Number of cards a day: ${this.state.numberCards}`} onClick={this.handleClickDropdownCards} />
-                    {this.state.isDropCardsOpen ? <DropdownList chooseNumber={this.chooseNumberCards} closeDropdown={this.handleClickDropdownCards} /> : null}
+                <div className={`dropdown ${isDropCardsOpen ? 'open' : ''}`}>
+                    <Button className="mainmenubtn button" title={`Number of cards a day: ${numberCards}`} onClick={this.handleClickDropdownCards} />
+                    {isDropCardsOpen ? <DropdownList chooseNumber={this.chooseNumberCards} closeDropdown={this.handleClickDropdownCards} /> : null}
                 </div>
             </div>
         );

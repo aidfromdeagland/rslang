@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
 import './study.scss';
 import dynamic from '../../../assets/icons/dynamic.svg';
-import exampleImg from '../../../assets/images/example.jpg';
 import next from '../../../assets/images/next-arrow.png';
 import { Button } from '../../shared/button';
 import { Answer } from './Answer';
-import { dataForExample, settingsForExample } from './dataForExample';
 import { WordService } from '../../../services/wordServices';
 import { SettingService } from '../../../services/settingServices';
 import { Spinner } from '../../shared/spinner';
@@ -14,42 +12,54 @@ export class Study extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            maxWordsOfTheDay: 10,
-            wordCount: 1,
+            maxWordsOfTheDay: 0,
+            maxCardsOfTheDay: 0,
+            wordCount: 0,
             valueInput: '',
             isCorrectWord: null,
-            isLoading: true,
             isLoadSettings: false,
+            isLoadWords: false,
         };
     }
 
-    componentDidMount() {
-        if (!this.settings) {
-            this.getSettings();
-        }
-
+    async componentDidMount() {
+        this.loadData();
+        this.getSettings();
     }
 
     getSettings = async () => {
         const settings = await SettingService.get();
         this.settings = settings.optional;
+        this.setState({
+            maxWordsOfTheDay: this.settings.numberLearnWord,
+            maxCardsOfTheDay: this.settings.numberLearnCard,
+        });
+        this.createCard();
+        console.log(this.settings);
+        this.setState({ isLoadSettings: true });
+    }
+
+    createCard = () => {
+        const { wordCount } = this.state;
+        this.actualCard = this.words[wordCount];
         this.context = this.chooseLearnMethod();
-        console.log(this.context);
         this.audioContext = `audio${this.context.slice(4)}` || 'audio';
         this.dataForCard = {
-            context: dataForExample[this.context],
-            word: dataForExample.word,
-            wordTranslate: dataForExample.wordTranslate,
-            audioContext: `https://raw.githubusercontent.com/aidfromdeagland/rslang-data/master/${dataForExample[this.audioContext]}`,
-            audioWord: `https://raw.githubusercontent.com/aidfromdeagland/rslang-data/master/${dataForExample.audio}`,
-            translationContext: dataForExample[`${this.context}Translate`],
-            idWord: dataForExample.id,
-            wordImage: `https://raw.githubusercontent.com/aidfromdeagland/rslang-data/master/${dataForExample.image}`,
-            transcription: dataForExample.transcription
+            context: this.actualCard[this.context],
+            word: this.actualCard.word,
+            wordTranslate: this.actualCard.wordTranslate,
+            audioContext: `https://raw.githubusercontent.com/aidfromdeagland/rslang-data/master/${this.actualCard[this.audioContext]}`,
+            audioWord: `https://raw.githubusercontent.com/aidfromdeagland/rslang-data/master/${this.actualCard.audio}`,
+            translationContext: this.actualCard[`${this.context}Translate`],
+            idWord: this.actualCard.id,
+            wordImage: `https://raw.githubusercontent.com/aidfromdeagland/rslang-data/master/${this.actualCard.image}`,
+            transcription: this.actualCard.transcription,
         };
-        console.log(this.settings);
-        this.setState({isLoadSettings: true});
+    }
 
+    loadData = async () => {
+        this.words = await WordService.getWords(0, 0);
+        this.setState({ isLoadWords: true });
     }
 
     checkWord = () => {
@@ -63,24 +73,35 @@ export class Study extends Component {
     }
 
     handleSubmit = (event) => {
+        const { valueInput } = this.state;
         event.preventDefault();
-        const actualValue = this.state.valueInput.toLocaleLowerCase();
+        const actualValue = valueInput.toLocaleLowerCase();
 
-        if (actualValue === this.dataForCard.word) {
+        if (actualValue === this.dataForCard.word.toLocaleLowerCase()) {
             this.setState({
                 isCorrectWord: true,
             });
-
-            this.playAudio(this.dataForCard.audioContext);
-            return;
+            const audio = new Audio(this.dataForCard.audioContext);
+            audio.play();
+            audio.addEventListener('ended', () => {
+                this.setState((prev) => ({
+                    wordCount: prev.wordCount + 1,
+                }));
+                this.createCard();
+                this.setState({
+                    isCorrectWord: null,
+                    valueInput: '',
+                });
+            });
+        } else {
+            const audio = new Audio(this.dataForCard.audioWord);
+            audio.play();
+            this.prevValue = valueInput;
+            this.setState({
+                isCorrectWord: false,
+                valueInput: '',
+            });
         }
-
-        this.playAudio(this.dataForCard.audioWord);
-        this.prevValue = this.state.valueInput;
-        this.setState({
-            isCorrectWord: false,
-            valueInput: '',
-        });
     }
 
     handleChange = (event) => {
@@ -90,17 +111,12 @@ export class Study extends Component {
         });
     }
 
-    playAudio = (url) => {
-        const audio = new Audio(url);
-        audio.play();
-    }
-
     handleClickShowAnswer = () => {
         this.setState({
-            // isCorrectWord: true,
             valueInput: this.dataForCard.word,
         });
-        this.playAudio(this.dataForCard.audioContext);
+        const audio = new Audio(this.dataForCard.audioContext);
+        audio.play();
     }
 
     chooseLearnMethod = () => {
@@ -108,7 +124,6 @@ export class Study extends Component {
         const min = 0;
         const max = selectedSentence.length - 1;
         const randomNumb = this.randomInteger(min, max);
-        console.log(selectedSentence[randomNumb]);
         return selectedSentence[randomNumb];
     }
 
@@ -120,9 +135,15 @@ export class Study extends Component {
         return Math.round(rand);
     }
 
+    handleClickNext = (e) => {
+        this.handleSubmit(e);
+    }
+
     render() {
-        if (this.state.isLoadSettings) {
-            console.log(this.dataForCard)
+        const {
+            isLoadSettings, isLoadWords, valueInput, isCorrectWord,
+        } = this.state;
+        if (isLoadSettings && isLoadWords) {
             return (
                 <div className="study-page">
                     <div className="card-container">
@@ -150,8 +171,8 @@ export class Study extends Component {
                                         checkWord={this.checkWord}
                                         handleChange={this.handleChange}
                                         handleSubmit={this.handleSubmit}
-                                        valueInput={this.state.valueInput}
-                                        isCorrectWord={this.state.isCorrectWord}
+                                        valueInput={valueInput}
+                                        isCorrectWord={isCorrectWord}
                                     />
                                 </div>
                                 <div className="translation-container">
@@ -166,12 +187,14 @@ export class Study extends Component {
                             </div>
                         </section>
                         <div className="navigate-next">
-                            <img src={next} alt="next" />
+                            <Button className="btn-next-card" onClick={(e) => this.handleClickNext(e)}>
+                                <img src={next} alt="next" />
+                            </Button>
                         </div>
                     </div>
                 </div>
             );
-        } else {
-            return <Spinner />}
+        }
+        return <Spinner />;
     }
 }

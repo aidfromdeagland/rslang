@@ -2,68 +2,50 @@ import React, { Component } from 'react';
 import './main.scss';
 import { Button } from '../../shared/button';
 import { Modal } from './Modal';
-import { Dropdown } from './dropDown/Dropdown';
-// import { NavLink } from 'react-router-dom';
 import { BrowserRouter as Router, Route, Link, NavLink } from "react-router-dom";
 
 export class Options extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            isOpenModal: false,
-            notWordForLearn: false,
-        };
-    }
-
-    handleCloseModal = () => {
-        this.setState(prev => ({
-            isOpenModal: !prev.isOpenModal,
-        }));
-    }
-
-    handleClickSettings = () => {
-        this.setState(prev => ({
-            isOpenModal: !prev.isOpenModal,
-        }));
-    }
-
-    checkingForNewWordsToLearn = (event) => {
-        if (this.props.needLearnWordsToday < 1) {
-            event.preventDefault();
-            this.setState({
-                notWordForLearn: true
-            });
-            this.setState(prev => ({
-                isOpenModal: !prev.isOpenModal,
-            }));
-        }
-    }
-
     render() {
+        const {
+            isOpenModal,
+            closeModal,
+            settings,
+            onChangeInput,
+            clickSettings,
+            checkSettings,
+            onchangeCheckbox,
+        } = this.props;
         return (
             <div className="main-page_options">
-                {this.state.isOpenModal ? <Modal closeModal={this.handleCloseModal} /> : null}
-                {/* {(this.state.isOpenModal && this.state.notWordForLearn)  ? <Modal2
-                closeModal={this.handleCloseModal}
-                children='Choose words' /> : null} */}
+                {isOpenModal
+                    ? (
+                        <Modal
+                            closeModal={closeModal}
+                            settings={settings}
+                            onChangeInput={onChangeInput}
+                            onchangeCheckbox={onchangeCheckbox}
+                            clickSettings={clickSettings}
+                            checkSettings={checkSettings}
+                        />
+                    ) : null}
                 <div className="options-settings">
-                    <Button className="button" title='Settings' onClick={this.handleClickSettings} />
-                    <Dropdown />
+                    <Button className="button" title="Settings" onClick={clickSettings} />
+                    <NavLink to="/main/study" className="learning-words">
+                        <Button className="button btn-start" title="START" />
+                    </NavLink>
                 </div>
                 <div className="options-learning">
                     <NavLink to={{
-                        pathname: `/main/study`,
-                        title: {about: 'info'},
+                        pathname: '/main/study',
                     }}
-                        // className='learning-words'
                     >
-                        <Button className="button" title='Learn new words' />
+                        <Button className="button" title="Learn new words" />
                     </NavLink>
-                    <NavLink to={`/main/study`} className='learning-words'>
-                        <Button className="button" title='Repeat words' />
+                    <NavLink to="/main/study" className="learning-words">
+                        <Button className="button" title="Repeat words" />
                     </NavLink>
                 </div>
-            </div >
+            </div>
         );
     }
 }
