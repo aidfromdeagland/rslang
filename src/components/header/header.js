@@ -8,7 +8,6 @@ export class Header extends Component {
         this.closeMenu = this.closeMenu.bind(this);
         this.state = {
             isOpen: false,
-
         };
     }
 
