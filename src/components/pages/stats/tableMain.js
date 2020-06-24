@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
-const Row = ({
-    maxNew, maxRight, total,
-}) => (
+const Row = ({ maxNew, maxRight, total }) => (
     <div className="row">
         <div>{maxNew}</div>
         <div>{maxRight}</div>
         <div>{total}</div>
-
     </div>
 );
 export class TableMain extends Component {
@@ -16,7 +14,7 @@ export class TableMain extends Component {
         this.state = {
             data: [
                 {
-                    maxNew: '', maxRight: '', total: '',
+                    maxNew: null, maxRight: null, total: null,
                 },
 
             ],
@@ -25,10 +23,15 @@ export class TableMain extends Component {
 
     render() {
         const { data } = this.state;
-        const rows = data.map((rowData) => <Row {...rowData} />);
+        const rows = data.map((rowData, index) => (
+            <Row
+                key={index}
+                {...rowData}
+            />
+        ));
+        console.log(rows);
 
         return (
-
             <div className="table">
                 <h1>Main statistics</h1>
                 <div className="header">
@@ -44,3 +47,9 @@ export class TableMain extends Component {
         );
     }
 }
+
+TableMain.propTypes = {
+    maxNew: PropTypes.number.isRequired,
+    maxRight: PropTypes.number.isRequired,
+    total: PropTypes.number.isRequired,
+};

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 const Row = ({
     game, total, win, lose, success,
@@ -18,22 +19,22 @@ export class TableGames extends Component {
         this.state = {
             data: [
                 {
-                    game: 'SpeakIt', total: '', win: '', lose: '', success: '',
+                    game: 'SpeakIt', total: null, win: null, lose: null, success: null,
                 },
                 {
-                    game: 'English Puzzle', total: '', win: '', lose: '', success: '',
+                    game: 'English Puzzle', total: null, win: null, lose: null, success: null,
                 },
                 {
-                    game: 'Savannh', total: '', win: '', lose: '', success: '',
+                    game: 'Savannh', total: null, win: null, lose: null, success: null,
                 },
                 {
-                    game: 'Audio Call', total: '', win: '', lose: '', success: '',
+                    game: 'Audio Call', total: null, win: null, lose: null, success: null,
                 },
                 {
-                    game: 'Sprint', total: '', win: '', lose: '', success: '',
+                    game: 'Sprint', total: null, win: null, lose: null, success: null,
                 },
                 {
-                    game: 'Hangman', total: '', win: '', lose: '', success: '',
+                    game: 'Hangman', total: null, win: null, lose: null, success: null,
                 },
 
             ],
@@ -42,7 +43,12 @@ export class TableGames extends Component {
 
     render() {
         const { data } = this.state;
-        const rows = data.map((rowData) => <Row {...rowData} />);
+        const rows = data.map((rowData, index) => (
+            <Row
+                key={index}
+                {...rowData}
+            />
+        ));
 
         return (
 
@@ -63,3 +69,11 @@ export class TableGames extends Component {
         );
     }
 }
+
+TableGames.propTypes = {
+    game: PropTypes.string.isRequired,
+    total: PropTypes.number.isRequired,
+    win: PropTypes.number.isRequired,
+    lose: PropTypes.number.isRequired,
+    success: PropTypes.number.isRequired,
+};

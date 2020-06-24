@@ -32,7 +32,7 @@ export class Chart extends Component {
                     },
                 ],
             },
-            amount: 4,
+            amount: null,
         };
     }
 

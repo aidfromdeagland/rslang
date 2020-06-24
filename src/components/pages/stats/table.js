@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { TableGames } from '../stats/tableGames';
-import { TableMain } from '../stats/tableMain';
+import { TableGames } from './tableGames';
+import { TableMain } from './tableMain';
 
 export class Table extends Component {
     render() {

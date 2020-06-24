@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { Button } from '../../shared/button';
 import { Chart } from './chart';
 
@@ -10,9 +10,9 @@ export class Stats extends Component {
         return (
             <div className="statistic">
                 <div>
-                    <Link to="notFound/table">
+                    <NavLink to="/stats/table">
                         <Button className="statistic__btn" title="Details" />
-                    </Link>
+                    </NavLink>
                 </div>
 
                 <Chart />
