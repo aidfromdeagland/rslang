@@ -7,6 +7,8 @@ import {
 import 'react-tabs/style/react-tabs.css';
 
 import { wordsMockLearned, wordsMockDifficult, wordsMockDeleted } from './tempMock';
+import { settingsForExample } from '../study/dataForExample';
+import { randomizeSettingsValues } from '../../../services/temporaryServices';
 import { WordList } from './wordList';
 
 export class Vocabulary extends Component {
@@ -15,13 +17,12 @@ export class Vocabulary extends Component {
         this.learnedWords = wordsMockLearned;
         this.difficultWords = wordsMockDifficult;
         this.deletedWords = wordsMockDeleted;
+        this.settings = randomizeSettingsValues(settingsForExample);
     }
 
     render() {
         return (
             <div className="content-container">
-                {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
-                <audio className="vocabulary__speaker" src="" />
                 <Tabs className="vocabulary" selectedTabClassName="vocabulary__tab_active" defaultFocus>
                     <TabList className="vocabulary__tab-list">
                         <Tab className="vocabulary__tab">Learned</Tab>
@@ -30,13 +31,13 @@ export class Vocabulary extends Component {
                     </TabList>
 
                     <TabPanel className="vocabulary__panel">
-                        <WordList words={this.learnedWords} />
+                        <WordList words={this.learnedWords} settings={this.settings} />
                     </TabPanel>
                     <TabPanel className="vocabulary__panel">
-                        <WordList words={this.difficultWords} />
+                        <WordList words={this.difficultWords} settings={this.settings} />
                     </TabPanel>
                     <TabPanel className="vocabulary__panel">
-                        <WordList words={this.deletedWords} />
+                        <WordList words={this.deletedWords} settings={this.settings} />
                     </TabPanel>
                 </Tabs>
             </div>
@@ -48,4 +49,15 @@ Vocabulary.defaultProps = {
     learnedWords: [],
     difficultWords: [],
     removedWords: [],
+    settings: {
+        mainSettings: {
+            word: true,
+            sentence: false,
+            textMeaning: false,
+        },
+        additionalSettings: {
+            transcription: true,
+            image: true,
+        },
+    },
 };

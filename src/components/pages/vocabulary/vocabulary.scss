@@ -1,3 +1,12 @@
+@font-face {
+  font-family: "Literata";
+  src: url("../../../assets/fonts/Literata-Bold.ttf") format("ttf"),
+  url("../../../assets/fonts/Literata-Regular.ttf") format("ttf"),
+  url("../../../assets/fonts/Literata-VariableFont.ttf") format("ttf");
+  font-weight: normal;
+  font-style: normal;
+}
+
 .vocabulary {
   box-sizing: border-box;
   position: relative;
@@ -6,7 +15,7 @@
   display: flex;
   flex-direction: column;
   align-content: center;
-  background-color: #ffffff;
+  font-family: Literata, "Open Sans", sans-serif;
 
   * {
     box-sizing: inherit;
@@ -14,6 +23,10 @@
 
   p, h4 {
     margin: 0;
+  }
+
+  h4 {
+    color: #092c70;
   }
 
   &__tab-list {
@@ -91,6 +104,7 @@
 
 .content-container {
   position: relative;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
   max-width: 1020px;
@@ -105,3 +119,4 @@
     }
   }
 }
+

@@ -5,6 +5,10 @@
   padding: 5px;
   border-bottom: 2px solid #092c70;
 
+  &:last-of-type {
+    border-bottom: none;
+  }
+
 
   &__mainContainer {
     display: flex;
@@ -43,5 +47,18 @@
     display: flex;
     width: 100%;
     justify-content: space-between;
+  }
+}
+
+@media (max-width: 699px) {
+  .word-card {
+    &__mainContainer {
+      flex-direction: column;
+    }
+
+    &__image {
+      max-width: 100%;
+      min-width: 100px;
+    }
   }
 }

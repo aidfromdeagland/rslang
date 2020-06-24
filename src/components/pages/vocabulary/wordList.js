@@ -7,12 +7,15 @@ export class WordList extends Component {
     constructor(props) {
         super(props);
         this.words = props.words;
+        this.settings = props.settings;
     }
 
     render() {
         return (
             <ul className="vocabulary__words">
-                { this.words.map((word) => <VocabularyWord word={word} key={word.id} />) }
+                { this.words.map(
+                    (word) => <VocabularyWord word={word} key={word.id} settings={this.settings} />,
+                    ) }
             </ul>
         );
     }
@@ -20,8 +23,10 @@ export class WordList extends Component {
 
 WordList.defaultProps = {
     words: [],
+    settings: [],
 };
 
 WordList.propTypes = {
     words: PropTypes.arrayOf(PropTypes.object),
+    settings: PropTypes.object,
 };
