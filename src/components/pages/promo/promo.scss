@@ -1,11 +1,25 @@
+@font-face {
+  font-family: "Literata";
+  src: url("../../../assets/fonts/Literata-Bold.ttf") format("ttf"),
+  url("../../../assets/fonts/Literata-Regular.ttf") format("ttf"),
+  url("../../../assets/fonts/Literata-VariableFont.ttf") format("ttf");
+  font-weight: normal;
+  font-style: normal;
+}
+
 .promo {
   width: 100%;
   display: grid;
   grid-template-columns: 1fr;
   color: #111111;
-  background-color: #FAEDE7;
+  font-family: Literata;
 
-  &__slogan {
+
+  &__slogans {
+
+  }
+
+  &_-description {
 
   }
 
@@ -13,9 +27,6 @@
 
   }
 
-  &__instructions {
-
-  }
 
   &__presentation {
 
