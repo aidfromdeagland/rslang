@@ -12,25 +12,8 @@
   display: grid;
   grid-template-columns: 1fr;
   color: #111111;
-  font-family: Literata;
+  font-family: Literata, "Open Sans", sans-serif;
 
-
-  &__slogans {
-
-  }
-
-  &_-description {
-
-  }
-
-  &__advantages {
-
-  }
-
-
-  &__presentation {
-
-  }
 
   > * {
     padding: 30px 0;
