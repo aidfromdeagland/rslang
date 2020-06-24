@@ -35,7 +35,6 @@ export class Study extends Component {
             maxCardsOfTheDay: this.settings.numberLearnCard,
         });
         this.createCard();
-        console.log(this.settings);
         this.setState({ isLoadSettings: true });
     }
 
@@ -74,7 +73,9 @@ export class Study extends Component {
 
     handleSubmit = (event) => {
         const { valueInput } = this.state;
-        event.preventDefault();
+        if (event) {
+            event.preventDefault();
+        }
         const actualValue = valueInput.toLocaleLowerCase();
 
         if (actualValue === this.dataForCard.word.toLocaleLowerCase()) {
