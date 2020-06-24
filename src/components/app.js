@@ -20,6 +20,7 @@ import { Sprint } from './games/sprint/Sprint';
 import { Hangman } from './games/hangman/Hangman';
 import { Footer } from './footer/footer';
 import { Study } from './pages/study/study';
+import { Table } from './pages/notFound/table';
 
 export class App extends Component {
     render() {
@@ -61,6 +62,9 @@ export class App extends Component {
                             </Route>
                             <Route path="/stats">
                                 <Stats />
+                            </Route>
+                            <Route path="/notFound/table">
+                                <Table />
                             </Route>
                             <Route path="/vocabulary">
                                 <Vocabulary />

@@ -6,46 +6,92 @@ export class Chart extends Component {
     constructor(props) {
         super(props);
         this.state = {
+
             charData: {
-                labels: ['600', '1200', '1800', '2400', '3000', '3600'],
                 datasets: [
                     {
-                        label: 'ammount words you learn',
-                        data: [
-                            2,
-                            10,
-                            40,
-                            45,
-                            45,
-                            50,
-                        ],
+                        label: 'amount words you learned',
+                        data: [{
+                            x: 0,
+                            y: 0,
+                        }, {
+                            x: 100,
+                            y: 3,
+                        }, {
+                            x: 1000,
+                            y: 27,
+                        }, {
+                            x: 3000,
+                            y: 83,
+                        }],
                         backgroundColor: [
                             'rgba(255, 99, 132, 0.6)',
                         ],
-                        pointRadius: 1,
+                        pointRadius: 3,
+
                     },
                 ],
-
             },
+            amount: 4,
         };
     }
 
     render() {
+        const { charData, amount } = this.state;
+
         return (
             <div className="chart">
                 <Line
-                    data={this.state.charData}
+
+                    data={charData}
                     options={{
                         title: {
                             display: true,
                             text: 'Look at your progress!',
                             fontSize: 25,
+                            fontColor: '#092C70',
+                            padding: 25,
                         },
                         legend: {
                             display: true,
                             position: 'bottom',
                         },
-                        height: 1500,
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    max: 100,
+                                    min: 0,
+                                    stepSize: 10,
+                                },
+                            }],
+                            xAxes: [{
+                                type: 'linear',
+                                ticks: {
+                                    max: 3600,
+                                    min: 0,
+                                    stepSize: 300,
+                                },
+                            }],
+                        },
+                        tooltips: {
+                            xLabel: null,
+                            callbacks: {
+                                afterLabel: () => {
+                                    const option = {
+                                        day: 'numeric',
+                                        month: 'long',
+                                    };
+                                    return new Date().toLocaleString('en-US', option);
+                                },
+                                label: () => (`words a day: ${amount}`),
+                                title: () => null,
+                                labelColor: () => ({
+
+                                    backgroundColor: 'rgba(255, 99, 132, 0.6)',
+                                }),
+
+                            },
+                        },
 
                     }}
 
