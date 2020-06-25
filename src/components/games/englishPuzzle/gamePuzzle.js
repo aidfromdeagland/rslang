@@ -37,12 +37,6 @@ export class GamePuzzle extends Component {
         this.setState({ haveWords: true });
     }
 
-    // createDataForGame = () => {
-
-    // }
-
-
-
     render() {
         const { haveWords } = this.state;
         if (haveWords) {
