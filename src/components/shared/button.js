@@ -25,6 +25,7 @@ Button.propTypes = {
     onClick: PropTypes.func,
     className: PropTypes.string,
     isDisabled: PropTypes.bool,
+    children: PropTypes.node,
 };
 
 Button.defaultProps = {

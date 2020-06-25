@@ -3,7 +3,7 @@ import './study.scss';
 import dynamic from '../../../assets/icons/dynamic.svg';
 import next from '../../../assets/images/next-arrow.png';
 import { Button } from '../../shared/button';
-import { Answer } from './Answer';
+import { Answer } from './answer';
 import { WordService } from '../../../services/wordServices';
 import { SettingService } from '../../../services/settingServices';
 import { Spinner } from '../../shared/spinner';
@@ -125,6 +125,7 @@ export class Study extends Component {
         const min = 0;
         const max = selectedSentence.length - 1;
         const randomNumb = this.randomInteger(min, max);
+        console.log(selectedSentence[randomNumb])
         return selectedSentence[randomNumb];
     }
 

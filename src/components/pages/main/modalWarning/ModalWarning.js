@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import '../modal.scss';
 import { Button } from '../../../shared/button';
 
-export class Modal2 extends Component {
+export class ModalWarning extends Component {
     constructor(props) {
         super(props);
         this.state = {

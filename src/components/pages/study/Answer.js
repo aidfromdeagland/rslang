@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { InputContainer } from './InputContainer';
+import { InputContainer } from './inputContainer';
 
 export class Answer extends Component {
     createContext = () => {

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './modal.scss';
-import { Checkbox } from './CheckBox';
+import { Checkbox } from './checkBox';
 import { Button } from '../../shared/button';
 
 export class Modal extends Component {
