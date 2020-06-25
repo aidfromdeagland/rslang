@@ -39,7 +39,25 @@ a {
     max-width: 1020;
     display: flex;
     flex-direction: column;
-     align-items: center;
+     align-items: flex-end;
+     a {
+      text-decoration: none;
+    }
+
+    &__btn {
+      display: flex;
+      border: 1px solid transparent;
+      border-radius: 7px;
+      background-color: #0F4AB4;
+      color: #fff;
+      padding: 0.4rem 1rem;
+       cursor: pointer;
+      align-self: flex-end;
+      font-size: 1.1rem;
+      &:hover {
+        background-color:#092C70;
+            }
+  }
    
 
 .table {
@@ -48,6 +66,7 @@ a {
     display: flex;
     flex-direction: column;
     width: 70vw;
+   
 
      h1 {
          text-align: center;

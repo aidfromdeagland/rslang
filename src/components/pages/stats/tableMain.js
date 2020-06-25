@@ -29,7 +29,6 @@ export class TableMain extends Component {
                 {...rowData}
             />
         ));
-        console.log(rows);
 
         return (
             <div className="table">
