@@ -3,12 +3,13 @@ import PropTypes from 'prop-types';
 
 export class SavannahWord extends Component {
     render() {
-        const { word, onClick } = this.props;
+        const { word, id, onClick } = this.props;
         return (
-            <div className="card__transition top"
-                onClick={onClick}
+            <div
+                className="card__transition top"
+                onClick={() => console.log(id)}
             >
-            
+
                 {word}
             </div>
         );

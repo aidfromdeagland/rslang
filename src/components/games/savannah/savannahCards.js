@@ -3,23 +3,34 @@ import PropTypes from 'prop-types';
 
 export class SavannahCards extends Component {
     render() {
-        const {
-            translate, wrongTranslate1, wrongTranslate2, wrongTranslate3,
-        } = this.props;
+        const { translateWords, id } = this.props;
+        const cards = translateWords.sort(() => 0.5 - Math.random());
+
         return (
             <div className="container__cards">
-                <div className="card">{translate}</div>
-                <div className="card">{wrongTranslate1}</div>
-                <div className="card">{wrongTranslate2}</div>
-                <div className="card">{wrongTranslate3}</div>
+
+                { cards.map((word, index) => (
+                    <div
+                        className="card"
+                        key={index}
+                        onClick={() => {
+                            if (word.id === id) {
+                                console.log('yep');
+                            } else {
+                                console.log('nope');
+                            }
+                        }}
+                    >
+                        {word.translate}
+                    </div>
+                )) }
+
             </div>
+
         );
     }
 }
 
 SavannahCards.propTypes = {
-    translate: PropTypes.string.isRequired,
-    wrongTranslate1: PropTypes.string.isRequired,
-    wrongTranslate2: PropTypes.string.isRequired,
-    wrongTranslate3: PropTypes.string.isRequired,
+    translateWords: PropTypes.array.isRequired,
 };

@@ -44,35 +44,55 @@ export class Savannah extends Component {
             this.setState({
                 id: rightWord[wordInx].id,
                 word: rightWord[wordInx].word,
-                translate: rightWord[wordInx].wordTranslate,
-                wrongTranslate1: WrongWord1[wordInx].wordTranslate,
-                wrongTranslate2: WrongWord2[wordInx].wordTranslate,
-                wrongTranslate3: WrongWord3[wordInx].wordTranslate,
+                translateWords: [
+                    {
+                        translate: rightWord[wordInx].wordTranslate,
+                        id: rightWord[wordInx].id,
+                    },
+                    {
+                        translate: WrongWord2[wordInx].wordTranslate,
+                        id: WrongWord2[wordInx].id,
+                    },
+                    {
+                        translate: WrongWord2[wordInx].wordTranslate,
+                        id: WrongWord2[wordInx].id,
+                    },
+                    {
+                        translate: WrongWord3[wordInx].wordTranslate,
+                        id: WrongWord3[wordInx].id,
+                    },
+                ],
+
             }),
+            // console.log(translateWords.map((a) => ({ sort: Math.random(), value: a }))),
         );
     }
 
     render() {
         const {
-            word, translate, wrongTranslate1, wrongTranslate2, wrongTranslate3, lives, id,
+            word, translateWords, lives, id,
         } = this.state;
+        // console.log(translateWords);
         return (
             <div className="container">
                 <SavannahLives
                     lives={lives}
-
                 />
                 <SavannahWord
-
                     word={word}
-
+                    id={id}
                 />
-                <SavannahCards
-                    translate={translate}
-                    wrongTranslate1={wrongTranslate1}
-                    wrongTranslate2={wrongTranslate2}
-                    wrongTranslate3={wrongTranslate3}
-                />
+                {this.state.word
+                    && (
+                        <SavannahCards
+                            translateWords={translateWords}
+                            id={id}
+                            // translate={translate}
+                            // wrongTranslate1={wrongTranslate1}
+                            // wrongTranslate2={wrongTranslate2}
+                            // wrongTranslate3={wrongTranslate3}
+                        />
+                    )}
 
                 <SavannahImage />
             </div>
