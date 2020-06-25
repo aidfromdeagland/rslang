@@ -1,22 +1,22 @@
 import React, { Component } from 'react';
 import './startPage.scss';
-import { Game } from './Game';
+import { GamePuzzle } from './gamePuzzle';
 
 export class StartPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
             isStart: false,
-        }
+        };
     }
 
     handleClick = () => {
-        this.setState({isStart: true});
+        this.setState({ isStart: true });
     }
 
     render() {
         if (this.state.isStart) {
-            return <Game />;
+            return <GamePuzzle />;
         }
         return (
             <div id="start-page">

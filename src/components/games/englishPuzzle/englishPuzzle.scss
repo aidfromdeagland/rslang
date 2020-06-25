@@ -1,3 +1,17 @@
 .english-puzzle {
   background: #faede7;
+  display: flex;
+  max-width: 1020px;
+  justify-content: center;
+  margin: auto;
+  height: 100vh;
+  padding: 100px 30px;
+  .game-puzzle__container {
+    width: 100%;
+    .game-puzzle__header {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+    }
+  }
 }
