@@ -8,13 +8,10 @@ import './stats.scss';
 export class Stats extends Component {
     render() {
         return (
-            <div className="statistic">
-                <div>
-                    <NavLink to="/stats/table">
-                        <Button className="statistic__btn" title="Details" />
-                    </NavLink>
-                </div>
-
+            <div className="stats">
+                <NavLink className="stats__link" to="/stats/table">
+                    <Button className="stats__btn" title="Details" />
+                </NavLink>
                 <Chart />
             </div>
         );

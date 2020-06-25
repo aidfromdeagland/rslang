@@ -53,8 +53,8 @@ export class TableGames extends Component {
         return (
 
             <div className="table">
-                <h1>Statistics of mini-games</h1>
-                <div className="header">
+
+                <div className="table__header">
                     <div>Game</div>
                     <div>Rounds</div>
                     <div>Win</div>

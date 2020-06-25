@@ -7,6 +7,7 @@
 $bg-color: #faede7;
 $main-color: #e08d9d;
 $text-color: #111111;
+$secondary-color: #092c70;
 
 .navigation {
   &__list {
@@ -24,6 +25,7 @@ $text-color: #111111;
     flex-direction: column;
     justify-content: center;
     transition: all 0.5s ease-in-out;
+    box-shadow: 0 0 8px 1px $secondary-color;
 
     &-showed {
       left: 0;
@@ -31,7 +33,7 @@ $text-color: #111111;
 
     li {
       display: flex;
-     
+
       &:hover {
         background: #fff;
       }
@@ -81,6 +83,6 @@ $text-color: #111111;
     }
     &_aboutteam {
       background-image: url("./../../assets/icons/aboutteam.svg");
-    } 
+    }
   }
 }

@@ -8,10 +8,12 @@ export class Table extends Component {
     render() {
         return (
             <div className="tables">
-                <NavLink to="/stats">
+                <NavLink className="tables__link" to="/stats">
                     <Button className="tables__btn" title="Back to graph" />
                 </NavLink>
+                <h1>Main statistics</h1>
                 <TableMain />
+                <h1>Statistics of mini-games</h1>
                 <TableGames />
             </div>
         );

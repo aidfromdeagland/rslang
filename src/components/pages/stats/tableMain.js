@@ -32,8 +32,7 @@ export class TableMain extends Component {
 
         return (
             <div className="table">
-                <h1>Main statistics</h1>
-                <div className="header">
+                <div className="table__header">
                     <div>Max new words a day</div>
                     <div>Max right answers a day</div>
                     <div>Total words you learned!</div>
