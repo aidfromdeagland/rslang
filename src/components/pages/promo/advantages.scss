@@ -2,10 +2,11 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: linear-gradient(to bottom, #DACDC7, #FAEDE7, #DACDC7);
-  border-bottom: 3px solid #092C70;
+  background: transparent;
+  border-bottom: 2px solid #092C70;
 
   &-heading {
+    margin: 0;
     font-size: 30px;
     color: #092C70;
   }
@@ -19,4 +20,11 @@
   }
 }
 
+@media (max-width: 699px) {
+  .promo__advantages {
+    &-list {
+      grid-template-columns: 1fr;
+    }
+  }
+}
 

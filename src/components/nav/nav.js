@@ -20,6 +20,7 @@ export class Nav extends Component {
 
     handleClick(e) {
         const { closeMenu } = this.props;
+
         if (this.node.parentElement.contains(e.target) && e.target.className !== 'header__container') {
             return;
         }
@@ -43,6 +44,7 @@ export class Nav extends Component {
             >
                 <ul
                     className={isOpen ? 'navigation__list navigation__list-showed' : 'navigation__list'}
+
                 >
                     <li aria-hidden onClick={this.closeByLink}>
                         <NavLink exact activeClassName="link_active" to="/main">
