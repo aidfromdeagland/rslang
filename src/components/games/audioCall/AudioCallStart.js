@@ -5,6 +5,7 @@ import { createIncArray } from '../../../utils/utils';
 import { Spinner } from '../../shared/spinner';
 import { groupCount, pageCount } from '../../../constants/globalConstants';
 import { Repository } from './Repository';
+import { SimpleSelect } from './simpleSelect';
 
 export class AudioCallStart extends Component {
     constructor(props) {
@@ -12,12 +13,12 @@ export class AudioCallStart extends Component {
         this.state = { isLoading: false, group: 1, page: 10 };
     }
 
-    handleGroupChange(event) {
-        this.setState({ group: event.target.value });
+    handleGroupChange(group) {
+        this.setState({ group });
     }
 
-    handlePageChange(event) {
-        this.setState({ page: event.target.value });
+    handlePageChange(page) {
+        this.setState({ page });
     }
 
     handleStartGame() {
@@ -38,25 +39,25 @@ export class AudioCallStart extends Component {
         if (this.state.isGame) {
             return (null);
         }
-        const getGroupSelect = () => (
-            <select className="list" key="group" value={this.state.group} onChange={(e) => this.handleGroupChange(e)}>
-                {createIncArray(groupCount).map((o) => <option key={o}>{o}</option>)}
-            </select>
-        );
-        const getPageSelect = () => (
-            <select className="list" key="page" value={this.state.page} onChange={(e) => this.handlePageChange(e)}>
-                {createIncArray(pageCount).map((o) => <option key={o}>{o}</option>)}
-            </select>
-        );
 
         return (
             <div className="audio-call">
                 <h1 className="audio-call__header">Audio Call</h1>
-                {!this.state.modeIsUserWords
+                {!this.props.modeIsUserWords
                     && (
                         <div>
-                            { getGroupSelect() }
-                            { getPageSelect() }
+                            <SimpleSelect
+                                key="group"
+                                values={createIncArray(groupCount)}
+                                defaultValue={this.state.group}
+                                onChange={(v) => this.handleGroupChange(v)}
+                            />
+                            <SimpleSelect
+                                key="page"
+                                values={createIncArray(pageCount)}
+                                defaultValue={this.state.page}
+                                onChange={(v) => this.handlePageChange(v)}
+                            />
                         </div>
                     )}
                 <span className="audio-call__description">Select the translation of the spoken word</span>
@@ -80,4 +81,5 @@ AudioCallStart.propTypes = {
         checkLoading: PropTypes.func,
     }),
     startGame: PropTypes.func.isRequired,
+    modeIsUserWords: PropTypes.bool.isRequired,
 };

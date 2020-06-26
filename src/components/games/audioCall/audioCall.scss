@@ -30,13 +30,20 @@
         cursor: pointer;
         transition: background-color 0.5s ease-in-out;
         outline: none;
+        user-select: none;
         @media (hover: hover) {
             &:hover {
                 background-color: rgba($color: #0F4AB4, $alpha: 0.2);
             }
         }
+        &_correct {
+            background-color: rgba($color: #00F102, $alpha: 0.2);
+        }
+        &_error {
+            background-color: rgba($color: #F10002, $alpha: 0.2);
+        }
     }
-    &__do-not-know {
+    &__button {
         font-family: 'OpenSans', sans-serif;
         font-weight: bold;
         padding: 10px 20px;
@@ -45,6 +52,8 @@
         color: #ffffff;
         background-color: #092C70;
         border: none;
+        outline: none;
+        user-select: none;
         cursor: pointer;
         @media (hover: hover) {
             &:hover {

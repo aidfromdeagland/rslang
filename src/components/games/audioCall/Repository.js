@@ -33,7 +33,7 @@ export class Repository {
     //     }
     // }
 
-    isHaveNextWord() {
+    isHaveWord() {
         return this.indexWord < this.gameWordCount;
     }
 
@@ -60,10 +60,10 @@ export class Repository {
     }
 
     increment() {
-        if (!this.isHaveNextWord()) {
+        this.indexWord += 1;
+        if (!this.isHaveWord()) {
             return false;
         }
-        this.indexWord += 1;
         this.word = this.gameWords[this.indexWord];
         return true;
     }
