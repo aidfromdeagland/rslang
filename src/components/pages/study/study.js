@@ -24,7 +24,6 @@ export class Study extends Component {
 
     async componentDidMount() {
         this.loadData();
-        this.getSettings();
     }
 
     getSettings = async () => {
@@ -59,6 +58,7 @@ export class Study extends Component {
     loadData = async () => {
         this.words = await WordService.getWords(0, 0);
         this.setState({ isLoadWords: true });
+        await this.getSettings();
     }
 
     checkWord = () => {
@@ -125,7 +125,6 @@ export class Study extends Component {
         const min = 0;
         const max = selectedSentence.length - 1;
         const randomNumb = this.randomInteger(min, max);
-        console.log(selectedSentence[randomNumb])
         return selectedSentence[randomNumb];
     }
 

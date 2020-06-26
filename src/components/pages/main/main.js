@@ -59,7 +59,6 @@ export class Main extends Component {
     checkSettings = () => {
         const settingsValues = Object.values(this.state);
         if (!settingsValues.includes(true)) {
-            alert('choose main settings');
             return;
         }
         this.handleCloseModal();

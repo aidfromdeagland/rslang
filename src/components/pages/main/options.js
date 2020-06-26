@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './main.scss';
 import { BrowserRouter as Router, Route, Link, NavLink } from 'react-router-dom';
 import { Button } from '../../shared/button';
-import { Modal } from './modal';
+import { ModalSettings } from './modal';
 
 export class Options extends Component {
     render() {
@@ -19,7 +19,7 @@ export class Options extends Component {
             <div className="main-page_options">
                 {isOpenModal
                     ? (
-                        <Modal
+                        <ModalSettings
                             closeModal={closeModal}
                             settings={settings}
                             onChangeInput={onChangeInput}

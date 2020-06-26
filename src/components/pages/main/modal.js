@@ -3,7 +3,7 @@ import './modal.scss';
 import { Checkbox } from './checkBox';
 import { Button } from '../../shared/button';
 
-export class Modal extends Component {
+export class ModalSettings extends Component {
     render() {
         const {
             closeModal,
