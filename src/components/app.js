@@ -3,7 +3,6 @@ import './app.scss';
 import {
     BrowserRouter as Router, Route, Switch,
 } from 'react-router-dom';
-import { PropTypes } from 'prop-types';
 import { Header } from './header/header';
 import { AboutTeam } from './pages/aboutTeam/aboutTeam';
 import { Auth } from './pages/auth/auth';
@@ -20,6 +19,8 @@ import { AudioCall } from './games/audioCall/AudioCall';
 import { Sprint } from './games/sprint/Sprint';
 import { Hangman } from './games/hangman/Hangman';
 import { Footer } from './footer/footer';
+import { Study } from './pages/study/study';
+import { Table } from './pages/stats/table';
 
 export class App extends Component {
     render() {
@@ -28,7 +29,6 @@ export class App extends Component {
                 <div className="app">
                     <Header />
                     <main>
-
                         <Switch>
                             <Route path="/auth">
                                 <Auth />
@@ -54,11 +54,17 @@ export class App extends Component {
                             <Route path="/mini-games/hangman">
                                 <Hangman />
                             </Route>
-                            <Route path="/main">
+                            <Route exact path="/main">
                                 <Main />
                             </Route>
-                            <Route path="/stats">
+                            <Route path="/main/study">
+                                <Study />
+                            </Route>
+                            <Route exact path="/stats">
                                 <Stats />
+                            </Route>
+                            <Route path="/stats/table">
+                                <Table />
                             </Route>
                             <Route path="/vocabulary">
                                 <Vocabulary />
@@ -80,11 +86,3 @@ export class App extends Component {
         );
     }
 }
-
-App.defaultProps = {
-    text: PropTypes.string.isRequired,
-};
-
-App.propTypes = {
-    text: PropTypes.string,
-};

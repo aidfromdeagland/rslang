@@ -7,19 +7,25 @@ export class SavannahCards extends Component {
         const cards = translateWords.sort(() => 0.5 - Math.random());
 
         return (
-            <div className="container__cards">
+            <div className="savannah__cards">
 
                 { cards.map((word, index) => (
                     <div
-                        className="card"
+                        className="savannah__cards-card"
+                        aria-hidden
                         key={index}
                         onClick={() => {
                             if (word.id === id) {
                                 console.log('yep');
+                                this.props.getNextWord();
+                                this.props.resizeImage();
                             } else {
                                 console.log('nope');
+                                this.props.lostLive();
+                                this.props.getNextWord();
                             }
                         }}
+
                     >
                         {word.translate}
                     </div>
@@ -32,5 +38,6 @@ export class SavannahCards extends Component {
 }
 
 SavannahCards.propTypes = {
-    translateWords: PropTypes.array.isRequired,
+    id: PropTypes.string.isRequired,
+    lostLive: PropTypes.func.isRequired,
 };

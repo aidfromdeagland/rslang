@@ -5,7 +5,7 @@
     <![CDATA[
     .heart {
       stroke: none;
-      fill:   #d82d00;
+      fill:  #D372E2;
     }
     ]]>
   </style>

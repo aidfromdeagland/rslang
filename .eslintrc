@@ -31,5 +31,6 @@
         "react/jsx-indent": [1, 4],
         "react/jsx-indent-props": [1, 4],
         "curly": [2, "all"]
-    }
+    },
+    "parser": "babel-eslint"
 }

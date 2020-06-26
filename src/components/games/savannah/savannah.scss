@@ -1,87 +1,93 @@
 
-    $main-color: #d82d00;
+    $main-color: #D372E2;
     $bg-color: #ecf5ea;
-    $secondary-color: #f9ff9c;
-    .container {
+    $secondary-color: #56DDE4;
+    $text-color: #5C6BF5;
+    $lives-color: #D372E2;
+    $shadow-color:  #4ABBFF;
+
+
+    .savannah {
         position: absolute;
         top: 0;
         left: 0;
-        z-index: 2;
+        z-index: 100;
         width: 100vw;
         height: 100vh;
         display:flex;
         flex-direction: column;
         justify-content: space-between;
-       
-        margin: 0 auto;
+         margin: 0 auto;
         background-color: #000;
         color: #fff ; 
+        text-transform: uppercase;
+        font-family: "Literata", sans-serif;
           
         &__lives {
             display: flex;
             justify-content: flex-end; 
             padding: 2rem;
+
+            &-life {
+                display: flex;
+                width: 40px;
+                height: 40px;
+                background-image: url("./../../../assets/icons/heart-savannah.svg"); 
+               }
         }
         
-    .life {
-        display: flex;
-        width: 30px;
-        height: 30px;
-        background-image: url("./../../../assets/icons/heart-savannah.svg"); 
-       }
+   
     
     &__cards {
         max-width: 1020px;
         height: 100px;
-        width: 60%;
-        margin: 0 auto;
+        width: 80%;
+        margin: 15rem auto;
         display: flex;
         align-items: center;
         justify-content: space-between;
-     
         text-align: center;
         flex: none;
-        color: $main-color;
+        color: $text-color;
+            
     
-    
-        .card {
+        &-card {
             background-color: $secondary-color;
             width: 23%;
-            padding: 1rem 0;
+            padding: 0.8rem 0;
             text-align: center;
             border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            box-shadow: 0 0 10px $shadow-color;
           
         }
     } 
     
     &__image {
       position: relative;
-      display: flex;
-      margin: 0 auto;
-      justify-content: center;
-      background-color: $main-color;
-      width: 20px;
-      height: 20px;
-    
+      margin: 0 auto 5rem;
+      background-image: url("../../../assets/images/crystal.jpg");
+      background-size: contain;
+          
     }
     
-    .card__transition {
+    &__card-transition {
         position: absolute;
-        left: 40%;
-        top: 3rem;
-        padding: 0.5rem;
+        top: 5rem;
+        left: 45%;
+        padding: 1rem;
         text-align: center;
         border-radius: 10px;
         border: 1px solid $main-color;
-        min-width: 7rem;
-        width: 2rem;
-        height: 2rem;
+        min-width: 10rem;
+        min-height: 3rem;
         font-size: 1.2rem;
+       
     }
     
-    
-    .bottom {
-        top: 18rem;
+    .card-bottom  {
+        top: 19rem;
         transition: all 5s linear;
     }  
     

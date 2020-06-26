@@ -11,13 +11,19 @@ export class Savannah extends Component {
         this.state = {
             id: null,
             word: null,
-            translate: null,
-            wrongTranslate1: null,
-            wrongTranslate2: null,
-            wrongTranslate3: null,
+            translateWords: [],
             lives: 5,
+            wordClass: 'savannah__card-transition',
+            imageWidth: 50,
+            imageHeight: 50,
+
         };
+
         this.getWord = this.getWord.bind(this);
+        this.startGame = this.startGame.bind(this);
+        this.lostLive = this.lostLive.bind(this);
+        this.getNextWord = this.getNextWord.bind(this);
+        this.resizeImage = this.resizeImage.bind(this);
     }
 
     componentWillMount() {
@@ -31,6 +37,34 @@ export class Savannah extends Component {
         const response = await fetch(url);
         const data = await response.json();
         return data;
+    }
+
+    getNextWord() {
+        this.startGame();
+        this.setState({
+            wordClass: 'savannah__card-transition',
+        });
+    }
+
+    setTime() {
+
+    }
+
+    lostLive() {
+        if (this.state.lives >= 1) {
+            this.setState({
+                lives: this.state.lives - 1,
+            });
+        } else {
+            console.log('game over');
+        }
+    }
+
+    resizeImage() {
+        this.setState({
+            imageHeight: this.state.imageHeight + 10,
+            imageWidth: this.state.imageWidth + 10,
+        });
     }
 
     async startGame() {
@@ -62,39 +96,46 @@ export class Savannah extends Component {
                         id: WrongWord3[wordInx].id,
                     },
                 ],
+                wordClass: 'savannah__card-transition card-bottom',
 
             }),
-            // console.log(translateWords.map((a) => ({ sort: Math.random(), value: a }))),
         );
     }
 
     render() {
         const {
-            word, translateWords, lives, id,
+            word, translateWords, lives, id, wordClass, imageHeight, imageWidth,
         } = this.state;
-        // console.log(translateWords);
+
         return (
-            <div className="container">
+            <div className="savannah">
                 <SavannahLives
                     lives={lives}
                 />
-                <SavannahWord
-                    word={word}
-                    id={id}
-                />
+                {this.state.word
+                 && (
+                     <SavannahWord
+                         word={word}
+                         id={id}
+                         wordClass={wordClass}
+                     />
+                 )}
                 {this.state.word
                     && (
                         <SavannahCards
                             translateWords={translateWords}
                             id={id}
-                            // translate={translate}
-                            // wrongTranslate1={wrongTranslate1}
-                            // wrongTranslate2={wrongTranslate2}
-                            // wrongTranslate3={wrongTranslate3}
+                            lostLive={this.lostLive}
+                            getNextWord={this.getNextWord}
+                            resizeImage={this.resizeImage}
                         />
                     )}
 
-                <SavannahImage />
+                <SavannahImage
+                    imageWidth={imageWidth}
+                    imageHeight={imageHeight}
+
+                />
             </div>
         );
     }
