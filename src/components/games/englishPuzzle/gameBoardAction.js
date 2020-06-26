@@ -16,7 +16,7 @@ export class GameBoardAction extends Component {
     }
 
     getWordsOfSentence = (sentence) => {
-        const words = sentence.split(' ').map((word, i) => <DraggableWord key={i} word={word} />);
+        const words = sentence.split(' ').map((word, i) => <DraggableWord key={i} word={word} sentenceDoneHandle={this.props.sentenceDoneHandle} />);
         return words;
     }
 

@@ -20,14 +20,14 @@ export class DraggableWord extends Component {
     }
 
     handleDrag = () => {
-        document.querySelectorAll('.word').forEach((puzzle) => {
+        document.querySelectorAll('.drag-word').forEach((puzzle) => {
             puzzle.onmousedown = (event) => {
                 const itemWidth = puzzle.getBoundingClientRect().width;
                 const itemHeight = puzzle.getBoundingClientRect().height;
 
                 const dragBlock = puzzle;
 
-                const containerForPuzzles = document.querySelector(`.puzzle-container-sentence`);
+                const containerForPuzzles = document.querySelector('.puzzle-container-sentence');
 
                 const shiftX = event.clientX - puzzle.getBoundingClientRect().left;
                 const shiftY = event.clientY - puzzle.getBoundingClientRect().top;
@@ -66,7 +66,7 @@ export class DraggableWord extends Component {
 
                     if (!elemBelow) return;
 
-                    const droppablePazzle = elemBelow.closest('.word');
+                    const droppablePazzle = elemBelow.closest('.drag-word');
                     const droppableClone = elemBelow.closest('.clone');
 
                     if (currentWord != droppablePazzle || currentWord != droppableClone) {
@@ -164,14 +164,22 @@ export class DraggableWord extends Component {
                     }
                     document.removeEventListener('mousemove', onMouseMove);
                     dragBlock.onmouseup = null;
+                    this.checkSentence();
                 };
             };
         });
     }
 
+    checkSentence = () => {
+        const puzzleField = document.querySelector('.puzzle-pieces');
+        if (!puzzleField.innerHTML) {
+            this.props.sentenceDoneHandle();
+        }
+    }
+
     render() {
         return (
-            <div className="word"><span className="word-text">{this.props.word}</span></div>
+            <div className="drag-word"><span className="word-text">{this.props.word}</span></div>
         );
     }
 }

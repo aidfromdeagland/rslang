@@ -6,6 +6,7 @@ import { WordService } from '../../../services/wordServices';
 import { Spinner } from '../../shared/spinner';
 import './game-puzzle.scss';
 import { GameBoardAction } from './gameBoardAction';
+import { Button } from '../../shared/button';
 
 export class GamePuzzle extends Component {
     constructor(props) {
@@ -16,6 +17,7 @@ export class GamePuzzle extends Component {
             word: 1,
             isChecked: true,
             haveWords: false,
+            isSentenceDone: false,
         };
     }
 
@@ -37,6 +39,12 @@ export class GamePuzzle extends Component {
         this.setState({ haveWords: true });
     }
 
+    sentenceDoneHandle = () => {
+        this.setState((prev) => ({
+            isSentenceDone: !prev.isSentenceDone,
+        }));
+    }
+
     render() {
         const { haveWords } = this.state;
         if (haveWords) {
@@ -50,9 +58,12 @@ export class GamePuzzle extends Component {
                         <div className="game-board__translation">
                             <span>{this.translateSentence}</span>
                         </div>
-                        <GameBoardAction sentence={this.sentenceForPuzzle} />
+                        <GameBoardAction sentence={this.sentenceForPuzzle} sentenceDoneHandle={this.sentenceDoneHandle} />
                         <div className="game-board__btn-block">
-
+                            {this.state.isSentenceDone && <Button className="check-sentence puzzle-btn button" title="Check" />}
+                            <Button className="dont-know-sentence puzzle-btn button" title="Don\'t know" />
+                            <Button className="continue-sentence puzzle-btn button" title="Continue" />
+                            <Button className="puzzle-result puzzle-btn button" title="Results" />
                         </div>
                     </div>
                 </div>

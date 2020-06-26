@@ -10,10 +10,15 @@
     padding: 40px 40px;
     font-size: 30px;
   }
+  .game-board__btn-block {
+    background-color: #f5f7f8;
+    display: flex;
+    flex-wrap: wrap;
+  }
 }
 
 .game-board__action {
-  padding: 50px 0;
+  margin: 50px 0;
   .puzzle-container-sentence {
     width: 100%;
     padding: 8px 12px;
@@ -54,7 +59,7 @@
   border: 1px solid #e6e9ee;
 }
 
-.word {
+.drag-word {
   width: auto;
   margin: 0 1px;
   transition: all 0.2s ease;
