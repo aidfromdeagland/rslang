@@ -1,3 +1,64 @@
 .hangman {
+    color: #092c70;
+    margin: 0;
+    text-align: center;
+    align-items: center;
 
-}
+    .gallows {
+        width: 400px;
+        height: 500px;
+        margin: auto;
+        align-items: center;
+        background-color: lightgray;
+    }   
+
+    .word {
+        height: 50px;
+        margin-top: 30px;
+        display: flex;
+        justify-content: space-between;
+        text-align: center;
+        align-items: center;
+
+        .letter {
+            width: 70px;
+            margin-right: 10px;
+            border: 1px solid #092c70;
+            border-radius: 5px;
+            font-size: 2rem;
+            font-weight: 700;
+            color: white;
+            text-align: center;
+            padding-bottom: 10px;
+        }
+        .activ {
+            color: #092c70;
+        }
+        .word-true{
+            background-color: lightgreen;
+        }
+        .word-false{
+            background-color: rgb(182, 55, 55);
+        }
+        
+    }
+    .btn-continue{
+        display: none;
+        width: 130px;
+        height: 35px;
+        color: #fff;
+        text-align: center;
+        align-items: center;
+        margin: auto;
+        margin-top: 20px;
+        padding-top: 10px;
+        font-family: "OpenSans", sans-serif;
+        background-color: #092c70;
+        border-radius: 7px;
+        cursor: pointer;
+    }
+    .btn-active{
+        display: block;
+    }
+
+}    
