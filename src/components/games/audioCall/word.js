@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-export class World extends Component {
+export class Word extends Component {
     constructor(props) {
         super(props);
         this.state = {};
@@ -49,11 +49,11 @@ export class World extends Component {
     }
 }
 
-World.defaultProps = {
+Word.defaultProps = {
     selectCorrect: false,
 };
 
-World.propTypes = {
+Word.propTypes = {
     text: PropTypes.string.isRequired,
     isCorrect: PropTypes.bool.isRequired,
     selected: PropTypes.func.isRequired,

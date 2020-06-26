@@ -49,7 +49,7 @@ export class AudioCall extends Component {
         case gameProgress.result:
         default:
             body = (
-                this.state.gameResult.map((o) => <span key={o.world.id}>{`${o.world.word} - ${o.correct}`}</span>)
+                this.state.gameResult.map((o) => <span key={o.word.id}>{`${o.word.word} - ${o.correct}`}</span>)
             );
             break;
         }

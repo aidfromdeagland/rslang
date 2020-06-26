@@ -1,16 +1,16 @@
 /* eslint-disable react/destructuring-assignment */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { World } from './world';
+import { Word } from './word';
 
-export class WorldList extends Component {
+export class WordList extends Component {
     render() {
         const {
             words, wordId, selected, selectCorrect,
         } = this.props;
 
         const wordsRender = words.map((w) => (
-            <World
+            <Word
                 key={w.id + wordId}
                 id={w.id}
                 text={w.wordTranslate}
@@ -23,11 +23,11 @@ export class WorldList extends Component {
     }
 }
 
-WorldList.defaultProps = {
+WordList.defaultProps = {
     selectCorrect: false,
 };
 
-WorldList.propTypes = {
+WordList.propTypes = {
     words: PropTypes.arrayOf(PropTypes.shape({
         id: PropTypes.string.isRequired,
         wordTranslate: PropTypes.string.isRequired,

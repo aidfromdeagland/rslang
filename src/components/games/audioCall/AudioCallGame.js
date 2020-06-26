@@ -1,7 +1,7 @@
 /* eslint-disable react/destructuring-assignment */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { WorldList } from './worldList';
+import { WordList } from './wordList';
 
 export class AudioCallGame extends Component {
     constructor(props) {
@@ -29,12 +29,12 @@ export class AudioCallGame extends Component {
         };
     }
 
-    addResult(world, correct) {
-        this.result.push({ world, correct });
+    addResult(word, correct) {
+        this.result.push({ word, correct });
     }
 
-    handleSelectWord(world, correct) {
-        this.addResult(world, correct);
+    handleSelectWord(word, correct) {
+        this.addResult(word, correct);
         this.setState({ selectedWord: true, selectCorrect: true });
         // сохранить статистику
     }
@@ -57,7 +57,7 @@ export class AudioCallGame extends Component {
         return (
             <div className="audio-call">
                 <span className="audio-call__dinamic" onMouseDown={() => this.handleSpeak()} tabIndex="0" role="button"> </span>
-                <WorldList
+                <WordList
                     words={round.gameWords}
                     wordId={round.word.id}
                     selected={(isCorrect) => this.handleSelectWord(round.word, isCorrect)}
