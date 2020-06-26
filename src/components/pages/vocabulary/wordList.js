@@ -11,18 +11,27 @@ export class WordList extends Component {
     }
 
     render() {
-        return (
-            <ul className="vocabulary__words">
-                { this.words.map(
-                    (word) => <VocabularyWord word={word} key={word.id} settings={this.settings} />,
+        if (this.words) {
+            return (
+                <ul className="vocabulary__words">
+                    { this.words.map(
+                        (word) => (
+                            <VocabularyWord
+                                word={word}
+                                key={word.id}
+                                settings={this.settings}
+                            />
+                        ),
                     ) }
-            </ul>
-        );
+                </ul>
+            );
+        }
+
+        return null;
     }
 }
 
 WordList.defaultProps = {
-    words: [],
     settings: [],
 };
 
