@@ -7,7 +7,6 @@ export class SavannahImage extends Component {
             width: `${imageWidth.toString()}px`,
             height: `${imageHeight.toString()}px`,
         };
-        console.log(styles);
         return (
             <div
                 className="savannah__image"

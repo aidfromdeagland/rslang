@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 export class SavannahCards extends Component {
     render() {
-        const { translateWords, id } = this.props;
+        const { translateWords, id, lives } = this.props;
         const cards = translateWords.sort(() => 0.5 - Math.random());
 
         return (
@@ -16,11 +16,9 @@ export class SavannahCards extends Component {
                         key={index}
                         onClick={() => {
                             if (word.id === id) {
-                                console.log('yep');
                                 this.props.getNextWord();
                                 this.props.resizeImage();
                             } else {
-                                console.log('nope');
                                 this.props.lostLive();
                                 this.props.getNextWord();
                             }
