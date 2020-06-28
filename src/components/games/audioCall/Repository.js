@@ -8,6 +8,7 @@ export class Repository {
         this.group = group;
         this.page = page;
         this.gameWordCount = gameWordCount;
+        this.step = 1 / gameWordCount;
         this.indexWord = 0;
         this.loadData();
     }
@@ -58,6 +59,13 @@ export class Repository {
 
     getAudio() {
         return new Audio(fileResource + this.word.audio);
+    }
+
+    getProgress() {
+        return {
+            currentPrecent: this.indexWord * this.step,
+            step: this.step,
+        };
     }
 
     increment() {

@@ -2,12 +2,14 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin: 10px 0;
+    padding: 10px 0;
     span, button {
         font-family: 'OpenSans', sans-serif;
     }
+    &__word, .audio-call__dinamic {
+        background-color: rgba(255, 255, 255, 0.6);
+    }
     &__button {
-        font-family: 'OpenSans', sans-serif;
         font-weight: bold;
         padding: 10px 20px;
         font-size: 20px;
@@ -89,7 +91,9 @@
         }
         .audio-call__quest-word {
             display: inline-block;
-            margin: 15px;
+            margin: 10px;
+            padding: 5px;
+            border-radius: 5px;
             font-size: 30px;
             color: #0F4AB4;
         }
@@ -118,12 +122,15 @@
                 background-color: rgba($color: #0F4AB4, $alpha: 0.2);
             }
         }
-        &_correct {
-            background-color: rgba($color: #00F102, $alpha: 0.2);
-        }
-        &_error {
-            background-color: rgba($color: #F10002, $alpha: 0.2);
-        }
+    }
+    &__word_excess {
+        background-color: transparent;
+    }
+    &__word_correct {
+        background-color: rgba($color: #00F102, $alpha: 0.4);
+    }
+    &__word_error {
+        background-color: rgba($color: #F10002, $alpha: 0.4);
     }
     &__result {
         .audio-call__button {

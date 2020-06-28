@@ -11,9 +11,14 @@ export class Word extends Component {
     getClassName() {
         switch (this.state.isCorrect) {
         case undefined:
-            return this.props.selectCorrect && this.props.isCorrect
-                ? 'audio-call__word audio-call__word_correct'
-                : 'audio-call__word';
+            if (!this.props.selectCorrect) {
+                return 'audio-call__word';
+            }
+            if (this.props.isCorrect) {
+                return 'audio-call__word audio-call__word_correct';
+            }
+            return 'audio-call__word audio-call__word_excess';
+
         case true:
             return 'audio-call__word audio-call__word_correct';
         case false:

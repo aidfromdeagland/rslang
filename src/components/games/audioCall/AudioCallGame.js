@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { WordList } from './wordList';
 import { fileResource } from '../../../constants/globalConstants';
+import { getDifferentColor } from './utils';
 
 export class AudioCallGame extends Component {
     constructor(props) {
@@ -22,11 +23,21 @@ export class AudioCallGame extends Component {
         }
     }
 
+    static getBackground(startPrecent, endPrecent) {
+        const startRoundColor = getDifferentColor(startPrecent);
+        const endRoundColor = getDifferentColor(endPrecent);
+        return `linear-gradient(${startRoundColor}, ${endRoundColor})`;
+    }
+
     getRound() {
+        const progeress = this.repository.getProgress();
+        const background = AudioCallGame.getBackground(progeress.currentPrecent,
+            progeress.currentPrecent + progeress.step);
         return {
             word: this.repository.getWord(),
             gameWords: this.repository.getWordsForGame(),
             audio: this.repository.getAudio(),
+            background,
         };
     }
 
@@ -56,7 +67,7 @@ export class AudioCallGame extends Component {
     render() {
         const { round, selectedWord } = this.state;
         return (
-            <div className="audio-call">
+            <div className="audio-call" style={{ background: round.background }}>
                 <span
                     className={`audio-call__word-image ${selectedWord ? 'audio-call__word-image_show' : ''}`}
                     style={{ backgroundImage: `url("${fileResource + this.state.round.word.image}")` }}
