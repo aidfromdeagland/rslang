@@ -1,8 +1,9 @@
 /* eslint-disable react/destructuring-assignment */
 import React, { Component } from 'react';
 import './audioCall.scss';
-import { AudioCallGame } from './AudioCallGame';
 import { AudioCallStart } from './AudioCallStart';
+import { AudioCallGame } from './AudioCallGame';
+import { AudioCallResult } from './AudioCallResult';
 import { gameProgress } from './constants';
 import { groupCount, pageCount } from '../../../constants/globalConstants';
 
@@ -50,10 +51,9 @@ export class AudioCall extends Component {
     }
 
     render() {
-        let body;
         switch (this.state.state) {
         case gameProgress.start:
-            body = (
+            return (
                 <AudioCallStart
                     repository={this.state.repository}
                     modeIsUserWords={false}
@@ -62,30 +62,21 @@ export class AudioCall extends Component {
                     group={this.state.group}
                 />
             );
-            break;
         case gameProgress.game:
-            body = (
+            return (
                 <AudioCallGame
                     repository={this.state.repository}
                     endGame={(result) => this.endGame(result)}
                 />
             );
-            break;
         case gameProgress.result:
         default:
-            body = (
-                <div>
-                    <div className="audio-call__result-list">{this.state.gameResult.map((o) => <span key={o.word.id}>{`${o.word.word} - ${o.correct}`}</span>)}</div>
-                    <button className="audio-call__button" type="button" onClick={() => this.nextGame()}>Next game</button>
-                </div>
+            return (
+                <AudioCallResult
+                    gameResult={this.state.gameResult}
+                    nextGame={() => this.nextGame()}
+                />
             );
-            break;
         }
-
-        return (
-            <div className="audio-call">
-                {body}
-            </div>
-        );
     }
 }

@@ -1,12 +1,13 @@
 import { shuffle, randomInteger } from '../../../utils/utils';
 import { WordService } from '../../../services/wordServices';
 import { fileResource } from '../../../constants/globalConstants';
+import { gameWordCount } from './constants';
 
 export class Repository {
     constructor(group, page) {
         this.group = group;
         this.page = page;
-        this.gameWordCount = 10;
+        this.gameWordCount = gameWordCount;
         this.indexWord = 0;
         this.loadData();
     }

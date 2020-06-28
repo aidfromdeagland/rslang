@@ -30,12 +30,12 @@ export class AudioCallGame extends Component {
         };
     }
 
-    addResult(word, correct) {
-        this.result.push({ word, correct });
+    addResult(word, isCorrect) {
+        this.result.push({ word, isCorrect });
     }
 
-    handleSelectWord(word, correct) {
-        this.addResult(word, correct);
+    handleSelectWord(word, isCorrect) {
+        this.addResult(word, isCorrect);
         this.setState({ selectedWord: true });
         // сохранить статистику
     }
