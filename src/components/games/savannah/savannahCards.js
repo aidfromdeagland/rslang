@@ -3,39 +3,49 @@ import PropTypes from 'prop-types';
 
 export class SavannahCards extends Component {
     render() {
-        const { translateWords, id, lives } = this.props;
+        const {
+            translateWords, word, getRightAnswer, getWrongAnswer, getRightAnswersForStatistics, getWrongAnswersForStatistics,
+        } = this.props;
         const cards = translateWords.sort(() => 0.5 - Math.random());
 
         return (
             <div className="savannah__cards">
 
-                { cards.map((word, index) => (
+                { cards.map((card, index) => (
                     <div
                         className="savannah__cards-card"
                         aria-hidden
                         key={index}
                         onClick={() => {
-                            if (word.id === id) {
-                                this.props.getNextWord();
-                                this.props.resizeImage();
+                            if (card.id === word.id) {
+                                getRightAnswer();
+                                getRightAnswersForStatistics(word.word, word.translate);
                             } else {
-                                this.props.lostLive();
-                                this.props.getNextWord();
+                                getWrongAnswer();
+                                getWrongAnswersForStatistics(word.word, word.translate);
                             }
                         }}
-
                     >
-                        {word.translate}
+                        {card.translate}
                     </div>
                 )) }
-
             </div>
-
         );
     }
 }
 
 SavannahCards.propTypes = {
-    id: PropTypes.string.isRequired,
-    lostLive: PropTypes.func.isRequired,
+    translateWords: PropTypes.arrayOf(PropTypes.shape({
+        translate: PropTypes.string.isRequired,
+        id: PropTypes.string.isRequired,
+    })).isRequired,
+    word: PropTypes.objectOf(PropTypes.shape({
+        word: PropTypes.string.isRequired,
+        translate: PropTypes.string.isRequired,
+        id: PropTypes.string.isRequired,
+    })).isRequired,
+    getRightAnswer: PropTypes.func.isRequired,
+    getWrongAnswer: PropTypes.func.isRequired,
+    getRightAnswersForStatistics: PropTypes.func.isRequired,
+    getWrongAnswersForStatistics: PropTypes.func.isRequired,
 };

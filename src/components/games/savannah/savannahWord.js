@@ -6,13 +6,15 @@ export class SavannahWord extends Component {
         const { word, wordClass } = this.props;
         return (
             <div className={wordClass}>
-                {word}
+                {word.word}
             </div>
         );
     }
 }
 
 SavannahWord.propTypes = {
-    word: PropTypes.string.isRequired,
+    word: PropTypes.objectOf(PropTypes.shape({
+        word: PropTypes.string.isRequired,
+    })).isRequired,
     wordClass: PropTypes.string.isRequired,
 };
