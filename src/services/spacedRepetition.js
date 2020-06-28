@@ -2,7 +2,7 @@ const millisecondsPerDay = 1000 * 60 * 60 * 24;
 const powerIndexGood = 1.4;
 const powerIndexEasy = 1.6;
 
-export const getMemoInfo = (quality, prevRepetitions) => {
+export const getMemoInfo = (difficulty, prevRepetitions) => {
     const currentDateSTamp = Date.now();
     const result = {
         repetitions: prevRepetitions ? prevRepetitions + 1 : 1,
@@ -10,17 +10,17 @@ export const getMemoInfo = (quality, prevRepetitions) => {
         nextRepetitionDate: currentDateSTamp,
     };
 
-    switch (quality) {
-    case 1: {
+    switch (difficulty) {
+    case 2: {
         result.nextRepetitionDate = currentDateSTamp + millisecondsPerDay;
         break;
     }
-    case 2: {
+    case 1: {
         result.nextRepetitionDate = currentDateSTamp
             + millisecondsPerDay * Math.ceil(result.repetitions ** powerIndexGood);
         break;
     }
-    case 3: {
+    case 0: {
         result.nextRepetitionDate = currentDateSTamp
             + millisecondsPerDay * Math.ceil(
                 result.repetitions ** powerIndexEasy + result.repetitions,
