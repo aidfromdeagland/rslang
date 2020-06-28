@@ -4,6 +4,7 @@ import './audioCall.scss';
 import { AudioCallGame } from './AudioCallGame';
 import { AudioCallStart } from './AudioCallStart';
 import { gameProgress } from './constants';
+import { groupCount, pageCount } from '../../../constants/globalConstants';
 
 export class AudioCall extends Component {
     constructor() {
@@ -11,9 +12,11 @@ export class AudioCall extends Component {
         this.state = { state: gameProgress.start };
     }
 
-    startGame(repository) {
+    startGame(repository, group, page) {
         this.setState({
             state: gameProgress.game,
+            group,
+            page,
             repository,
         });
     }
@@ -26,6 +29,26 @@ export class AudioCall extends Component {
         });
     }
 
+    nextGame() {
+        let { group, page } = this.state;
+        page += 1;
+        if (page >= pageCount) {
+            page = 0;
+            group += 1;
+            if (group >= groupCount) {
+                page = 0;
+                group = 0;
+            }
+        }
+        this.setState({
+            state: gameProgress.start,
+            page,
+            group,
+            repository: undefined,
+            gameResult: undefined,
+        });
+    }
+
     render() {
         let body;
         switch (this.state.state) {
@@ -34,7 +57,9 @@ export class AudioCall extends Component {
                 <AudioCallStart
                     repository={this.state.repository}
                     modeIsUserWords={false}
-                    startGame={(repository) => this.startGame(repository)}
+                    startGame={(repository, group, page) => this.startGame(repository, group, page)}
+                    page={this.state.page}
+                    group={this.state.group}
                 />
             );
             break;
@@ -49,7 +74,10 @@ export class AudioCall extends Component {
         case gameProgress.result:
         default:
             body = (
-                this.state.gameResult.map((o) => <span key={o.word.id}>{`${o.word.word} - ${o.correct}`}</span>)
+                <div>
+                    <div className="audio-call__result-list">{this.state.gameResult.map((o) => <span key={o.word.id}>{`${o.word.word} - ${o.correct}`}</span>)}</div>
+                    <button className="audio-call__button" type="button" onClick={() => this.nextGame()}>Next game</button>
+                </div>
             );
             break;
         }

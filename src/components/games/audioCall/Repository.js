@@ -67,26 +67,4 @@ export class Repository {
         this.word = this.gameWords[this.indexWord];
         return true;
     }
-    // getWord(resolve) {
-    //     if (this.word) {
-    //         resolve(this.word);
-    //         return true;
-    //     }
-    //     this.getWord = resolve;
-    //     return false;
-    // }
-
-    // increment() {
-    //     if (!this.isHaveNextWord()) {
-    //         return false;
-    //     }
-    //     if (this.nextWord) {
-    //         this.word = this.nextWord;
-    //         this.indexWord += 1;
-    //         this.loadNextWord();
-    //     } else {
-    //         this.word = null;
-    //     }
-    //     return true;
-    // }
 }

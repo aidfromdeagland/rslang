@@ -10,7 +10,7 @@ import { SimpleSelect } from './simpleSelect';
 export class AudioCallStart extends Component {
     constructor(props) {
         super(props);
-        this.state = { isLoading: false, group: 1, page: 10 };
+        this.state = { isLoading: false, group: props.group, page: props.page };
     }
 
     handleGroupChange(group) {
@@ -29,7 +29,7 @@ export class AudioCallStart extends Component {
 
         if (!repository.checkLoading(() => {
             this.setState({ isGame: true, isLoading: false });
-            this.props.startGame(repository);
+            this.props.startGame(repository, this.state.group, this.state.page);
         })) {
             this.setState({ isLoading: true });
         }
@@ -45,18 +45,20 @@ export class AudioCallStart extends Component {
                 <h1 className="audio-call__header">Audio Call</h1>
                 {!this.props.modeIsUserWords
                     && (
-                        <div>
+                        <div className="audio-call__levels">
                             <SimpleSelect
                                 key="group"
                                 values={createIncArray(groupCount)}
                                 defaultValue={this.state.group}
                                 onChange={(v) => this.handleGroupChange(v)}
+                                title="level"
                             />
                             <SimpleSelect
                                 key="page"
                                 values={createIncArray(pageCount)}
                                 defaultValue={this.state.page}
                                 onChange={(v) => this.handlePageChange(v)}
+                                title="round"
                             />
                         </div>
                     )}
@@ -65,7 +67,7 @@ export class AudioCallStart extends Component {
                 {
                     this.state.isLoading
                         ? <Spinner />
-                        : <button className="audio-call__start-game" type="button" onClick={() => this.handleStartGame()}>Start game</button>
+                        : <button className="audio-call__button audio-call__start-game" type="button" onClick={() => this.handleStartGame()}>Start game</button>
                 }
             </div>
         );
@@ -74,6 +76,8 @@ export class AudioCallStart extends Component {
 
 AudioCallStart.defaultProps = {
     repository: undefined,
+    page: 0,
+    group: 0,
 };
 
 AudioCallStart.propTypes = {
@@ -82,4 +86,6 @@ AudioCallStart.propTypes = {
     }),
     startGame: PropTypes.func.isRequired,
     modeIsUserWords: PropTypes.bool.isRequired,
+    page: PropTypes.number,
+    group: PropTypes.number,
 };

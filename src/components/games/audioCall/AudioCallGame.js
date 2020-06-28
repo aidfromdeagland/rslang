@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { WordList } from './wordList';
+import { fileResource } from '../../../constants/globalConstants';
 
 export class AudioCallGame extends Component {
     constructor(props) {
@@ -35,7 +36,7 @@ export class AudioCallGame extends Component {
 
     handleSelectWord(word, correct) {
         this.addResult(word, correct);
-        this.setState({ selectedWord: true, selectCorrect: true });
+        this.setState({ selectedWord: true });
         // сохранить статистику
     }
 
@@ -49,19 +50,26 @@ export class AudioCallGame extends Component {
             return;
         }
 
-        this.setState({ selectedWord: false, round: this.getRound(), selectCorrect: false });
+        this.setState({ selectedWord: false, round: this.getRound() });
     }
 
     render() {
-        const { round, selectCorrect } = this.state;
+        const { round, selectedWord } = this.state;
         return (
             <div className="audio-call">
-                <span className="audio-call__dinamic" onMouseDown={() => this.handleSpeak()} tabIndex="0" role="button"> </span>
+                <span
+                    className={`audio-call__word-image ${selectedWord ? 'audio-call__word-image_show' : ''}`}
+                    style={{ backgroundImage: `url("${fileResource + this.state.round.word.image}")` }}
+                />
+                <div className={`audio-call__quest ${selectedWord ? 'audio-call__quest_show' : ''}`}>
+                    <span className="audio-call__dinamic" onMouseDown={() => this.handleSpeak()} tabIndex="0" role="button"> </span>
+                    <span className="audio-call__quest-word">{this.state.round.word.word}</span>
+                </div>
                 <WordList
                     words={round.gameWords}
                     wordId={round.word.id}
                     selected={(isCorrect) => this.handleSelectWord(round.word, isCorrect)}
-                    selectCorrect={selectCorrect}
+                    selectCorrect={selectedWord}
                 />
                 {this.state.selectedWord
                     ? <button className="audio-call__button" type="button" onClick={() => this.handleNextWord()}>→→→</button>

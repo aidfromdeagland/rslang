@@ -2,8 +2,34 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin: 10px 0;
+    span, button {
+        font-family: 'OpenSans', sans-serif;
+    }
+    &__button {
+        font-family: 'OpenSans', sans-serif;
+        font-weight: bold;
+        padding: 10px 20px;
+        font-size: 20px;
+        border-radius: 7px;
+        color: #ffffff;
+        background-color: #092C70;
+        box-shadow: 0 0 10px rgba(0,0,0,0.5);
+        border: none;
+        outline: none;
+        user-select: none;
+        cursor: pointer;
+        @media (hover: hover) {
+            &:hover {
+                background-color: #0F4AB4;
+            }
+        }
+    }
     .list {
         margin: 5px 15px;
+    }
+    &__header {
+        color: #0F4AB4;
     }
     &__start-game {
         margin-top: 20px;
@@ -11,23 +37,79 @@
         font-size: 32px;
         cursor: pointer;
     }
+    &__levels {
+        display: flex;
+    }
     &__dinamic {
         display: block;
-        width: 64px;
-        height: 64px;
+        width: 94px;
+        height: 94px;
         background: url("./../../../assets/icons/dynamic.svg") center no-repeat;
-        background-size: contain;
+        background-size: 64px 64px;
+        background-position: center;
+        box-shadow: 0 0 10px rgba(0,0,0,0.5);
+        border-radius: 50%;
         outline: none;
         cursor: pointer;
+        transition: background-color 0.5s ease-in-out;
+        @media (hover: hover) {
+            &:hover {
+                background-color: rgba($color: #0F4AB4, $alpha: 0.2);
+            }
+        }
+    }
+    &__word-image {
+        display: block;
+        width: 128px;
+        height: 105px;
+        opacity: 0;
+        background-size: cover;
+        outline: none;
+        border: 2px solid #0F4AB4;
+        border-radius: 50%;
+        background-repeat: no-repeat;
+        &_show {
+        height: 128px;
+            opacity: 1;
+        }
+    }
+    &__quest {
+        display: flex;
+        align-items: center;
+        .audio-call__quest-word {
+            display: none;
+        }
+    }
+    &__quest_show {
+        .audio-call__dinamic {
+            width: 40px;
+            height: 40px;
+            background-size: 32px 32px;
+            background-position: center;
+        }
+        .audio-call__quest-word {
+            display: inline-block;
+            margin: 15px;
+            font-size: 30px;
+            color: #0F4AB4;
+        }
     }
     &__words {
         margin: 40px 0;
+        @media (max-width: 600px) {
+            display: flex;
+            flex-direction: column;
+            .audio-call__word {
+                margin: 5px;
+            }
+        }
     }
     &__word {
         padding: 15px;
         margin: 0 15px;
         border-radius: 7px;
         cursor: pointer;
+        box-shadow: 0 0 10px rgba(0,0,0,0.5);
         transition: background-color 0.5s ease-in-out;
         outline: none;
         user-select: none;
@@ -43,22 +125,10 @@
             background-color: rgba($color: #F10002, $alpha: 0.2);
         }
     }
-    &__button {
-        font-family: 'OpenSans', sans-serif;
-        font-weight: bold;
-        padding: 10px 20px;
-        font-size: 20px;
-        border-radius: 7px;
-        color: #ffffff;
-        background-color: #092C70;
-        border: none;
-        outline: none;
-        user-select: none;
-        cursor: pointer;
-        @media (hover: hover) {
-            &:hover {
-                background-color: #0F4AB4;
-            }
-        }
+    &__result-list {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 30px;
     }
 }
