@@ -6,21 +6,13 @@ import {
 } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 
+import PropTypes from 'prop-types';
 import { wordsMockLearned, wordsMockDifficult, wordsMockDeleted } from './tempMock';
-import { settingsForExample } from '../study/dataForExample';
-import { randomizeSettingsValues } from '../../../services/temporaryServices';
 import { WordList } from './wordList';
 
 export class Vocabulary extends Component {
-    constructor(props) {
-        super(props);
-        this.learnedWords = wordsMockLearned;
-        this.difficultWords = wordsMockDifficult;
-        this.deletedWords = wordsMockDeleted;
-        this.settings = randomizeSettingsValues(settingsForExample);
-    }
-
     render() {
+        const { settings } = this.props;
         return (
             <div className="content-container">
                 <Tabs className="vocabulary" selectedTabClassName="vocabulary__tab_active" defaultFocus>
@@ -31,13 +23,13 @@ export class Vocabulary extends Component {
                     </TabList>
 
                     <TabPanel className="vocabulary__panel">
-                        <WordList words={this.learnedWords} settings={this.settings} />
+                        <WordList words={wordsMockLearned} settings={settings} />
                     </TabPanel>
                     <TabPanel className="vocabulary__panel">
-                        <WordList words={this.difficultWords} settings={this.settings} />
+                        <WordList words={wordsMockDifficult} settings={settings} isSpecial />
                     </TabPanel>
                     <TabPanel className="vocabulary__panel">
-                        <WordList words={this.deletedWords} settings={this.settings} />
+                        <WordList words={wordsMockDeleted} settings={settings} isSpecial />
                     </TabPanel>
                 </Tabs>
             </div>
@@ -46,18 +38,22 @@ export class Vocabulary extends Component {
 }
 
 Vocabulary.defaultProps = {
-    learnedWords: [],
-    difficultWords: [],
-    removedWords: [],
     settings: {
         mainSettings: {
             word: true,
-            sentence: false,
-            textMeaning: false,
+            sentence: true,
+            textMeaning: true,
         },
         additionalSettings: {
             transcription: true,
             image: true,
         },
     },
+};
+
+Vocabulary.propTypes = {
+    settings: PropTypes.objectOf(PropTypes.shape({
+        mainSettings: PropTypes.object,
+        additionalSettings: PropTypes.object,
+    })),
 };

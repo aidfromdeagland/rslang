@@ -6,36 +6,58 @@ import { VocabularyWord } from './word';
 export class WordList extends Component {
     constructor(props) {
         super(props);
-        this.words = props.words;
-        this.settings = props.settings;
+        this.state = { words: props.words };
+    }
+
+    removeWordHandler = (wordId) => {
+        this.setState((prevState) => ({
+            words: prevState.words.filter((word) => word.id !== wordId),
+        }));
     }
 
     render() {
-        if (this.words) {
-            return (
+        const { words } = this.state;
+        const { settings, isSpecial } = this.props;
+        return words
+            ? (
                 <ul className="vocabulary__words">
-                    { this.words.map(
+                    { words.map(
                         (word) => (
                             <VocabularyWord
                                 word={word}
                                 key={word.id}
-                                settings={this.settings}
+                                settings={settings}
+                                isSpecial={isSpecial}
+                                removeWordHandler={this.removeWordHandler}
                             />
                         ),
                     ) }
                 </ul>
-            );
-        }
-
-        return null;
+            )
+            : null;
     }
 }
 
 WordList.defaultProps = {
-    settings: [],
+    settings: {
+        mainSettings: {
+            word: true,
+            sentence: true,
+            textMeaning: true,
+        },
+        additionalSettings: {
+            transcription: true,
+            image: true,
+        },
+    },
+    isSpecial: false,
 };
 
 WordList.propTypes = {
-    words: PropTypes.arrayOf(PropTypes.object),
-    settings: PropTypes.object,
+    words: PropTypes.arrayOf(PropTypes.object).isRequired,
+    settings: PropTypes.objectOf(PropTypes.shape({
+        mainSettings: PropTypes.object,
+        additionalSettings: PropTypes.object,
+    })),
+    isSpecial: PropTypes.bool,
 };

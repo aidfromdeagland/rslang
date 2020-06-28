@@ -31,6 +31,7 @@
 
   &__tab-list {
     position: fixed;
+    z-index: 2;
     padding: 0 20px;
     left: 0;
     width: 100%;
@@ -90,15 +91,49 @@
 
   }
 
+  &__button {
+    &:hover {
+      transform: scale(1.05);
+      filter: saturate(125%);
+    }
+
+    &:active {
+      transform: scale(0.95);
+      filter: saturate(75%);
+    }
+  }
+
   &__button_audio {
-    background: url("../../../assets/icons/dynamic.svg");
+    background: url("../../../assets/icons/dynamic.svg") center no-repeat;
     width: 32px;
     height: 1.5em;
     border: none;
     background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
     cursor: pointer;
+    transition: transform 0.3s, filter 0.2s;
+  }
+
+  &__button_restore {
+    position: absolute;
+    z-index: 1;
+    left: 5px;
+    top: 5px;
+    align-self: flex-end;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #092c70;
+    color: #fff;
+    border-radius: 7px;
+    height: 1.5rem;
+    padding: 0 1.5rem;
+    border: none;
+    font-family: "OpenSans", sans-serif;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #0f4Ab4;
+    }
   }
 }
 

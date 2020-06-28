@@ -5,51 +5,51 @@ import { Button } from '../../shared/button';
 import { MEDIA_PREFIX_URL } from '../../../constants/globalConstants';
 
 export class VocabularyWord extends Component {
-    constructor(props) {
-        super(props);
-        this.settings = props.settings;
-        this.id = props.word.id;
-        this.word = props.word.word;
-        this.image = `${MEDIA_PREFIX_URL}${props.word.image}`;
-        this.audio = `${MEDIA_PREFIX_URL}${props.word.audio}`;
-        this.audioMeaning = `${MEDIA_PREFIX_URL}${props.word.audioMeaning}`;
-        this.audioExample = `${MEDIA_PREFIX_URL}${props.word.audioExample}`;
-        this.textMeaning = props.word.textMeaning;
-        this.textExample = props.word.textExample;
-        this.transcription = props.word.transcription;
-        this.wordTranslate = props.word.wordTranslate;
-        this.textMeaningTranslate = props.word.textMeaningTranslate;
-        this.textExampleTranslate = props.word.textExampleTranslate;
-        this.lastUsed = new Date().toLocaleString('en-us', {
-            weekday: 'short', month: 'long', day: 'numeric', hour: 'numeric',
-        });
-        this.repetitions = `${Math.floor(Math.random() * 15) + 1}`;
-    }
-
-    onAudioClickHandler = () => {
-        new Audio(this.audio).play();
+    onAudioClickHandler = (audioSrc) => {
+        new Audio(audioSrc).play();
     }
 
     render() {
+        const {
+            word, settings, isSpecial, removeWordHandler,
+        } = this.props;
+        const imageSrc = `${MEDIA_PREFIX_URL}${word.image}`;
+        const audioSrc = `${MEDIA_PREFIX_URL}${word.audio}`;
+        const currentDate = new Date().toLocaleString('en-gb', { month: 'short', day: 'numeric' });
+        const getRandomRepeats = () => Math.floor(Math.random() * 10 + 1);
         return (
             <li className="vocabulary__word word-card">
                 <div className="word-card__mainContainer">
                     <div className="word-card__mainTextContainer">
-
-                        <h4>{ this.word }</h4>
-                        <Button title="" className="vocabulary__button vocabulary__button_audio" isDisabled={false} onClick={this.onAudioClickHandler} />
-                        {this.settings.additionalSettings.transcription
-                            ? <p>{ this.transcription }</p> : null}
-                        {this.settings.mainSettings.word ? <p>{ this.wordTranslate }</p> : null}
+                        { isSpecial
+                            ? (
+                                <Button
+                                    className="vocabulary__button vocabulary__button_restore"
+                                    title="Restore"
+                                    isDisabled={false}
+                                    onClick={() => removeWordHandler(word.id)}
+                                />
+                            )
+                            : null }
+                        <h4>{ word.word }</h4>
+                        <Button title="" className="vocabulary__button vocabulary__button_audio" isDisabled={false} onClick={() => this.onAudioClickHandler(audioSrc)} />
+                        {settings.additionalSettings.transcription
+                            ? <p>{ word.word.transcription }</p> : null}
+                        {settings.mainSettings.word ? <p>{ word.word.wordTranslate }</p> : null}
                     </div>
-                    {this.settings.additionalSettings.image ? <img className="word-card__image" src={this.image} alt={`an illustration for "${this.word}"`} /> : null }
+                    {settings.additionalSettings.image ? <img className="word-card__image" src={imageSrc} alt={`an illustration for "${word.word}"`} /> : null }
                 </div>
                 <div className="word-card__additionalContainer">
-                    {this.settings.mainSettings.sentence ? <p className="word-card__example" dangerouslySetInnerHTML={{ __html: this.textExample }} /> : null}
-                    {this.settings.mainSettings.textMeaning ? <p className="word-card__meaning" dangerouslySetInnerHTML={{ __html: this.textMeaning }} /> : null}
+                    {settings.mainSettings.sentence ? <p className="word-card__example" dangerouslySetInnerHTML={{ __html: word.textExample }} /> : null}
+                    {settings.mainSettings.textMeaning ? <p className="word-card__meaning" dangerouslySetInnerHTML={{ __html: word.textMeaning }} /> : null}
                     <div className="word-card__training-info">
-                        <p className="word-card__last-used">{ `last used: ${this.lastUsed}` }</p>
-                        <p className="word-card__repetitions">{ `repetitions: ${this.repetitions}` }</p>
+                        <div className="word-card__bottom-left-container">
+                            <p className="word-card__last-used">{ `last used: ${currentDate}` }</p>
+                            <p className="word-card__next-use">{ `next repeat: ${currentDate}` }</p>
+                        </div>
+                        <div className="word-card__bottom-right-container">
+                            <p className="word-card__repetitions">{ `repeats: ${getRandomRepeats()}` }</p>
+                        </div>
                     </div>
                 </div>
 
@@ -58,7 +58,37 @@ export class VocabularyWord extends Component {
     }
 }
 
+VocabularyWord.defaultProps = {
+    settings: {
+        mainSettings: {
+            word: true,
+            sentence: true,
+            textMeaning: true,
+        },
+        additionalSettings: {
+            transcription: true,
+            image: true,
+        },
+    },
+    isSpecial: false,
+    removeWordHandler: PropTypes.func,
+};
+
 VocabularyWord.propTypes = {
-    word: PropTypes.object.isRequired,
-    settings: PropTypes.object.isRequired,
+    word: PropTypes.objectOf(PropTypes.oneOfType(
+        [PropTypes.string, PropTypes.number, PropTypes.object],
+    )).isRequired,
+    settings: PropTypes.shape({
+        mainSettings: PropTypes.shape({
+            word: PropTypes.bool,
+            sentence: PropTypes.bool,
+            textMeaning: PropTypes.bool,
+        }),
+        additionalSettings: PropTypes.shape({
+            transcription: PropTypes.bool,
+            image: PropTypes.bool,
+        }),
+    }),
+    isSpecial: PropTypes.bool,
+    removeWordHandler: PropTypes.func,
 };
