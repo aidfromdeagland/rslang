@@ -20,6 +20,7 @@ import { Sprint } from './games/sprint/Sprint';
 import { Hangman } from './games/hangman/Hangman';
 import { Footer } from './footer/footer';
 import { Study } from './pages/study/study';
+import { Table } from './pages/stats/table';
 
 export class App extends Component {
     render() {
@@ -59,8 +60,11 @@ export class App extends Component {
                             <Route path="/main/study">
                                 <Study />
                             </Route>
-                            <Route path="/stats">
+                            <Route exact path="/stats">
                                 <Stats />
+                            </Route>
+                            <Route path="/stats/table">
+                                <Table />
                             </Route>
                             <Route path="/vocabulary">
                                 <Vocabulary />
