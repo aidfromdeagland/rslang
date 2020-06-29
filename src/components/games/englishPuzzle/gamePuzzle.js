@@ -14,7 +14,7 @@ export class GamePuzzle extends Component {
         this.state = {
             level: 1,
             page: 1,
-            word: 1,
+            word: 2,
             isChecked: true,
             haveWords: false,
             isSentenceDone: false,
@@ -34,9 +34,27 @@ export class GamePuzzle extends Component {
             word,
         } = this.state;
         this.words = await WordService.getWords(level - 1, page - 1);
-        this.sentenceForPuzzle = this.words[word].textExample.replace(/(<([^>]+)>)/g, '');
+        const sentence = this.words[word].textExample.replace(/(<([^>]+)>)/g, '');
+        this.sentenceForPuzzle = this.mixWords(sentence);
         this.translateSentence = this.words[word].textExampleTranslate;
         this.setState({ haveWords: true });
+    }
+
+    mixWords = (sentence) => {
+        const newSentence = sentence.split(' ');
+        // console.log(newSentence)
+        const randomSentence = [];
+        for (let i = newSentence.length - 1; i >= 0; i -= 1) {
+            const randomIndex = this.randomInteger(0, i);
+            randomSentence.push(newSentence[randomIndex]);
+            newSentence.splice(randomIndex, 1);
+        }
+        return randomSentence.join(' ');
+    }
+
+    randomInteger = (min, max) => {
+        const rand = min - 0.5 + Math.random() * (max - min + 1);
+        return Math.round(rand);
     }
 
     sentenceDoneHandle = () => {
