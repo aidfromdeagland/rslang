@@ -9,18 +9,28 @@ export class AudioCallGame extends Component {
     constructor(props) {
         super(props);
         this.repository = props.repository;
-        this.state = { selectedWord: false, round: this.getRound() };
+        this.state = { selectedWord: false, pressNumber: undefined, round: this.getRound() };
         this.result = [];
     }
 
     componentDidMount() {
         this.handleSpeak();
+        let isPressed = false;
+        document.addEventListener('keydown', (e) => {
+            if (isPressed) {
+                return;
+            }
+            isPressed = true;
+            this.handleKeyPress(e);
+        });
+        document.addEventListener('keyup', () => { isPressed = false; });
     }
 
     componentDidUpdate() {
-        if (!this.state.selectedWord) {
-            this.handleSpeak();
+        if (this.state.selectedWord || this.state.pressNumber) {
+            return;
         }
+        this.handleSpeak();
     }
 
     static getBackground(startPrecent, endPrecent) {
@@ -55,17 +65,31 @@ export class AudioCallGame extends Component {
         this.state.round.audio.play();
     }
 
+    handleKeyPress(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            if (this.state.selectedWord) {
+                this.handleNextWord();
+            } else {
+                this.handleSelectWord(this.state.round.word, false);
+            }
+        } else if (e.key > 0 && e.key <= 5) {
+            e.preventDefault();
+            this.setState({ pressNumber: Number(e.key) });
+        }
+    }
+
     handleNextWord() {
         if (!this.repository.increment()) {
             this.props.endGame(this.result);
             return;
         }
 
-        this.setState({ selectedWord: false, round: this.getRound() });
+        this.setState({ selectedWord: false, pressNumber: undefined, round: this.getRound() });
     }
 
     render() {
-        const { round, selectedWord } = this.state;
+        const { round, selectedWord, pressNumber } = this.state;
         return (
             <div className="audio-call" style={{ background: round.background }}>
                 <span
@@ -81,6 +105,7 @@ export class AudioCallGame extends Component {
                     wordId={round.word.id}
                     selected={(isCorrect) => this.handleSelectWord(round.word, isCorrect)}
                     selectCorrect={selectedWord}
+                    pressNumber={pressNumber}
                 />
                 {this.state.selectedWord
                     ? <button className="audio-call__button" type="button" onClick={() => this.handleNextWord()}>→→→</button>

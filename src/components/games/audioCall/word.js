@@ -8,6 +8,12 @@ export class Word extends Component {
         this.state = {};
     }
 
+    componentDidUpdate() {
+        if (this.props.number === this.props.pressNumber) {
+            this.handleSelectWord();
+        }
+    }
+
     getClassName() {
         switch (this.state.isCorrect) {
         case undefined:
@@ -42,20 +48,22 @@ export class Word extends Component {
 
     render() {
         return (
-            <span
+            <div
                 className={this.getClassName()}
                 onMouseDown={() => this.handleSelectWord()}
                 tabIndex="0"
                 role="button"
             >
-                {this.props.text}
-            </span>
+                <span className="word__number">{this.props.number}</span>
+                <span className="word__text">{this.props.text}</span>
+            </div>
         );
     }
 }
 
 Word.defaultProps = {
     selectCorrect: false,
+    pressNumber: undefined,
 };
 
 Word.propTypes = {
@@ -63,4 +71,6 @@ Word.propTypes = {
     isCorrect: PropTypes.bool.isRequired,
     selected: PropTypes.func.isRequired,
     selectCorrect: PropTypes.bool,
+    number: PropTypes.number.isRequired,
+    pressNumber: PropTypes.number,
 };

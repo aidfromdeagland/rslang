@@ -6,10 +6,10 @@ import { Word } from './word';
 export class WordList extends Component {
     render() {
         const {
-            words, wordId, selected, selectCorrect,
+            words, wordId, selected, selectCorrect, pressNumber,
         } = this.props;
 
-        const wordsRender = words.map((w) => (
+        const wordsRender = words.map((w, i) => (
             <Word
                 key={w.id + wordId}
                 id={w.id}
@@ -17,6 +17,8 @@ export class WordList extends Component {
                 isCorrect={w.id === wordId}
                 selected={selected}
                 selectCorrect={selectCorrect}
+                number={i + 1}
+                pressNumber={pressNumber}
             />
         ));
         return (<div className="audio-call__words">{wordsRender}</div>);
@@ -25,6 +27,7 @@ export class WordList extends Component {
 
 WordList.defaultProps = {
     selectCorrect: false,
+    pressNumber: undefined,
 };
 
 WordList.propTypes = {
@@ -35,4 +38,5 @@ WordList.propTypes = {
     wordId: PropTypes.string.isRequired,
     selected: PropTypes.func.isRequired,
     selectCorrect: PropTypes.bool,
+    pressNumber: PropTypes.number,
 };
