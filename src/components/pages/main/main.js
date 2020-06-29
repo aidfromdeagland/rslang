@@ -28,26 +28,13 @@ export class Main extends Component {
         const settingsResponse = await SettingService.get();
         const settings = settingsResponse.optional;
         this.settings = settings || settingsDefault;
-
-        // console.log(this.settings)
         this.setState({ settings: this.settings });
     }
 
     putSettings = () => {
-        const {
-            word, textMeaning, textExample, showPicture, showTranscription, numberLearnWord, numberLearnCard,
-        } = this.state.settings;
-        const settings = SettingService.createObject(12, {
-            word,
-            textMeaning,
-            textExample,
-            showPicture,
-            showTranscription,
-            numberLearnWord,
-            numberLearnCard,
-        });
+        const settings = SettingService.createObject(12, this.state.settings);
         SettingService.put(settings);
-        this.setState(settings);
+        this.setState({ settings });
     }
 
     checkboxHandle = (property) => {
