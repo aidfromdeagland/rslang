@@ -6,6 +6,8 @@ import { AudioCallGame } from './AudioCallGame';
 import { AudioCallResult } from './AudioCallResult';
 import { gameProgress } from './constants';
 import { groupCount, pageCount } from '../../../constants/globalConstants';
+import { User } from '../../pages/auth/user';
+import { Auth } from '../../pages/auth/auth';
 
 // TODO Не реализовано (этот текст впоследствии обязательно удалю):
 // * переводы слов, из которых выбирается нужный, относятся к одной части речи
@@ -22,7 +24,18 @@ import { groupCount, pageCount } from '../../../constants/globalConstants';
 export class AudioCall extends Component {
     constructor() {
         super();
-        this.state = { state: gameProgress.start };
+        this.state = { state: gameProgress.start, auth: false };
+    }
+
+    componentDidMount() {
+        User.checkToken(
+            () => {
+                this.setState({ auth: true });
+            },
+            () => {
+                this.setState({ auth: false });
+            },
+        );
     }
 
     startGame(repository, group, page) {
@@ -63,6 +76,13 @@ export class AudioCall extends Component {
     }
 
     render() {
+        if (!this.state.auth) {
+            return (
+                <div className="audio-call">
+                    <Auth isChecking logIn={() => { this.setState({ auth: true }); }} />
+                </div>
+            );
+        }
         switch (this.state.state) {
         case gameProgress.start:
             return (
