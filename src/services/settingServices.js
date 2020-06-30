@@ -1,4 +1,4 @@
-import { backend } from '../constants/globalConstants';
+import { backend, settingsDefault } from '../constants/globalConstants';
 import { User } from '../components/pages/auth/user';
 import { ServiceError } from './serviceError';
 
@@ -50,7 +50,7 @@ export class SettingService {
             return content;
         }
         if (rawResponse.status === 400) {
-            throw new ServiceError('Bad request', rawResponse.status);
+            return settingsDefault;
         }
         if (rawResponse.status === 401) {
             throw new ServiceError('Access token is missing or invalid', rawResponse.status);
@@ -67,4 +67,11 @@ export class SettingService {
 // }
 
 // interface IOptional {
+//    word: bool,
+//    textMeaning: bool,
+//    textExample: bool,
+//    showPicture: bool,
+//    showTranscription: bool,
+//    numberLearnWord: number,
+//    numberLearnCard: number,
 // }
