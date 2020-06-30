@@ -6,7 +6,6 @@ import { AudioCallGame } from './AudioCallGame';
 import { AudioCallResult } from './AudioCallResult';
 import { gameProgress } from './constants';
 import { groupCount, pageCount } from '../../../constants/globalConstants';
-import { User } from '../../pages/auth/user';
 import { Auth } from '../../pages/auth/auth';
 
 // TODO Не реализовано (этот текст впоследствии обязательно удалю):
@@ -25,17 +24,6 @@ export class AudioCall extends Component {
     constructor() {
         super();
         this.state = { state: gameProgress.start, auth: false };
-    }
-
-    componentDidMount() {
-        User.checkToken(
-            () => {
-                this.setState({ auth: true });
-            },
-            () => {
-                this.setState({ auth: false });
-            },
-        );
     }
 
     startGame(repository, group, page) {
