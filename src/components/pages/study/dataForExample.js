@@ -15,8 +15,8 @@ export const dataForExample = {
 export const settingsForExample = {
     mainSettings: {
         word: true,
-        sentence: false,
-        textMeaning: false,
+        textMeaning: true,
+        textExample: true,
     },
     additionalSettings: {
         transcription: true,

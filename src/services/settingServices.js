@@ -3,12 +3,10 @@ import { User } from '../components/pages/auth/user';
 import { ServiceError } from './serviceError';
 
 export class SettingService {
-    static createObject(wordsPerDay, testVal)/*: ISettings */ {
+    static createObject(wordsPerDay, value)/*: ISettings */ {
         return {
             wordsPerDay,
-            optional: {
-                testVal,
-            },
+            optional: value,
         };
     }
 

@@ -12,13 +12,15 @@ export class DropdownList extends Component {
         return (
             <div className="dropdown-child">
                 {numbers.map((number, index) => {
-                    return (<div
-                        onClick={() => {
-                            this.dropdownChildHandle(index);
-                        }}
-                        key={index}>
-                        {index + 1}
-                    </div>);
+                    return (
+                        <div
+                            onClick={() => {
+                                this.dropdownChildHandle(index);
+                            }}
+                            key={index}>
+                            {index + 1}
+                        </div>
+                    );
                 })}
             </div>
         );
