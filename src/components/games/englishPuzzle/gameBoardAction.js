@@ -16,7 +16,17 @@ export class GameBoardAction extends Component {
     }
 
     getWordsOfSentence = (sentence) => {
-        const words = sentence.split(' ').map((word, i) => <DraggableWord key={i} word={word} sentenceDoneHandle={this.props.sentenceDoneHandle} />);
+        const words = sentence.split(' ').map((word, i) => {
+            return (
+                <DraggableWord
+                    key={i}
+                    word={word}
+                    showCheck={this.props.showCheck}
+                    showButton={this.props.showButton}
+                    isClickedDontKnow={this.props.isClickedDontKnow}
+                />
+            );
+        });
         return words;
     }
 
@@ -30,12 +40,13 @@ export class GameBoardAction extends Component {
     render() {
         return (
             <div className="game-board__action">
-                <div className="puzzle-container-sentence" />
+                <div className="puzzle-container-sentence">
+                    {this.props.isClickedDontKnow ? this.getWordsOfSentence(this.props.correctSentence) : null}
+                </div>
                 <div className="puzzle-pieces">
-                    {this.getWordsOfSentence(this.props.sentence)}
+                    {this.props.isClickedDontKnow ? null : this.getWordsOfSentence(this.props.sentenceForPuzzle)}
                 </div>
             </div>
         );
-
     }
 }

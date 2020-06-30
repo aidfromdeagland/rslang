@@ -7,17 +7,22 @@ import { Spinner } from '../../shared/spinner';
 import './game-puzzle.scss';
 import { GameBoardAction } from './gameBoardAction';
 import { Button } from '../../shared/button';
+import { ButtonsBlock } from './buttonsGame';
 
 export class GamePuzzle extends Component {
     constructor(props) {
         super(props);
         this.state = {
             level: 1,
-            page: 1,
-            word: 2,
+            page: 2,
+            wordCount: 0,
             isChecked: true,
             haveWords: false,
-            isSentenceDone: false,
+            isCheckBtn: false,
+            isContinueBtn: false,
+            isDontKnowBtn: true,
+            isResultBtn: false,
+            isClickedDontKnow: false,
         };
     }
 
@@ -27,22 +32,30 @@ export class GamePuzzle extends Component {
         }
     }
 
+    componentDidUpdate() {
+        if (!this.state.haveWords) {
+            this.loadWords();
+        }
+    }
+
     loadWords = async () => {
         const {
             level,
             page,
-            word,
+            wordCount,
         } = this.state;
-        this.words = await WordService.getWords(level - 1, page - 1);
-        const sentence = this.words[word].textExample.replace(/(<([^>]+)>)/g, '');
-        this.sentenceForPuzzle = this.mixWords(sentence);
-        this.translateSentence = this.words[word].textExampleTranslate;
+        const calculatingPage = Math.floor((page - 1) / 2);
+        const calculatingLevel = level - 1;
+        const allWords = await WordService.getWords(calculatingLevel, calculatingPage);
+        const wordsForGameRound = (page - 1) % 2 === 0 ? allWords.slice(0, 10) : allWords.slice(10, 19);
+        this.sentence = wordsForGameRound[wordCount].textExample.replace(/(<([^>]+)>)/g, '');
+        this.sentenceForPuzzle = this.mixWords(this.sentence);
+        this.translateSentence = wordsForGameRound[wordCount].textExampleTranslate;
         this.setState({ haveWords: true });
     }
 
     mixWords = (sentence) => {
         const newSentence = sentence.split(' ');
-        // console.log(newSentence)
         const randomSentence = [];
         for (let i = newSentence.length - 1; i >= 0; i -= 1) {
             const randomIndex = this.randomInteger(0, i);
@@ -57,10 +70,19 @@ export class GamePuzzle extends Component {
         return Math.round(rand);
     }
 
-    sentenceDoneHandle = () => {
-        this.setState((prev) => ({
-            isSentenceDone: !prev.isSentenceDone,
-        }));
+    showButton = (name, boolean) => {
+        this.setState({ [name]: boolean });
+    }
+
+    clickDontKnow = () => {
+        this.setState({ isClickedDontKnow: true });
+    }
+
+    getNextWord = (count) => {
+        this.setState({
+            wordCount: count,
+            haveWords: false,
+        });
     }
 
     render() {
@@ -76,13 +98,27 @@ export class GamePuzzle extends Component {
                         <div className="game-board__translation">
                             <span>{this.translateSentence}</span>
                         </div>
-                        <GameBoardAction sentence={this.sentenceForPuzzle} sentenceDoneHandle={this.sentenceDoneHandle} />
-                        <div className="game-board__btn-block">
-                            {this.state.isSentenceDone && <Button className="check-sentence puzzle-btn button" title="Check" />}
-                            <Button className="dont-know-sentence puzzle-btn button" title="Don\'t know" />
-                            <Button className="continue-sentence puzzle-btn button" title="Continue" />
-                            <Button className="puzzle-result puzzle-btn button" title="Results" />
-                        </div>
+                        <GameBoardAction
+                            sentenceForPuzzle={this.sentenceForPuzzle}
+                            correctSentence={this.sentence}
+                            showCheck={this.showCheck}
+                            showButton={this.showButton}
+                            isClickedDontKnow={this.state.isClickedDontKnow}
+                        />
+                        <ButtonsBlock
+                            wordCount={this.state.wordCount}
+                            isCheckBtn={this.state.isCheckBtn}
+                            isContinueBtn={this.state.isContinueBtn}
+                            isDontKnowBtn={this.state.isDontKnowBtn}
+                            isResultBtn={this.state.isResultBtn}
+                            correctSentence={this.sentence}
+                            showButton={this.showButton}
+                            getNextWord={this.getNextWord}
+                            clickDontKnow={this.clickDontKnow}
+                        />
+                    </div>
+                    <div className="progress-bar-game">
+                        <div className="progress-percent-game" style={{ width: `${(this.state.wordCount + 1) * 10}%` }} />
                     </div>
                 </div>
             );

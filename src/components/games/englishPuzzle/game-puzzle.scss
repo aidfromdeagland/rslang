@@ -71,6 +71,12 @@
   outline: none;
   cursor: grab;
   user-select: none;
+  &.completed.un-correct-word {
+    background: #eab49f;
+  }
+  &.completed.correct-word {
+    background: #72eac2;
+  }
   .word-text {
     width: 100%;
     max-width: 200px;

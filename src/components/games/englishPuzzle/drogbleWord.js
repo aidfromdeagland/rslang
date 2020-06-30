@@ -16,6 +16,9 @@ export class DraggableWord extends Component {
     }
 
     componentDidMount() {
+        if (this.props.isClickedDontKnow) {
+            return;
+        }
         this.handleDrag();
     }
 
@@ -75,7 +78,6 @@ export class DraggableWord extends Component {
                             return;
                         }
 
-
                         if (droppablePazzle && currentWord == droppablePazzle && droppablePazzle.nextElementSibling && droppablePazzle.nextElementSibling.classList.contains('clone')) {
                             if (event.pageX >= droppablePazzle.getBoundingClientRect().left && event.pageX <= droppablePazzle.getBoundingClientRect().left + droppablePazzle.getBoundingClientRect().width / 2) {
                                 clone.remove();
@@ -118,6 +120,10 @@ export class DraggableWord extends Component {
                 document.addEventListener('mousemove', onMouseMove);
 
                 dragBlock.onmouseup = (event) => {
+                    document.querySelectorAll('.completed').forEach((word) => {
+                        word.classList.remove('correct-word');
+                        word.classList.remove('un-correct-word');
+                    });
                     if (event.pageX === startX && event.pageY === startY) {
                         containerForPuzzles.append(puzzle);
                         puzzle.classList.add('completed');
@@ -173,7 +179,12 @@ export class DraggableWord extends Component {
     checkSentence = () => {
         const puzzleField = document.querySelector('.puzzle-pieces');
         if (!puzzleField.innerHTML) {
-            this.props.sentenceDoneHandle();
+            // this.props.showCheck(true);
+            this.props.showButton('isCheckBtn', true);
+            this.props.showButton('isDontKnowBtn', false);
+        } else {
+            // this.props.showCheck(false);
+            this.props.showButton('isCheckBtn', false);
         }
     }
 
