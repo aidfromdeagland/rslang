@@ -46,6 +46,10 @@ export class Dropdown extends Component {
         }));
     }
 
+    handleButtonSelect = () => {
+        this.props.selectLevel(this.state.numberLevel, this.state.numberPage);
+    }
+
     render() {
         const {
             isDropLevelOpen,
@@ -67,11 +71,7 @@ export class Dropdown extends Component {
                     <Button className="mainmenubtn button" title={`${numberPage}`} onClick={this.handleClickDropdownPages} />
                     {isDropPageOpen ? <DropdownList chooseNumber={this.chooseNumberPages} closeDropdown={this.handleClickDropdownPages} /> : null}
                 </div>
-                <div className={`dropdown ${isDropWordOpen ? 'open' : ''}`}>
-                    Number Word:
-                    <Button className="mainmenubtn button" title={`${numberWords}`} onClick={this.handleClickDropdownWords} />
-                    {isDropWordOpen ? <DropdownList chooseNumber={this.chooseNumberWords} closeDropdown={this.handleClickDropdownWords} /> : null}
-                </div>
+                <Button className="button select-level" title="Select" onClick={this.handleButtonSelect} />
             </div>
         );
     }

@@ -85,13 +85,21 @@ export class GamePuzzle extends Component {
         });
     }
 
+    selectLevel = (level, page) => {
+        this.setState({
+            level,
+            page,
+            haveWords: false,
+        });
+    }
+
     render() {
         const { haveWords } = this.state;
         if (haveWords) {
             return (
                 <div className="game-puzzle__container">
                     <div className="game-puzzle__header">
-                        <Dropdown />
+                        <Dropdown selectLevel={this.selectLevel} />
                         <Checkbox text="Auto pronunciation" />
                     </div>
                     <div className="game-board">
