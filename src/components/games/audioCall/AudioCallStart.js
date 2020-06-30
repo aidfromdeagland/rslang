@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { createIncArray } from '../../../utils/utils';
 import { Spinner } from '../../shared/spinner';
 import { groupCount, pageCount } from '../../../constants/globalConstants';
-import { Repository } from './Repository';
+import { Repository } from './repository';
 import { SimpleSelect } from './simpleSelect';
 
 export class AudioCallStart extends Component {
