@@ -1,33 +1,33 @@
-const millisecondsPerDay = 1000 * 60 * 60 * 24;
-const powerIndexGood = 1.4;
-const powerIndexEasy = 1.6;
+const MILLISECONDS_PER_DAY = 1000 * 60 * 60 * 24;
+const POWER_INDEX_GOOD = 1.4;
+const POWER_INDEX_EASY = 1.6;
 
 export const getMemoInfo = (difficulty, prevRepetitions) => {
-    const currentDateSTamp = Date.now();
+    const currentDateStamp = Date.now();
     const result = {
         repetitions: prevRepetitions ? prevRepetitions + 1 : 1,
-        prevRepetitionDate: currentDateSTamp,
-        nextRepetitionDate: currentDateSTamp,
+        prevRepetitionDate: currentDateStamp,
+        nextRepetitionDate: currentDateStamp,
     };
 
     switch (difficulty) {
     case 2: {
-        result.nextRepetitionDate = currentDateSTamp + millisecondsPerDay;
+        result.nextRepetitionDate = currentDateStamp + MILLISECONDS_PER_DAY;
         break;
     }
     case 1: {
-        result.nextRepetitionDate = currentDateSTamp
-            + millisecondsPerDay * Math.ceil(result.repetitions ** powerIndexGood);
+        result.nextRepetitionDate = currentDateStamp
+            + MILLISECONDS_PER_DAY * Math.ceil(result.repetitions ** POWER_INDEX_GOOD);
         break;
     }
     case 0: {
-        result.nextRepetitionDate = currentDateSTamp
-            + millisecondsPerDay * Math.ceil(
-                result.repetitions ** powerIndexEasy + result.repetitions,
+        result.nextRepetitionDate = currentDateStamp
+            + MILLISECONDS_PER_DAY * Math.ceil(
+                result.repetitions ** POWER_INDEX_EASY + result.repetitions,
             );
         break;
     }
-    default: result.nextRepetitionDate = currentDateSTamp;
+    default: result.nextRepetitionDate = currentDateStamp;
     }
 
     return result;
