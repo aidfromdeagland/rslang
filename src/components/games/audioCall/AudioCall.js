@@ -1,9 +1,9 @@
 /* eslint-disable react/destructuring-assignment */
 import React, { Component } from 'react';
 import './audioCall.scss';
-import { AudioCallStart } from './audioCallStart';
-import { AudioCallGame } from './audioCallGame';
-import { AudioCallResult } from './audioCallResult';
+import { AudioCallStart } from './AudioCallStart';
+import { AudioCallGame } from './AudioCallGame';
+import { AudioCallResult } from './AudioCallResult';
 import { gameProgress } from './constants';
 import { groupCount, pageCount } from '../../../constants/globalConstants';
 
