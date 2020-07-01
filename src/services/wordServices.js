@@ -178,10 +178,9 @@ export class WordService {
         throw new ServiceError(errorText, rawResponse.status);
     }
 
-    static async getUserAggWords(group, filter, wordsPerPage = 20) {
+    static async getUserAggWords(group, filter = '', wordsPerPage = 20) {
         const url = `${backend}/users/${User.userId}/aggregatedWords`
             + `?group=${group}&filter=${JSON.stringify(filter)}&wordsPerPage=${wordsPerPage}`;
-        // url = 'https://afternoon-falls-25894.herokuapp.com/users/5edcc9c356c3d600176edc54/aggregatedWords?group=0&wordsPerPage=20&onlyUserWords=true&filter={"userWord.difficulty":"weak"}';
         const rawResponse = await fetch(url, {
             method: 'GET',
             withCredentials: true,
@@ -192,6 +191,14 @@ export class WordService {
         });
         if (rawResponse.ok) {
             const content = await rawResponse.json();
+            content[0].paginatedResults.map((w) => {
+                const word = w;
+                // eslint-disable-next-line no-underscore-dangle
+                word.id = w._id;
+                // eslint-disable-next-line no-underscore-dangle
+                delete word._id;
+                return word;
+            });
             return content; //  IAggWords[]
         }
         if (rawResponse.status === 401) {
@@ -251,7 +258,7 @@ export class WordService {
 // }
 
 // interface IAggWord {
-//    _id: string,
+//     id: string,
 //     word: string,
 //     image: string,
 //     audio: string,

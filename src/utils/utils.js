@@ -22,3 +22,6 @@ export const arrayPopByKey = function arrayPopByKey(array, key, value) {
 export const createIncArray = function createIncArray(count) {
     return [...Array(count).keys()];
 };
+
+export const getUniqueByKey = (array, key) => array
+    .filter((v, i, a) => a.findIndex((t) => (t[key] === v[key])) === i);

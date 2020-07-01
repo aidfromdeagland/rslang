@@ -1,7 +1,12 @@
-import { shuffle, randomInteger } from '../../../utils/utils';
+/* eslint-disable no-underscore-dangle */
+import { shuffle, randomInteger, getUniqueByKey } from '../../../utils/utils';
 import { WordService } from '../../../services/wordServices';
 import { SettingService } from '../../../services/settingServices';
-import { fileResource, groupCount, pageCount } from '../../../constants/globalConstants';
+import {
+    fileResource, wordsCount, groupCount, pageCount,
+} from '../../../constants/globalConstants';
+import { maxIndexQuestWords, maxIndexQuestWordsNotCorrect } from './constants';
+import { levenshtein } from './utils';
 
 export class Repository {
     static setNextGame(state) {
@@ -38,14 +43,12 @@ export class Repository {
             indexWord: 0,
             currentSettings: undefined,
             allWords: undefined, // все слова. Используются для формирования ошибочных вариантов
-            gameWords: undefined, // слова, которые будут заданы
+            gameWords: undefined, // слова, которые будут заданы в процессе игры
             loaded: undefined,
             step: undefined,
+            loadedGroup: undefined,
+            loadedPage: undefined,
         };
-    }
-
-    get word() {
-        return this.state.gameWords[this.state.indexWord];
     }
 
     async loadSettings(success) {
@@ -60,16 +63,30 @@ export class Repository {
     }
 
     async loadData() {
-        const words = shuffle(await WordService.getWords(this.state.currentSettings.group,
-            this.state.currentSettings.page));
-        if (words[0].page !== this.state.currentSettings.page
-            || words[0].group !== this.state.currentSettings.group) {
-            return;
+        const { page, group, wordCount } = this.state.currentSettings;
+        const { loadedGroup, loadedPage, loaded } = this.state;
+
+        const isLoadingPage = loadedPage !== page || loadedGroup !== group;
+        if (loadedGroup !== group) {
+            this.state.allWords = undefined;
+            this.state.gameWords = undefined;
+            // в дальнейшем в бэке скорее всего уберут возможность брать всё,
+            // поэтому сразу расчитываю, что есть только слова по группам
+            const aggWords = await WordService.getUserAggWords(group, '', wordsCount);
+            const words = aggWords[0].paginatedResults;
+            this.state.allWords = words.filter((w) => w.group === group);
+            this.state.loadedGroup = group;
         }
-        this.state.allWords = words;
-        this.state.gameWords = words.slice(this.state.currentSettings.wordCount);
+        if (isLoadingPage) {
+            this.state.gameWords = undefined;
+            this.state.gameWords = shuffle(
+                this.state.allWords.filter((w) => w.page === page),
+            ).slice(wordCount);
+            this.state.loadedPage = page;
+        }
         if (this.state.loaded) {
-            this.state.loaded();
+            this.state.loaded = undefined;
+            loaded();
         }
     }
 
@@ -78,13 +95,9 @@ export class Repository {
     }
 
     setLevel(newPage, newGroup) {
-        const { page, group } = this.state.gameWords[0];
-        if (page !== newPage || group !== newGroup) {
-            this.state.currentSettings.page = newPage;
-            this.state.currentSettings.group = newGroup;
-            this.state.gameWords = undefined;
-            this.loadData();
-        }
+        this.state.currentSettings.page = newPage;
+        this.state.currentSettings.group = newGroup;
+        this.loadData();
     }
 
     checkLoaded(resolve) {
@@ -97,18 +110,24 @@ export class Repository {
     }
 
     getWord() {
-        return this.word;
+        return this.state.gameWords[this.state.indexWord];
     }
 
     getWordsForGame() {
-        const gameWords = shuffle(this.state.allWords.filter((w) => w.id !== this.word.id))
-            .slice(0, 4);
-        gameWords.splice(randomInteger(3), 0, this.word);
+        const word = this.getWord();
+        const { wordTranslate } = word;
+        const wordId = word.id;
+        let gameWords = this.state.allWords.filter((w) => w.id !== wordId);
+        gameWords = getUniqueByKey(gameWords, 'wordTranslate');
+        gameWords = gameWords.sort((a, b) => levenshtein(a.wordTranslate, wordTranslate)
+            - levenshtein(b.wordTranslate, wordTranslate));
+        gameWords = gameWords.slice(0, maxIndexQuestWords);
+        gameWords.splice(randomInteger(maxIndexQuestWordsNotCorrect), 0, word);
         return gameWords;
     }
 
     getAudio() {
-        return new Audio(fileResource + this.word.audio);
+        return new Audio(fileResource + this.getWord().audio);
     }
 
     getProgress() {

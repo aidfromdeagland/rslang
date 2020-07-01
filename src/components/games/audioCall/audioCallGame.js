@@ -5,6 +5,7 @@ import { WordList } from './wordList';
 import { fileResource } from '../../../constants/globalConstants';
 import { getDifferentColor } from './utils';
 import { Repository } from './repository';
+import { maxCountQuestWords } from './constants';
 
 export class AudioCallGame extends Component {
     constructor(props) {
@@ -82,7 +83,7 @@ export class AudioCallGame extends Component {
             } else {
                 this.handleSelectWord(this.state.round.word, false);
             }
-        } else if (e.key > 0 && e.key <= 5) {
+        } else if (e.key > 0 && e.key <= maxCountQuestWords) {
             e.preventDefault();
             this.setState({ pressNumber: Number(e.key) });
         }
