@@ -8,10 +8,15 @@ import './game-puzzle.scss';
 import { GameBoardAction } from './gameBoardAction';
 import { Button } from '../../shared/button';
 import { ButtonsBlock } from './buttonsGame';
+import { ModalResult } from './modalStatistics/modalResult';
 
 export class GamePuzzle extends Component {
     constructor(props) {
         super(props);
+        this.results = {
+            know: [],
+            dontKnow: [],
+        };
         this.state = {
             level: 1,
             page: 1,
@@ -24,6 +29,7 @@ export class GamePuzzle extends Component {
             isResultBtn: false,
             isClickedDontKnow: false,
             isAutoPronunciation: true,
+            isRoundEnd: false,
         };
     }
 
@@ -104,18 +110,37 @@ export class GamePuzzle extends Component {
         });
     }
 
+    checkBoxHandle = () => {
+        this.setState((prev) => ({
+            isAutoPronunciation: !prev.isAutoPronunciation,
+        }));
+    }
+
+    addToResults = (result, sentence, audioUrl) => {
+        this.results[result].push({ sentence, audioUrl });
+    }
+
+    showResults = () => {
+        this.setState({ isRoundEnd: true });
+    }
+
     render() {
         const { haveWords } = this.state;
         if (haveWords) {
             return (
                 <div className="game-puzzle__container">
+                    {this.state.isRoundEnd && <ModalResult results={this.results} />}
                     <div className="game-puzzle__header">
                         <Dropdown
                             selectLevel={this.selectLevel}
                             level={this.state.level}
                             page={this.state.page}
                         />
-                        <Checkbox text="Auto pronunciation" checked={this.state.isAutoPronunciation} />
+                        <Checkbox
+                            text="Auto pronunciation"
+                            checked={this.state.isAutoPronunciation}
+                            checkBoxHandle={this.checkBoxHandle}
+                        />
                     </div>
                     <div className="game-board">
                         <div className="game-board__translation">
@@ -142,6 +167,10 @@ export class GamePuzzle extends Component {
                             level={this.state.level}
                             page={this.state.page}
                             audioSentence={this.audioSentence}
+                            isAutoPronunciation={this.state.isAutoPronunciation}
+                            addToResults={this.addToResults}
+                            showResults={this.showResults}
+                            isRoundEnd={this.state.isRoundEnd}
                         />
                     </div>
                     <div className="progress-bar-game">

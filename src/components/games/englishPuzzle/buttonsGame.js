@@ -21,6 +21,12 @@ export class ButtonsBlock extends Component {
 
         if (document.querySelectorAll('.correct-word').length === correctSentence.length) {
             this.props.showButton('isContinueBtn', true);
+            const urlAudio = `https://raw.githubusercontent.com/aidfromdeagland/rslang-data/master/${this.props.audioSentence}`;
+            const audio = new Audio(urlAudio);
+            if (this.props.isAutoPronunciation) {
+                audio.play();
+            }
+            this.props.addToResults('know', this.props.correctSentence, urlAudio);
             if (this.props.wordCount === 9) {
                 this.props.showButton('iResultBtn', true);
             }
@@ -40,9 +46,11 @@ export class ButtonsBlock extends Component {
             if (this.props.level === 6 && this.props.page === 60) {
                 return;
             }
-            if (this.props.page < 60) {
+            if (this.props.page < 60 && this.props.isRoundEnd) {
                 this.props.selectLevel(this.props.level, parseFloat(this.props.page) + 1);
                 // this.props.getNextWord(0);
+            } else if (this.props.page < 60) {
+                this.props.showResults();
             } else {
                 this.props.selectLevel(this.props.level + 1, 1);
             }
@@ -58,13 +66,17 @@ export class ButtonsBlock extends Component {
             document.querySelector('.puzzle-container-sentence').insertAdjacentHTML('beforeend', wordPuzzle);
         });
         this.props.showButton('isContinueBtn', true);
-        if (this.props.wordCount === 9) {
-            this.props.showButton('isResultBtn', true);
-        }
+        // if (this.props.wordCount === 9) {
+        //     this.props.showButton('isResultBtn', true);
+        // }
         const urlAudio = `https://raw.githubusercontent.com/aidfromdeagland/rslang-data/master/${this.props.audioSentence}`;
         const audio = new Audio(urlAudio);
-        audio.play();
+        if (this.props.isAutoPronunciation) {
+            audio.play();
+        }
         this.props.showButton('isDontKnowBtn', false);
+        this.props.showButton('isCheckBtn', false);
+        this.props.addToResults('dontKnow', this.props.correctSentence, urlAudio);
         // this.props.clickDontKnow();
     }
 
