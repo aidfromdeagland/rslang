@@ -14,7 +14,7 @@ export class GamePuzzle extends Component {
         super(props);
         this.state = {
             level: 1,
-            page: 2,
+            page: 1,
             wordCount: 0,
             isChecked: true,
             haveWords: false,
@@ -23,6 +23,7 @@ export class GamePuzzle extends Component {
             isDontKnowBtn: true,
             isResultBtn: false,
             isClickedDontKnow: false,
+            isAutoPronunciation: true,
         };
     }
 
@@ -47,10 +48,11 @@ export class GamePuzzle extends Component {
         const calculatingPage = Math.floor((page - 1) / 2);
         const calculatingLevel = level - 1;
         const allWords = await WordService.getWords(calculatingLevel, calculatingPage);
-        const wordsForGameRound = (page - 1) % 2 === 0 ? allWords.slice(0, 10) : allWords.slice(10, 19);
+        const wordsForGameRound = (page - 1) % 2 === 0 ? allWords.slice(0, 10) : allWords.slice(10, 20);
         this.sentence = wordsForGameRound[wordCount].textExample.replace(/(<([^>]+)>)/g, '');
         this.sentenceForPuzzle = this.mixWords(this.sentence);
         this.translateSentence = wordsForGameRound[wordCount].textExampleTranslate;
+        this.audioSentence = wordsForGameRound[wordCount].audioExample;
         this.setState({ haveWords: true });
     }
 
@@ -82,6 +84,10 @@ export class GamePuzzle extends Component {
         this.setState({
             wordCount: count,
             haveWords: false,
+            isCheckBtn: false,
+            isContinueBtn: false,
+            isDontKnowBtn: true,
+            isResultBtn: false,
         });
     }
 
@@ -90,6 +96,11 @@ export class GamePuzzle extends Component {
             level,
             page,
             haveWords: false,
+            wordCount: 0,
+            isCheckBtn: false,
+            isContinueBtn: false,
+            isDontKnowBtn: true,
+            isResultBtn: false,
         });
     }
 
@@ -99,8 +110,12 @@ export class GamePuzzle extends Component {
             return (
                 <div className="game-puzzle__container">
                     <div className="game-puzzle__header">
-                        <Dropdown selectLevel={this.selectLevel} />
-                        <Checkbox text="Auto pronunciation" />
+                        <Dropdown
+                            selectLevel={this.selectLevel}
+                            level={this.state.level}
+                            page={this.state.page}
+                        />
+                        <Checkbox text="Auto pronunciation" checked={this.state.isAutoPronunciation} />
                     </div>
                     <div className="game-board">
                         <div className="game-board__translation">
@@ -123,6 +138,10 @@ export class GamePuzzle extends Component {
                             showButton={this.showButton}
                             getNextWord={this.getNextWord}
                             clickDontKnow={this.clickDontKnow}
+                            selectLevel={this.selectLevel}
+                            level={this.state.level}
+                            page={this.state.page}
+                            audioSentence={this.audioSentence}
                         />
                     </div>
                     <div className="progress-bar-game">

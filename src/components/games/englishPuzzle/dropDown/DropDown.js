@@ -10,8 +10,8 @@ export class Dropdown extends Component {
             isDropLevelOpen: false,
             isDropPageOpen: false,
             isDropWordOpen: false,
-            numberLevel: 1,
-            numberPage: 1,
+            numberLevel: this.props.level,
+            numberPage: this.props.page,
             numberWords: 1,
         };
     }
@@ -64,12 +64,12 @@ export class Dropdown extends Component {
                 <div className={`dropdown ${isDropLevelOpen ? 'open' : ''}`}>
                     Level:
                     <Button className="mainmenubtn button" title={`${numberLevel}`} onClick={this.handleClickDropdownLevels} />
-                    {isDropLevelOpen ? <DropdownList chooseNumber={this.chooseNumberLevels} closeDropdown={this.handleClickDropdownLevels} /> : null}
+                    {isDropLevelOpen ? <DropdownList chooseNumber={this.chooseNumberLevels} closeDropdown={this.handleClickDropdownLevels} totalNumber="6" /> : null}
                 </div>
                 <div className={`dropdown ${isDropPageOpen ? 'open' : ''}`}>
                     Page:
                     <Button className="mainmenubtn button" title={`${numberPage}`} onClick={this.handleClickDropdownPages} />
-                    {isDropPageOpen ? <DropdownList chooseNumber={this.chooseNumberPages} closeDropdown={this.handleClickDropdownPages} /> : null}
+                    {isDropPageOpen ? <DropdownList chooseNumber={this.chooseNumberPages} closeDropdown={this.handleClickDropdownPages} totalNumber="60" /> : null}
                 </div>
                 <Button className="button select-level" title="Select" onClick={this.handleButtonSelect} />
             </div>

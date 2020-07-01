@@ -8,7 +8,7 @@ export class DropdownList extends Component {
     }
 
     render() {
-        const numbers = Array(30).fill(null);
+        const numbers = Array(parseFloat(this.props.totalNumber)).fill(null);
         return (
             <div className="dropdown-child">
                 {numbers.map((number, index) => {

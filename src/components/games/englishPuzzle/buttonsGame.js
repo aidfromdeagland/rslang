@@ -5,7 +5,6 @@ import './game-puzzle.scss';
 import { Button } from '../../shared/button';
 
 export class ButtonsBlock extends Component {
-
     handleCheck = () => {
         const correctSentence = this.props.correctSentence.split(' ');
         document.querySelectorAll('.completed').forEach((word) => {
@@ -22,6 +21,9 @@ export class ButtonsBlock extends Component {
 
         if (document.querySelectorAll('.correct-word').length === correctSentence.length) {
             this.props.showButton('isContinueBtn', true);
+            if (this.props.wordCount === 9) {
+                this.props.showButton('iResultBtn', true);
+            }
         } else {
             this.props.showButton('isDontKnowBtn', true);
         }
@@ -34,12 +36,36 @@ export class ButtonsBlock extends Component {
         if (this.props.wordCount < 9) {
             this.props.getNextWord(this.props.wordCount + 1);
         }
+        if (this.props.wordCount === 9) {
+            if (this.props.level === 6 && this.props.page === 60) {
+                return;
+            }
+            if (this.props.page < 60) {
+                this.props.selectLevel(this.props.level, parseFloat(this.props.page) + 1);
+                // this.props.getNextWord(0);
+            } else {
+                this.props.selectLevel(this.props.level + 1, 1);
+            }
+        }
     }
 
     handleDontKnow = () => {
-        // document.querySelector('.puzzle-container-sentence').innerHTML = '';
-        // document.querySelector('.puzzle-pieces').innerHTML = '';
-        this.props.clickDontKnow();
+        document.querySelector('.puzzle-container-sentence').innerHTML = '';
+        document.querySelector('.puzzle-pieces').innerHTML = '';
+
+        this.props.correctSentence.split(' ').map((word) => {
+            const wordPuzzle = `<div class="drag-word completed"><span class="word-text">${word}</span></div>`;
+            document.querySelector('.puzzle-container-sentence').insertAdjacentHTML('beforeend', wordPuzzle);
+        });
+        this.props.showButton('isContinueBtn', true);
+        if (this.props.wordCount === 9) {
+            this.props.showButton('isResultBtn', true);
+        }
+        const urlAudio = `https://raw.githubusercontent.com/aidfromdeagland/rslang-data/master/${this.props.audioSentence}`;
+        const audio = new Audio(urlAudio);
+        audio.play();
+        this.props.showButton('isDontKnowBtn', false);
+        // this.props.clickDontKnow();
     }
 
     render() {
