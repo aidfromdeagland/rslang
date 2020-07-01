@@ -30,12 +30,27 @@ $shadow-color: #4abbff;
         margin: 0 auto;
         text-align: center;
         display: flex;
+        color: #fff;
 
         &-text {
             padding-top: 2rem;
-            color: #fff;
             font-size: 2rem;
             width: 50%;
+
+            div {
+                font-size: 1.5rem;
+                margin-top: 1rem;
+                span {
+                    border: 1px solid #fff;
+                    border-radius: 7px;
+                    padding: 0 0.3rem;
+                    margin-right: 0.5rem;
+
+                    &:first-child {
+                    margin-left: 1rem;
+                    }
+                }
+            }
         }
 
         &-btn {
@@ -96,8 +111,7 @@ $shadow-color: #4abbff;
                 background-color: red;
             }
         }
-
-            }
+    }
 
     &__image {
         position: relative;
@@ -126,7 +140,6 @@ $shadow-color: #4abbff;
             display: flex;
             justify-content: space-between;
             align-items: left;
-           
 
             &_word {
                 min-width: 30%;
@@ -136,13 +149,11 @@ $shadow-color: #4abbff;
             &_transcription {
                 min-width: 35%;
                 text-align: left;
-             
             }
 
             &_translate {
                 min-width: 35%;
                 text-align: left;
-                
             }
 
             &_sound {
@@ -160,7 +171,7 @@ $shadow-color: #4abbff;
         }
 
         &-right {
-            color: $secondary-color;
+            color: $text-color;
         }
 
         &-btn {
@@ -184,10 +195,10 @@ $shadow-color: #4abbff;
             font-size: 1.5rem;
             cursor: pointer;
 
-        a {
-            text-decoration: none;
-            color:#000;
-        }
+            a {
+                text-decoration: none;
+                color: #000;
+            }
         }
 
         h1 {

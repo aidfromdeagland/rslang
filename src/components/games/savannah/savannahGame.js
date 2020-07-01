@@ -6,8 +6,8 @@ import { SavannahWord } from './savannahWord';
 import { SavannahImage } from './savannahImage';
 import { SavannahStatistics } from './savannahStatistics';
 import { AUDIO_URL } from '../../../constants/globalConstants';
-import { soundCorrect } from '../../../assets/audio/correct.mp3';
-import { soundError } from '../../../assets/audio/error.mp3';
+import soundCorrect from '../../../assets/audio/correct.mp3';
+import soundError from '../../../assets/audio/error.mp3';
 import './savannah.scss';
 
 export class SavannahGame extends Component {
@@ -23,18 +23,53 @@ export class SavannahGame extends Component {
             imageWidth: 30,
             imageHeight: 30,
             selected: null,
+            keyPressed: null,
+
         };
     }
 
     componentDidMount() {
         this.getNewCards();
         this.startTimer();
+        let isPressed = false;
+
+        this.keydown = (e) => {
+            if (isPressed) {
+                return;
+            }
+            isPressed = true;
+            this.pressKey(e);
+            this.handleClickByKeyboard();
+        };
+        this.keyup = () => { isPressed = false; };
+        document.addEventListener('keydown', this.keydown);
+        document.addEventListener('keyup', this.keyup);
     }
 
     componentDidUpdate() {
         if (this.state.lives < 1) {
             this.stopTimer();
         }
+    }
+
+    componentWillUnmount() {
+        document.removeEventListener('keydown', this.keydown);
+        document.removeEventListener('keyup', this.keyup);
+    }
+
+    handleClickByKeyboard =() => {
+        const { translateWords, word, keyPressed } = this.state;
+        this.stopTimer();
+        for (let i = 0; i < translateWords.length; i += 1) {
+            if (translateWords[i].id === word.id) {
+                if (keyPressed === i + 1) {
+                    this.getRightAnswer();
+                } else if (keyPressed !== i + 1 && keyPressed !== null) {
+                    this.getWrongAnswer();
+                }
+            }
+        }
+        this.startTimer();
     }
 
     getAudio = (url) => {
@@ -45,7 +80,6 @@ export class SavannahGame extends Component {
          const group = Math.floor(Math.random() * (5 - 0)) + 0;
          const page = Math.floor(Math.random() * (29 - 0)) + 0;
          const data = await WordService.getWords(group, page);
-         // console.log(data[0]);
          return data;
      }
 
@@ -100,8 +134,8 @@ export class SavannahGame extends Component {
                 id: rightWord[wordInx].id,
             },
             {
-                translate: wrongWord2[wordInx].wordTranslate,
-                id: wrongWord2[wordInx].id,
+                translate: wrongWord1[wordInx].wordTranslate,
+                id: wrongWord1[wordInx].id,
 
             },
             {
@@ -132,10 +166,22 @@ export class SavannahGame extends Component {
         );
     }
 
+    pressKey = (e) => {
+        if (e.key > 0 && e.key <= 4) {
+            e.preventDefault();
+            this.setState({
+                keyPressed: Number(e.key),
+            });
+        } else {
+            this.setState({
+                keyPressed: null,
+            });
+        }
+    }
+
     startTimer = () => {
         this.timer = setInterval(() => {
             this.getWrongAnswer();
-            console.log('timer');
         }, 7000);
     }
 
@@ -146,7 +192,7 @@ export class SavannahGame extends Component {
     render() {
         const {
             word, translateWords, lives, id, wordClass, imageHeight, imageWidth, rightAnswers,
-            wrongAnswers, stopTimer, startTimer, selected,
+            wrongAnswers, selected, keyPressed,
         } = this.state;
 
         return (
@@ -180,6 +226,8 @@ export class SavannahGame extends Component {
                             startTimer={this.startTimer}
                             toggleSelected={this.toggleSelected}
                             selected={selected}
+                            keyPressed={keyPressed}
+                            getWordKey={this.getWordKey}
                         />
                     )}
 

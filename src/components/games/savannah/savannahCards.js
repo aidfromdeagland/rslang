@@ -20,13 +20,16 @@ export class SavannahCards extends Component {
                             if (card.id === word.id) {
                                 getRightAnswer();
                                 startTimer();
+                                toggleSelected(null);
                             } else {
                                 getWrongAnswer();
                                 startTimer();
+                                toggleSelected(null);
                             }
                         }}
+
                     >
-                        {card.translate}
+                        {`${index + 1}. ${card.translate}`}
                     </div>
                 )) }
             </div>
