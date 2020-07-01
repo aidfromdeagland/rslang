@@ -1,11 +1,11 @@
 /* eslint-disable react/destructuring-assignment */
 import React, { Component } from 'react';
 import './audioCall.scss';
-import { AudioCallStart } from './AudioCallStart';
-import { AudioCallGame } from './AudioCallGame';
-import { AudioCallResult } from './AudioCallResult';
+import { AudioCallStart } from './audioCallStart';
+import { AudioCallGame } from './audioCallGame';
+import { AudioCallResult } from './audioCallResult';
 import { gameProgress } from './constants';
-import { Repository } from './Repository';
+import { Repository } from './repository';
 import { Auth } from '../../pages/auth/auth';
 
 // TODO Не реализовано (этот текст впоследствии обязательно удалю):

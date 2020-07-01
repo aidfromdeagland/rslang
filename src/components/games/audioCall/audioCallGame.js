@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { WordList } from './wordList';
 import { fileResource } from '../../../constants/globalConstants';
 import { getDifferentColor } from './utils';
-import { Repository } from './Repository';
+import { Repository } from './repository';
 
 export class AudioCallGame extends Component {
     constructor(props) {
