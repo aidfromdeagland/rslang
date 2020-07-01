@@ -5,7 +5,7 @@ import { AudioCallStart } from './AudioCallStart';
 import { AudioCallGame } from './AudioCallGame';
 import { AudioCallResult } from './AudioCallResult';
 import { gameProgress } from './constants';
-import { groupCount, pageCount } from '../../../constants/globalConstants';
+import { Repository } from './Repository';
 import { Auth } from '../../pages/auth/auth';
 
 // TODO Не реализовано (этот текст впоследствии обязательно удалю):
@@ -26,39 +26,30 @@ export class AudioCall extends Component {
         this.state = { state: gameProgress.start, auth: false };
     }
 
-    startGame(repository, group, page) {
+    setAuth() {
+        this.setState({ auth: true });
+    }
+
+    startGame(repositoryState) {
         this.setState({
             state: gameProgress.game,
-            group,
-            page,
-            repository,
+            repositoryState,
         });
     }
 
     endGame(result) {
+        let { repositoryState } = this.state;
+        repositoryState = Repository.setNextGame(repositoryState);
         this.setState({
             state: gameProgress.result,
-            repository: undefined,
             gameResult: result,
+            repositoryState,
         });
     }
 
     nextGame() {
-        let { group, page } = this.state;
-        page += 1;
-        if (page >= pageCount) {
-            page = 0;
-            group += 1;
-            if (group >= groupCount) {
-                page = 0;
-                group = 0;
-            }
-        }
         this.setState({
             state: gameProgress.start,
-            page,
-            group,
-            repository: undefined,
             gameResult: undefined,
         });
     }
@@ -67,7 +58,7 @@ export class AudioCall extends Component {
         if (!this.state.auth) {
             return (
                 <div className="audio-call">
-                    <Auth isChecking logIn={() => { this.setState({ auth: true }); }} />
+                    <Auth isChecking logIn={() => { this.setAuth(); }} />
                 </div>
             );
         }
@@ -75,17 +66,14 @@ export class AudioCall extends Component {
         case gameProgress.start:
             return (
                 <AudioCallStart
-                    repository={this.state.repository}
-                    modeIsUserWords={false}
-                    startGame={(repository, group, page) => this.startGame(repository, group, page)}
-                    page={this.state.page}
-                    group={this.state.group}
+                    repositoryState={this.state.repositoryState}
+                    startGame={(repositoryState) => this.startGame(repositoryState)}
                 />
             );
         case gameProgress.game:
             return (
                 <AudioCallGame
-                    repository={this.state.repository}
+                    repositoryState={this.state.repositoryState}
                     endGame={(result) => this.endGame(result)}
                 />
             );

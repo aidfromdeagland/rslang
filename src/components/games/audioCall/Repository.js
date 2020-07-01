@@ -1,49 +1,98 @@
 import { shuffle, randomInteger } from '../../../utils/utils';
 import { WordService } from '../../../services/wordServices';
-import { fileResource } from '../../../constants/globalConstants';
-import { gameWordCount } from './constants';
+import { SettingService } from '../../../services/settingServices';
+import { fileResource, groupCount, pageCount } from '../../../constants/globalConstants';
 
 export class Repository {
-    constructor(group, page) {
-        this.group = group;
-        this.page = page;
-        this.gameWordCount = gameWordCount;
-        this.step = 1 / gameWordCount;
-        this.indexWord = 0;
-        this.loadData();
+    static setNextGame(state) {
+        const repositoryState = state;
+        let { group, page } = repositoryState.currentSettings;
+        page += 1;
+        if (page >= pageCount) {
+            page = 0;
+            group += 1;
+            if (group >= groupCount) {
+                page = 0;
+                group = 0;
+            }
+        }
+        repositoryState.currentSettings.group = group;
+        repositoryState.currentSettings.page = page;
+        repositoryState.indexWord = 0;
+        Repository.saveSettingsAudioCall(repositoryState.currentSettings);
+        return repositoryState;
+    }
+
+    static async saveSettingsAudioCall(currentSettings) {
+        try {
+            const settings = await SettingService.get();
+            settings.optional.audioCall = JSON.stringify(currentSettings);
+            await SettingService.put(settings);
+        } catch (error) {
+            // TODO показать ошибку пользователю
+        }
+    }
+
+    constructor(state) {
+        this.state = state || {
+            indexWord: 0,
+            currentSettings: undefined,
+            allWords: undefined, // все слова. Используются для формирования ошибочных вариантов
+            gameWords: undefined, // слова, которые будут заданы
+            loaded: undefined,
+            step: undefined,
+        };
+    }
+
+    get word() {
+        return this.state.gameWords[this.state.indexWord];
+    }
+
+    async loadSettings(success) {
+        try {
+            const settings = await SettingService.get();
+            this.state.currentSettings = JSON.parse(settings.optional.audioCall);
+            this.state.step = 1 / this.state.currentSettings.wordCount;
+            success(this.state.currentSettings);
+        } catch (error) {
+            // TODO показать ошибку пользователю
+        }
     }
 
     async loadData() {
-        const words = shuffle(await WordService.getWords(this.group, this.page));
-        this.words = words;
-        this.gameWords = words.slice(this.gameWordCount);
-        // this.loadNextWord();
-        this.word = this.gameWords[this.indexWord];
-        if (this.loaded) {
-            this.loaded();
+        const words = shuffle(await WordService.getWords(this.state.currentSettings.group,
+            this.state.currentSettings.page));
+        if (words[0].page !== this.state.currentSettings.page
+            || words[0].group !== this.state.currentSettings.group) {
+            return;
+        }
+        this.state.allWords = words;
+        this.state.gameWords = words.slice(this.state.currentSettings.wordCount);
+        if (this.state.loaded) {
+            this.state.loaded();
         }
     }
-
-    // loadNextWord() {
-    //     this.nextWord = this.gameWords[this.indexWord + 1];
-    //     if (!this.word) {
-    //         this.word = this.nextWord;
-    //         if (this.getWord) {
-    //             this.getWord(this.word);
-    //         }
-    //         this.loadNextWord();
-    //     }
-    // }
 
     isHaveWord() {
-        return this.indexWord < this.gameWordCount;
+        return this.state.indexWord < this.state.currentSettings.wordCount;
     }
 
-    checkLoading(resolve) {
-        if (this.word) {
+    setLevel(newPage, newGroup) {
+        const { page, group } = this.state.gameWords[0];
+        if (page !== newPage || group !== newGroup) {
+            this.state.currentSettings.page = newPage;
+            this.state.currentSettings.group = newGroup;
+            this.state.gameWords = undefined;
+            this.loadData();
+        }
+    }
+
+    checkLoaded(resolve) {
+        if (this.state.gameWords) {
+            resolve();
             return true;
         }
-        this.loaded = resolve;
+        this.state.loaded = resolve;
         return false;
     }
 
@@ -52,7 +101,8 @@ export class Repository {
     }
 
     getWordsForGame() {
-        const gameWords = shuffle(this.words.filter((w) => w.id !== this.word.id)).slice(0, 4);
+        const gameWords = shuffle(this.state.allWords.filter((w) => w.id !== this.word.id))
+            .slice(0, 4);
         gameWords.splice(randomInteger(3), 0, this.word);
         return gameWords;
     }
@@ -63,17 +113,16 @@ export class Repository {
 
     getProgress() {
         return {
-            currentPrecent: this.indexWord * this.step,
-            step: this.step,
+            currentPrecent: this.state.indexWord * this.state.step,
+            step: this.state.step,
         };
     }
 
     increment() {
-        this.indexWord += 1;
+        this.state.indexWord += 1;
         if (!this.isHaveWord()) {
             return false;
         }
-        this.word = this.gameWords[this.indexWord];
         return true;
     }
 }

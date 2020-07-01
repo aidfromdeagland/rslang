@@ -10,7 +10,25 @@ import { SimpleSelect } from './simpleSelect';
 export class AudioCallStart extends Component {
     constructor(props) {
         super(props);
-        this.state = { isLoading: false, group: props.group, page: props.page };
+        const isLoadingSettings = !props.repositoryState;
+        this.state = {
+            isLoading: false,
+            isLoadingSettings,
+            group: isLoadingSettings || props.repositoryState.currentSettings.group,
+            page: isLoadingSettings || props.repositoryState.currentSettings.page,
+        };
+    }
+
+    componentDidMount() {
+        this.repository = new Repository(this.props.repositoryState);
+        if (!this.state.isLoadingSettings) {
+            this.repository.setLevel(this.state.page, this.state.group);
+            return;
+        }
+        this.repository.loadSettings((settings) => {
+            this.repository.loadData();
+            this.setState({ isLoadingSettings: false, group: settings.group, page: settings.page });
+        });
     }
 
     handleGroupChange(group) {
@@ -22,14 +40,10 @@ export class AudioCallStart extends Component {
     }
 
     handleStartGame() {
-        let { repository } = this.props;
-        if (!repository) {
-            repository = new Repository(this.state.group, this.state.page);
-        }
-
-        if (!repository.checkLoading(() => {
+        this.repository.setLevel(this.state.page, this.state.group);
+        if (!this.repository.checkLoaded(() => {
             this.setState({ isGame: true, isLoading: false });
-            this.props.startGame(repository, this.state.group, this.state.page);
+            this.props.startGame(this.repository.state);
         })) {
             this.setState({ isLoading: true });
         }
@@ -43,7 +57,7 @@ export class AudioCallStart extends Component {
         return (
             <div className="audio-call">
                 <h1 className="audio-call__header">Audio Call</h1>
-                {!this.props.modeIsUserWords
+                {!this.state.modeIsUserWords && !this.state.isLoadingSettings
                     && (
                         <div className="audio-call__levels">
                             <SimpleSelect
@@ -65,7 +79,7 @@ export class AudioCallStart extends Component {
                 <span className="audio-call__description">Select the translation of the spoken word</span>
                 <span className="audio-call__train">Improves the perception of English speech by ear</span>
                 {
-                    this.state.isLoading
+                    this.state.isLoading || this.state.isLoadingSettings
                         ? <Spinner />
                         : <button className="audio-call__button audio-call__start-game" type="button" onClick={() => this.handleStartGame()}>Start game</button>
                 }
@@ -75,17 +89,15 @@ export class AudioCallStart extends Component {
 }
 
 AudioCallStart.defaultProps = {
-    repository: undefined,
-    page: 0,
-    group: 0,
+    repositoryState: undefined,
 };
 
 AudioCallStart.propTypes = {
-    repository: PropTypes.shape({
-        checkLoading: PropTypes.func,
+    repositoryState: PropTypes.shape({
+        currentSettings: PropTypes.shape({
+            group: PropTypes.number,
+            page: PropTypes.number,
+        }),
     }),
     startGame: PropTypes.func.isRequired,
-    modeIsUserWords: PropTypes.bool.isRequired,
-    page: PropTypes.number,
-    group: PropTypes.number,
 };

@@ -27,7 +27,7 @@ export class SettingService {
             throw new ServiceError('Access token is missing or invalid', rawResponse.status);
         }
         if (rawResponse.status === 404) {
-            throw new ServiceError('Settings not found', rawResponse.status);
+            return settingsDefault;
         }
 
         const errorText = await rawResponse.text();
@@ -35,6 +35,8 @@ export class SettingService {
     }
 
     static async put(settings /* ISettings */) {
+        const save = settings;
+        delete save.id;
         const rawResponse = await fetch(`${backend}/users/${User.userId}/settings`, {
             method: 'PUT',
             withCredentials: true,
@@ -43,14 +45,14 @@ export class SettingService {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(settings),
+            body: JSON.stringify(save),
         });
         if (rawResponse.ok) {
             const content = await rawResponse.json();
             return content;
         }
         if (rawResponse.status === 400) {
-            return settingsDefault;
+            throw new ServiceError('Bad request', rawResponse.status);
         }
         if (rawResponse.status === 401) {
             throw new ServiceError('Access token is missing or invalid', rawResponse.status);

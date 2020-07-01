@@ -4,11 +4,12 @@ import PropTypes from 'prop-types';
 import { WordList } from './wordList';
 import { fileResource } from '../../../constants/globalConstants';
 import { getDifferentColor } from './utils';
+import { Repository } from './Repository';
 
 export class AudioCallGame extends Component {
     constructor(props) {
         super(props);
-        this.repository = props.repository;
+        this.repository = new Repository(props.repositoryState);
         this.state = { selectedWord: false, pressNumber: undefined, round: this.getRound() };
         this.result = [];
     }
@@ -16,14 +17,17 @@ export class AudioCallGame extends Component {
     componentDidMount() {
         this.handleSpeak();
         let isPressed = false;
-        document.addEventListener('keydown', (e) => {
+
+        this.keydown = (e) => {
             if (isPressed) {
                 return;
             }
             isPressed = true;
             this.handleKeyPress(e);
-        });
-        document.addEventListener('keyup', () => { isPressed = false; });
+        };
+        this.keyup = () => { isPressed = false; };
+        document.addEventListener('keydown', this.keydown);
+        document.addEventListener('keyup', this.keyup);
     }
 
     componentDidUpdate() {
@@ -31,6 +35,11 @@ export class AudioCallGame extends Component {
             return;
         }
         this.handleSpeak();
+    }
+
+    componentWillUnmount() {
+        document.removeEventListener('keydown', this.keydown);
+        document.removeEventListener('keyup', this.keyup);
     }
 
     static getBackground(startPrecent, endPrecent) {
@@ -116,10 +125,11 @@ export class AudioCallGame extends Component {
 }
 
 AudioCallGame.propTypes = {
-    repository: PropTypes.shape({
-        getWordsForGame: PropTypes.func.isRequired,
-        getAudio: PropTypes.func.isRequired,
-        increment: PropTypes.func.isRequired,
+    repositoryState: PropTypes.shape({
+        currentSettings: PropTypes.shape({
+            group: PropTypes.number,
+            page: PropTypes.number,
+        }),
     }).isRequired,
     endGame: PropTypes.func.isRequired,
 };
