@@ -4,25 +4,25 @@ import PropTypes from 'prop-types';
 export class SavannahCards extends Component {
     render() {
         const {
-            translateWords, word, getRightAnswer, getWrongAnswer, getRightAnswersForStatistics, getWrongAnswersForStatistics,
+            translateWords, word, getRightAnswer, getWrongAnswer, stopTimer, startTimer, toggleSelected, selected,
         } = this.props;
-        const cards = translateWords.sort(() => 0.5 - Math.random());
-
         return (
             <div className="savannah__cards">
 
-                { cards.map((card, index) => (
+                { translateWords.map((card, index) => (
                     <div
-                        className="savannah__cards-card"
+                        className={index === selected ? 'savannah__cards-card savannah__cards-card-success' : 'savannah__cards-card'}
                         aria-hidden
                         key={index}
                         onClick={() => {
+                            toggleSelected(index);
+                            stopTimer();
                             if (card.id === word.id) {
                                 getRightAnswer();
-                                getRightAnswersForStatistics(word.word, word.translate);
+                                startTimer();
                             } else {
                                 getWrongAnswer();
-                                getWrongAnswersForStatistics(word.word, word.translate);
+                                startTimer();
                             }
                         }}
                     >
@@ -39,13 +39,9 @@ SavannahCards.propTypes = {
         translate: PropTypes.string.isRequired,
         id: PropTypes.string.isRequired,
     })).isRequired,
-    word: PropTypes.objectOf(PropTypes.shape({
-        word: PropTypes.string.isRequired,
-        translate: PropTypes.string.isRequired,
-        id: PropTypes.string.isRequired,
-    })).isRequired,
+    word: PropTypes.objectOf((PropTypes.string)).isRequired,
     getRightAnswer: PropTypes.func.isRequired,
     getWrongAnswer: PropTypes.func.isRequired,
-    getRightAnswersForStatistics: PropTypes.func.isRequired,
-    getWrongAnswersForStatistics: PropTypes.func.isRequired,
+    stopTimer: PropTypes.func.isRequired,
+    startTimer: PropTypes.func.isRequired,
 };

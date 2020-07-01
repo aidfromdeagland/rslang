@@ -1,10 +1,14 @@
 import React, { Component } from 'react';
-import './savannah.scss';
+import { WordService } from '../../../services/wordServices';
 import { SavannahCards } from './savannahCards';
 import { SavannahLives } from './savannahLives';
 import { SavannahWord } from './savannahWord';
 import { SavannahImage } from './savannahImage';
 import { SavannahStatistics } from './savannahStatistics';
+import { AUDIO_URL } from '../../../constants/globalConstants';
+import { soundCorrect } from '../../../assets/audio/correct.mp3';
+import { soundError } from '../../../assets/audio/error.mp3';
+import './savannah.scss';
 
 export class SavannahGame extends Component {
     constructor(props) {
@@ -13,152 +17,146 @@ export class SavannahGame extends Component {
             word: {},
             translateWords: [],
             lives: 5,
+            rightAnswers: [],
+            wrongAnswers: [],
             wordClass: 'savannah__card-transition',
             imageWidth: 30,
             imageHeight: 30,
-            isOver: false,
-            rightAnswers: [],
-            wrongAnswers: [],
+            selected: null,
         };
-
-        this.getWord = this.getWord.bind(this);
-        this.getNewCards = this.getNewCards.bind(this);
-        this.timeIsOver = this.timeIsOver.bind(this);
-        this.resizeImage = this.resizeImage.bind(this);
-        this.getRightAnswer = this.getRightAnswer.bind(this);
-        this.getWrongAnswer = this.getWrongAnswer.bind(this);
     }
 
     componentDidMount() {
         this.getNewCards();
-        // this.timeIsOver();
+        this.startTimer();
     }
 
-    // componentWillUnmount() {
-    //     this.timeIsOver();
-    // }
-
-    // componentWillUpdate() {
-    //     if (this.state.isOver === true) {
-    //         // this.getNewCards();
-    //         // this.toggleIsTimeOver();
-    //         console.log('bzzz');
-    //     }
-    // }
-
-    async getWord() {
-        const group = Math.floor(Math.random() * (5 - 0)) + 0;
-        const page = Math.floor(Math.random() * (29 - 0)) + 0;
-        const url = `https://afternoon-falls-25894.herokuapp.com/words?page=${page}&group=${group}`;
-        const response = await fetch(url);
-        const data = await response.json();
-        return data;
+    componentDidUpdate() {
+        if (this.state.lives < 1) {
+            this.stopTimer();
+        }
     }
 
-    getRightAnswer() {
-        this.resizeImage();
+    getAudio = (url) => {
+        new Audio(AUDIO_URL + url).play();
+    }
+
+     getWord = async () => {
+         const group = Math.floor(Math.random() * (5 - 0)) + 0;
+         const page = Math.floor(Math.random() * (29 - 0)) + 0;
+         const data = await WordService.getWords(group, page);
+         // console.log(data[0]);
+         return data;
+     }
+
+    getRightAnswer = () => {
+        const {
+            imageHeight, imageWidth, word, rightAnswers,
+        } = this.state;
         this.getNewCards();
+        const row = {
+            word: word.word,
+            transcription: word.transcription,
+            translate: word.translate,
+            audio: word.audio,
+        };
+        this.setState({
+            rightAnswers: [...rightAnswers, row],
+            wordClass: 'savannah__card-transition',
+            imageHeight: imageHeight + 10,
+            imageWidth: imageWidth + 10,
+        });
+        new Audio(soundCorrect).play();
+    }
+
+    getWrongAnswer = () => {
+        const { word, wrongAnswers } = this.state;
+        this.getNewCards();
+        const row = {
+            word: word.word,
+            transcription: word.transcription,
+            translate: word.translate,
+            audio: word.audio,
+        };
         this.setState({
             wordClass: 'savannah__card-transition',
+            lives: this.state.lives - 1,
+            wrongAnswers: [...wrongAnswers, row],
         });
-        // new Audio('./../../../assets/audio/correct.mp3').play();
+        new Audio(soundError).play();
     }
 
-    getWrongAnswer() {
-        this.lostLive();
-        this.getNewCards();
-        this.setState({
-            wordClass: 'savannah__card-transition',
-        });
-    }
+    toggleSelected = (id) => { this.setState({ selected: id }); }
 
-    async getNewCards() {
+    getNewCards = async () => {
         const wordInx = Math.floor(Math.random() * (19 - 0)) + 0;
         const rightWord = await this.getWord();
         const wrongWord1 = await this.getWord();
         const wrongWord2 = await this.getWord();
         const wrongWord3 = await this.getWord();
+        const arrayOfWords = [
+            {
+                translate: rightWord[wordInx].wordTranslate,
+                id: rightWord[wordInx].id,
+            },
+            {
+                translate: wrongWord2[wordInx].wordTranslate,
+                id: wrongWord2[wordInx].id,
+
+            },
+            {
+                translate: wrongWord2[wordInx].wordTranslate,
+                id: wrongWord2[wordInx].id,
+            },
+            {
+                translate: wrongWord3[wordInx].wordTranslate,
+                id: wrongWord3[wordInx].id,
+            },
+        ];
 
         Promise.all([rightWord, wrongWord1, wrongWord2, wrongWord3]).then(
+
             this.setState({
                 word: {
                     id: rightWord[wordInx].id,
                     word: rightWord[wordInx].word,
                     translate: rightWord[wordInx].wordTranslate,
+                    transcription: rightWord[wordInx].transcription,
+                    audio: rightWord[wordInx].audio,
                 },
-                translateWords: [
-                    {
-                        translate: rightWord[wordInx].wordTranslate,
-                        id: rightWord[wordInx].id,
-                    },
-                    {
-                        translate: wrongWord2[wordInx].wordTranslate,
-                        id: wrongWord2[wordInx].id,
 
-                    },
-                    {
-                        translate: wrongWord2[wordInx].wordTranslate,
-                        id: wrongWord2[wordInx].id,
-                    },
-                    {
-                        translate: wrongWord3[wordInx].wordTranslate,
-                        id: wrongWord3[wordInx].id,
-                    },
-                ],
+                translateWords: arrayOfWords.sort(() => 0.5 - Math.random()),
                 wordClass: 'savannah__card-transition card-bottom',
             }),
 
         );
     }
 
-     getRightAnswersForStatistics = (value1, value2) => {
-         const row = {
-             word: value1,
-             translate: value2,
-         };
-         this.setState({ rightAnswers: [...this.state.rightAnswers, row] });
-     }
+    startTimer = () => {
+        this.timer = setInterval(() => {
+            this.getWrongAnswer();
+            console.log('timer');
+        }, 7000);
+    }
 
-     getWrongAnswersForStatistics = (value1, value2) => {
-         const row = {
-             word: value1,
-             translate: value2,
-         };
-         this.setState({ wrongAnswers: [...this.state.wrongAnswers, row] });
-     }
+    stopTimer= () => {
+        clearInterval(this.timer);
+    }
 
-      lostLive = () => {
-          this.setState((prevState) => ({
-              lives: prevState.lives - 1,
-          }));
-      };
+    render() {
+        const {
+            word, translateWords, lives, id, wordClass, imageHeight, imageWidth, rightAnswers,
+            wrongAnswers, stopTimer, startTimer, selected,
+        } = this.state;
 
-      resizeImage() {
-          this.setState({
-              imageHeight: this.state.imageHeight + 10,
-              imageWidth: this.state.imageWidth + 10,
-          });
-      }
+        return (
+            <div className="savannah">
 
-      timeIsOver() {
-          setTimeout(() => {
-              this.getWrongAnswer();
-          }, 5000);
-      }
+                <SavannahLives
+                    lives={lives}
+                />
 
-      render() {
-          const {
-              word, translateWords, lives, id, wordClass, imageHeight, imageWidth, rightAnswers, wrongAnswers,
-          } = this.state;
-
-          return (
-              <div className="savannah">
-
-                  <SavannahLives
-                      lives={lives}
-                  />
-
-                  {{ word } && this.state.lives >= 1
+                {{ word } && this.state.lives >= 1
                     && (
                         <SavannahWord
                             word={word}
@@ -167,7 +165,7 @@ export class SavannahGame extends Component {
                         />
                     )}
 
-                  {{ word } && this.state.lives >= 1
+                {{ word } && this.state.lives >= 1
                     && (
                         <SavannahCards
                             translateWords={translateWords}
@@ -178,25 +176,28 @@ export class SavannahGame extends Component {
                             wrongAnswers={wrongAnswers}
                             getRightAnswer={this.getRightAnswer}
                             getWrongAnswer={this.getWrongAnswer}
-                            getRightAnswersForStatistics={this.getRightAnswersForStatistics}
-                            getWrongAnswersForStatistics={this.getWrongAnswersForStatistics}
+                            stopTimer={this.stopTimer}
+                            startTimer={this.startTimer}
+                            toggleSelected={this.toggleSelected}
+                            selected={selected}
                         />
                     )}
 
-                  {this.state.lives < 1
+                {this.state.lives < 1
                    && (
                        <SavannahStatistics
                            rightAnswers={rightAnswers}
                            wrongAnswers={wrongAnswers}
+                           getAudio={this.getAudio}
                        />
                    )}
 
-                  <SavannahImage
-                      imageWidth={imageWidth}
-                      imageHeight={imageHeight}
-                  />
+                <SavannahImage
+                    imageWidth={imageWidth}
+                    imageHeight={imageHeight}
+                />
 
-              </div>
-          );
-      }
+            </div>
+        );
+    }
 }

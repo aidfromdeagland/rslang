@@ -13,8 +13,8 @@ export class SavannahWord extends Component {
 }
 
 SavannahWord.propTypes = {
-    word: PropTypes.objectOf(PropTypes.shape({
-        word: PropTypes.string.isRequired,
-    })).isRequired,
+    // word: PropTypes.objectOf(PropTypes.shape({
+    //     word: PropTypes.string.isRequired,
+    // })).isRequired,
     wordClass: PropTypes.string.isRequired,
 };

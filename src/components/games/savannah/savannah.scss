@@ -1,82 +1,71 @@
+$main-color: #d372e2;
+$bg-color: #ecf5ea;
+$secondary-color: #56dde4;
+$text-color: #5c6bf5;
+$lives-color: #d372e2;
+$shadow-color: #4abbff;
 
-    $main-color: #D372E2;
-    $bg-color: #ecf5ea;
-    $secondary-color: #56DDE4;
-    $text-color: #5C6BF5;
-    $lives-color: #D372E2;
-    $shadow-color:  #4ABBFF;
+.savannah {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin: 0 auto;
+    background-color: #000;
+    color: #fff;
+    font-family: "Literata", sans-serif;
 
-
-    .savannah {
-        position: absolute;
-        top: 0;
-        left: 0;
-        z-index: 10;
+    &__start {
+        background-color: #aad9f5;
+        background-image: url("./../../../assets/images/lion.jpg");
+        background-size: cover;
+        background-position: left;
         width: 100vw;
         height: 100vh;
-        display:flex;
-        flex-direction: column;
-        justify-content: space-between;
-         margin: 0 auto;
-        background-color: #000;
-        color: #fff ; 
-         font-family: "Literata", sans-serif;
+        margin: 0 auto;
+        text-align: center;
+        display: flex;
 
-        &__start {
-  background-color: #AAD9F5;          
-background-image: url('./../../../assets/images/lion.jpg');
-background-size: cover;
-background-position: left;
-width: 100vw;
-height: 100vh;
-margin: 0 auto;
-text-align: center;
-display: flex;
-
-
-
-
-
-&-text {
-    padding-top: 2rem;
-    color: #fff;
-    font-size: 2rem;
-    width: 50%;
-
-}
-
-
-&-btn {
-    margin: 3rem 0 0 3rem;
-    border: 1px solid transparent;
-    border-radius: 7px;
-    background-color: #092C70;
-    color: #fff;
-    padding: 1rem 2rem;
-     cursor: pointer;
-     font-size: 1.1rem;
-    &:hover {
-      background-color: #0F4AB4;
-          }
-}
-
-        }   
-
-        &__lives {
-            display: flex;
-            justify-content: flex-end; 
-            padding: 2rem;
-
-            &-life {
-                display: flex;
-                width: 40px;
-                height: 40px;
-                background-image: url("./../../../assets/icons/heart-savannah.svg"); 
-               }
+        &-text {
+            padding-top: 2rem;
+            color: #fff;
+            font-size: 2rem;
+            width: 50%;
         }
-        
-   
-    
+
+        &-btn {
+            margin: 3rem 0 0 3rem;
+            border: 1px solid transparent;
+            border-radius: 7px;
+            background-color: #092c70;
+            color: #fff;
+            padding: 1rem 2rem;
+            cursor: pointer;
+            font-size: 1.1rem;
+            &:hover {
+                background-color: #0f4ab4;
+            }
+        }
+    }
+
+    &__lives {
+        display: flex;
+        justify-content: flex-end;
+        padding: 2rem;
+
+        &-life {
+            display: flex;
+            width: 40px;
+            height: 40px;
+            background-image: url("./../../../assets/icons/heart-savannah.svg");
+        }
+    }
+
     &__cards {
         max-width: 1020px;
         height: 100px;
@@ -89,8 +78,7 @@ display: flex;
         flex: none;
         color: $text-color;
         text-transform: uppercase;
-            
-    
+
         &-card {
             background-color: $secondary-color;
             width: 23%;
@@ -100,77 +88,129 @@ display: flex;
             cursor: pointer;
             font-size: 1.1rem;
             box-shadow: 0 0 10px $shadow-color;
-          
+
+            &-success {
+                background-color: $bg-color;
+            }
+            &-error {
+                background-color: red;
+            }
         }
-    } 
-    
+
+            }
+
     &__image {
-      position: relative;
-      margin: 0 auto 5rem;
-      background-image: url("../../../assets/images/crystal.jpg");
-      background-size: contain;
-      background-repeat: no-repeat;
-          
+        position: relative;
+        margin: 0 auto 5rem;
+        background-image: url("../../../assets/images/crystal.jpg");
+        background-size: contain;
+        background-repeat: no-repeat;
     }
 
     &__statistics {
+        position: relative;
         margin: 0 auto;
         background-color: $bg-color;
         width: 50%;
         height: 70%;
         overflow-y: scroll;
-        border-radius: 5px;
-        color: $text-color;
+        overflow-x: hidden;
+        border-radius: 10px;
+        color: #000;
         text-align: center;
+        display: flex;
+        flex-direction: column;
+        padding: 2rem;
 
-      
+        &-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: left;
+           
+
+            &_word {
+                min-width: 30%;
+                text-align: left;
+            }
+
+            &_transcription {
+                min-width: 35%;
+                text-align: left;
+             
+            }
+
+            &_translate {
+                min-width: 35%;
+                text-align: left;
+                
+            }
+
+            &_sound {
+                min-width: 10%;
+                background-image: (url("../../../assets/icons/dynamic-savannah.svg"));
+                background-size: contain;
+                background-repeat: no-repeat;
+                cursor: pointer;
+            }
+        }
 
         &-wrong {
-color: $main-color;
+            color: $main-color;
+            flex: 0;
         }
 
         &-right {
-            color: $secondary-color; 
+            color: $secondary-color;
         }
 
         &-btn {
-           
+            margin: 3rem 0;
             border: 1px solid transparent;
             border-radius: 7px;
             background-color: $text-color;
             color: #fff;
             padding: 0.5rem 1rem;
-             cursor: pointer;
-             font-size: 1.1rem;
+            cursor: pointer;
+            font-size: 1.1rem;
             &:hover {
-              background-color: $lives-color;
-                  }
+                background-color: $lives-color;
+            }
         }
-        
+
+        &-btnClose {
+            position: absolute;
+            top: 0.5rem;
+            right: 1rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+
+        a {
+            text-decoration: none;
+            color:#000;
+        }
+        }
+
+        h1 {
+            color: $text-color;
+        }
     }
-    
+
     &__card-transition {
         position: absolute;
         top: -5rem;
         left: 45%;
         padding: 1rem;
-        text-align: center;
-        border-radius: 10px;
-        border: 1px solid $main-color;
         min-width: 10rem;
         min-height: 3rem;
-        font-size: 1.2rem;
+        font-size: 2rem;
         text-transform: uppercase;
-       
-    }
-    
-    .card-bottom  {
-        top: 20rem;
-        transition: all 5s linear;
-    }  
-    
+        letter-spacing: 0.4rem;
+        color: #fff;
     }
 
-
-    
-
+    .card-bottom {
+        top: 30rem;
+        color: $secondary-color;
+        transition: all 7s linear;
+    }
+}
