@@ -85,6 +85,9 @@
     background: #5196a67a;
     border-radius: 5px;
     font-size: 27px;
+    &.correct {
+      background: #1fda4e7a;
+    }
   }
   .word-container {
     position: absolute;
@@ -140,12 +143,21 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 12px;
   border-radius: 5px;
-  &:hover {
+  .btn-next-card {
+    padding: 13px;
+    margin: 0;
+    border: 0;
+    background: none;
+    width: 100%;
+    height: 100%;
     cursor: pointer;
-    background: #f9efeb59;
+    &:hover {
+      cursor: pointer;
+      background: #f9efeb59;
+    }
   }
+
   img {
     width: 23px;
     height: 47px;
@@ -153,9 +165,17 @@
 }
 
 .buttons-block {
+  display: flex;
+  justify-content: space-around;
   margin: 10px 0;
   .delete-btn {
     background: #af0001;
+    &:hover {
+      background: #da3d3dd7;
+    }
+  }
+  .learn-btn {
+    width: 180px;
   }
   .button {
     margin: 0 10px;
