@@ -124,12 +124,26 @@ export class GamePuzzle extends Component {
         this.setState({ isRoundEnd: true });
     }
 
+    handleByNextRound = () => {
+        this.setState({ isRoundEnd: false });
+        if (this.props.level === 6 && this.props.page === 60) {
+            this.selectLevel(1, 1);
+        }
+        if (this.state.page < 60) {
+            this.selectLevel(this.state.level, parseFloat(this.state.page) + 1);
+        } else {
+            this.selectLevel(this.state.level + 1, 1);
+        }
+        this.results.know = [];
+        this.results.dontKnow = [];
+    }
+
     render() {
         const { haveWords } = this.state;
         if (haveWords) {
             return (
                 <div className="game-puzzle__container">
-                    {this.state.isRoundEnd && <ModalResult results={this.results} />}
+                    {this.state.isRoundEnd && <ModalResult results={this.results} handleByNextRound={this.handleByNextRound} />}
                     <div className="game-puzzle__header">
                         <Dropdown
                             selectLevel={this.selectLevel}

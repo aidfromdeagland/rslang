@@ -43,17 +43,18 @@ export class ButtonsBlock extends Component {
             this.props.getNextWord(this.props.wordCount + 1);
         }
         if (this.props.wordCount === 9) {
-            if (this.props.level === 6 && this.props.page === 60) {
-                return;
-            }
-            if (this.props.page < 60 && this.props.isRoundEnd) {
-                this.props.selectLevel(this.props.level, parseFloat(this.props.page) + 1);
-                // this.props.getNextWord(0);
-            } else if (this.props.page < 60) {
-                this.props.showResults();
-            } else {
-                this.props.selectLevel(this.props.level + 1, 1);
-            }
+            this.props.showResults();
+            // if (this.props.level === 6 && this.props.page === 60) {
+            //     return;
+            // }
+            // if (this.props.page < 60 && this.props.isRoundEnd) {
+            //     this.props.selectLevel(this.props.level, parseFloat(this.props.page) + 1);
+            //     // this.props.getNextWord(0);
+            // } else if (this.props.page < 60) {
+            //     this.props.showResults();
+            // } else {
+            //     this.props.selectLevel(this.props.level + 1, 1);
+            // }
         }
     }
 
