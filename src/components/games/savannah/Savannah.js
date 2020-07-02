@@ -8,9 +8,9 @@ export class Savannah extends Component {
             <div
                 className="savannah__start"
             >
-
                 <div className="savannah__start-text">
-                    Welcome to dangerous and exciting world of Savannah! Catch up words and get rich!
+                    Welcome to dangerous and exciting world of Savannah!
+                    Catch up words and get rich!
                     <div>
                         Use Keybord to be faster!
                         <span>1</span>
@@ -25,7 +25,6 @@ export class Savannah extends Component {
                 </NavLink>
 
             </div>
-
         );
     }
 }

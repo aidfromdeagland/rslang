@@ -22,8 +22,9 @@ export class SavannahGame extends Component {
             wordClass: 'savannah__card-transition',
             imageWidth: 30,
             imageHeight: 30,
-            selected: null,
             keyPressed: null,
+            isCorrect: null,
+            isWrong: null,
 
         };
     }
@@ -31,8 +32,8 @@ export class SavannahGame extends Component {
     componentDidMount() {
         this.getNewCards();
         this.startTimer();
-        let isPressed = false;
 
+        let isPressed = false;
         this.keydown = (e) => {
             if (isPressed) {
                 return;
@@ -42,8 +43,10 @@ export class SavannahGame extends Component {
             this.handleClickByKeyboard();
         };
         this.keyup = () => { isPressed = false; };
+
         document.addEventListener('keydown', this.keydown);
         document.addEventListener('keyup', this.keyup);
+        document.addEventListener('mousedown', this.showRightWordByClick);
     }
 
     componentDidUpdate() {
@@ -55,6 +58,7 @@ export class SavannahGame extends Component {
     componentWillUnmount() {
         document.removeEventListener('keydown', this.keydown);
         document.removeEventListener('keyup', this.keyup);
+        document.removeEventListener('mousedown', this.showRightWordByClick);
     }
 
     handleClickByKeyboard =() => {
@@ -64,13 +68,25 @@ export class SavannahGame extends Component {
             if (translateWords[i].id === word.id) {
                 if (keyPressed === i + 1) {
                     this.getRightAnswer();
+                    this.showRightCard(i);
                 } else if (keyPressed !== i + 1 && keyPressed !== null) {
                     this.getWrongAnswer();
+                    this.showRightCard(i);
+                    this.showWrongCard(keyPressed - 1);
                 }
             }
         }
         this.startTimer();
     }
+
+    showRightWordByClick = () => {
+        const { translateWords, word } = this.state;
+        for (let i = 0; i < translateWords.length; i += 1) {
+            if (translateWords[i].id === word.id) {
+                this.showRightCard(i);
+            }
+        }
+    };
 
     getAudio = (url) => {
         new Audio(AUDIO_URL + url).play();
@@ -120,7 +136,26 @@ export class SavannahGame extends Component {
         new Audio(soundError).play();
     }
 
-    toggleSelected = (id) => { this.setState({ selected: id }); }
+    showRightCard = (card) => {
+        this.setState({ isCorrect: card });
+        setTimeout(() => { this.setState({ isCorrect: null }); }, 700);
+    }
+
+    showWrongCard = (card) => {
+        this.setState({ isWrong: card });
+        setTimeout(() => { this.setState({ isWrong: null }); }, 700);
+    }
+
+    getClassName = (i) => {
+        const { isCorrect, isWrong } = this.state;
+        if (i === isCorrect) {
+            return 'savannah__cards-card savannah__cards-card-success';
+        }
+        if (i === isWrong) {
+            return 'savannah__cards-card savannah__cards-card-error';
+        }
+        return 'savannah__cards-card';
+    }
 
     getNewCards = async () => {
         const wordInx = Math.floor(Math.random() * (19 - 0)) + 0;
@@ -191,8 +226,8 @@ export class SavannahGame extends Component {
 
     render() {
         const {
-            word, translateWords, lives, id, wordClass, imageHeight, imageWidth, rightAnswers,
-            wrongAnswers, selected, keyPressed,
+            word, translateWords, lives, id, wordClass, imageHeight, imageWidth,
+            rightAnswers, wrongAnswers,
         } = this.state;
 
         return (
@@ -216,18 +251,13 @@ export class SavannahGame extends Component {
                         <SavannahCards
                             translateWords={translateWords}
                             word={word}
-                            id={id}
-                            lives={lives}
-                            rightAnswers={rightAnswers}
-                            wrongAnswers={wrongAnswers}
                             getRightAnswer={this.getRightAnswer}
                             getWrongAnswer={this.getWrongAnswer}
                             stopTimer={this.stopTimer}
                             startTimer={this.startTimer}
-                            toggleSelected={this.toggleSelected}
-                            selected={selected}
-                            keyPressed={keyPressed}
-                            getWordKey={this.getWordKey}
+                            getClassName={this.getClassName}
+                            showRightCard={this.showRightCard}
+                            showWrongCard={this.showWrongCard}
                         />
                     )}
 

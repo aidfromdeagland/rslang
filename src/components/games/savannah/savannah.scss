@@ -4,6 +4,8 @@ $secondary-color: #56dde4;
 $text-color: #5c6bf5;
 $lives-color: #d372e2;
 $shadow-color: #4abbff;
+$success-color: #56e4c3;
+$error-color: #e2727d;
 
 .savannah {
     position: absolute;
@@ -105,10 +107,10 @@ $shadow-color: #4abbff;
             box-shadow: 0 0 10px $shadow-color;
 
             &-success {
-                background-color: $bg-color;
+                background-color: $success-color;
             }
             &-error {
-                background-color: red;
+                background-color: $error-color;
             }
         }
     }
@@ -166,12 +168,12 @@ $shadow-color: #4abbff;
         }
 
         &-wrong {
-            color: $main-color;
+            color: $error-color;
             flex: 0;
         }
 
         &-right {
-            color: $text-color;
+            color: $success-color;
         }
 
         &-btn {
@@ -202,7 +204,7 @@ $shadow-color: #4abbff;
         }
 
         h1 {
-            color: $text-color;
+            color: $success-color;
         }
     }
 

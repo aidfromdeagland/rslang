@@ -4,30 +4,29 @@ import PropTypes from 'prop-types';
 export class SavannahCards extends Component {
     render() {
         const {
-            translateWords, word, getRightAnswer, getWrongAnswer, stopTimer, startTimer, toggleSelected, selected,
+            translateWords, word, getRightAnswer, getWrongAnswer, stopTimer,
+            startTimer, showRightCard, showWrongCard, getClassName,
         } = this.props;
         return (
             <div className="savannah__cards">
 
                 { translateWords.map((card, index) => (
                     <div
-                        className={index === selected ? 'savannah__cards-card savannah__cards-card-success' : 'savannah__cards-card'}
+                        className={getClassName(index)}
                         aria-hidden
                         key={index}
                         onClick={() => {
-                            toggleSelected(index);
                             stopTimer();
                             if (card.id === word.id) {
+                                showRightCard(index);
                                 getRightAnswer();
                                 startTimer();
-                                toggleSelected(null);
                             } else {
+                                showWrongCard(index);
                                 getWrongAnswer();
                                 startTimer();
-                                toggleSelected(null);
                             }
                         }}
-
                     >
                         {`${index + 1}. ${card.translate}`}
                     </div>
@@ -47,4 +46,7 @@ SavannahCards.propTypes = {
     getWrongAnswer: PropTypes.func.isRequired,
     stopTimer: PropTypes.func.isRequired,
     startTimer: PropTypes.func.isRequired,
+    showRightCard: PropTypes.func.isRequired,
+    showWrongCard: PropTypes.func.isRequired,
+    getClassName: PropTypes.func.isRequired,
 };
