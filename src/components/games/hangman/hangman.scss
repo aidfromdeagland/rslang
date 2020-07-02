@@ -3,6 +3,35 @@
     margin: 0;
     text-align: center;
     align-items: center;
+    min-height: 100vh;
+    width: 100%;
+
+    .dop-block{
+        width: 70px;
+        height: 30px;
+        margin-top: -20px;
+        display: flex;
+        margin-left: auto;
+        margin-right: 0;
+        justify-content: space-between;
+        /*margin-right: 100px;*/
+        /*text-align: right;*/
+        border: none;
+
+        .dop-block-el{
+            border: none;
+            /*width: 30px;
+            height: 30px;*/
+            /*border-radius: 5px;*/
+            opacity: .5;
+            cursor: pointer;
+        }
+
+        .dop-active {
+            border: none;
+            opacity: 1;
+        }
+    }
 
     .gallows {
         width: 400px;
@@ -42,23 +71,29 @@
         }
         
     }
-    .btn-continue{
-        display: none;
-        width: 130px;
-        height: 35px;
-        color: #fff;
-        text-align: center;
-        align-items: center;
-        margin: auto;
-        margin-top: 20px;
-        padding-top: 10px;
-        font-family: "OpenSans", sans-serif;
-        background-color: #092c70;
-        border-radius: 7px;
-        cursor: pointer;
-    }
-    .btn-active{
-        display: block;
-    }
+
+    // .btn_block{
+    //     display: flex;
+    //     justify-content: center;
+    //     margin-right: 10px;
+
+        .btn-continue{
+            display: none;
+            width: 130px;
+            height: 35px;
+            color: #fff;
+            text-align: center;
+            align-items: center;
+            margin: auto;
+            margin-top: 20px;
+            padding-top: 10px;
+            font-family: "OpenSans", sans-serif;
+            background-color: #092c70;
+            border-radius: 7px;
+            cursor: pointer;
+        }
+        .btn-active{
+            display: block;
+        }
 
 }    

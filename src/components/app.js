@@ -18,6 +18,7 @@ import { Savannah } from './games/savannah/Savannah';
 import { AudioCall } from './games/audioCall/AudioCall';
 import { Sprint } from './games/sprint/Sprint';
 import { Hangman } from './games/hangman/Hangman';
+import { Hangmanstat } from './games/hangman/hangmanstat';
 import { Footer } from './footer/footer';
 
 export class App extends Component {
@@ -51,6 +52,9 @@ export class App extends Component {
                             </Route>
                             <Route path="/mini-games/hangman">
                                 <Hangman />
+                            </Route>
+                            <Route path="/mini-games/hangman/hangmanstat">
+                                <Hangmanstat />
                             </Route>
                             <Route path="/main">
                                 <Main />

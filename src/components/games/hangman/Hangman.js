@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import './hangman.scss';
+//import {Hangmanstat} from './hangmanstat.js';
 import gal0 from '../../../components/games/hangman/hangmanimg/gal0.png';
 import gal1 from '../../../components/games/hangman/hangmanimg/gal1.png';
 import gal2 from '../../../components/games/hangman/hangmanimg/gal2.png';
@@ -7,124 +8,221 @@ import gal3 from '../../../components/games/hangman/hangmanimg/gal3.png';
 import gal4 from '../../../components/games/hangman/hangmanimg/gal4.png';
 import gal5 from '../../../components/games/hangman/hangmanimg/gal5.png';
 import gal6 from '../../../components/games/hangman/hangmanimg/gal6.png';
+import pron from '../../../components/games/hangman/hangmanimg/pron.png';
+import stat64 from '../../../components/games/hangman/hangmanimg/stat-64.png';
+import { NavLink } from 'react-router-dom';
+import { WordService } from '../../../services/wordServices';
+import { AUDIO_URL } from '../../../constants/globalConstants';
+
+import './hangmanstat.scss';
 
 export class Hangman extends Component {
     constructor(props) {
         super(props);
         this.state = {
             isContinue: false,
-            CurrentWord: [],
-            GalImgURL: `${gal0}`,
+            isPron: false,
+            isStat: false,
+            currentWord: [],
+            galImgURL: `${gal0}`,
+            wordStat: {
+                word: '',
+                isGuess: false,
+                countMovies: 0,
+                unguessletters: [],
+                falseletters: [],
+                numberGame: 0,
+        },
+        countGames: 0,
+         
+
         };
-        this.onInit = this.onInit.bind(this);
-        this.listenerLetter = this.listenerLetter.bind(this);
-        this.onChangeGal = this.onChangeGal.bind(this);
+        
+        this.dataInit = this.dataInit.bind(this);
+        this.listenerletter = this.listenerletter.bind(this);
+        this.changeGal = this.changeGal.bind(this);
+        this.changeStatistics = this.changeStatistics.bind(this);
+        this.dopPron = this.dopPron.bind(this);
     } 
 
-    onInit(n){
+    dataInit(n){
         this.setState((prevState) => {
             let arr = this.getWord(n);
-            this.LetterTrue = []; 
-            this.LetterTrue.push(arr[0]);
-            this.LetterTrue.push(arr[arr.length-1]);
-            return {CurrentWord: arr};
+            this.letterTrue = []; 
+            this.letterTrue.push(arr[0]);
+            this.letterTrue.push(arr[arr.length-1]);
+            return {currentWord: arr};
         });
-        this.LetterFalse = [];
-        this.CountLetter = 6;
+        this.setState({isContinue: false});
+        this.letterFalse = [];
+        this.countletter = 6;
+        this.hangmanLS = [];
+        this.hangmanLS = (localStorage.getItem('hangmanLS') === null) ? this.hangmanLS : localStorage.getItem('hangmanLS');
+      
+        
     }
   
-    onChangeGal(){
-        let n = this.LetterFalse.length;
+    changeGal(){
+        let n = this.letterFalse.length;
         this.setState((prevState) => {
             let ind = `gal${n}`; 
-            return {GalImgURL: `${ind}`};
+            return {galImgURL: `${ind}`};
         });        
     }
 
-    listenerLetter(event){ 
+    listenerletter(event){ 
         event.preventDefault();
-        let Letter = event.key.toLowerCase();
-        let ind = this.state.CurrentWord.indexOf(Letter);
+        let letter = event.key.toLowerCase();
+        let ind = this.state.currentWord.indexOf(letter);
         if ( ind > 0 ){
-            if (this.LetterTrue.indexOf(Letter) > 0){
+            if (this.letterTrue.indexOf(letter) > 0){
                 ind = -1;                
             }
             while ( ind !== -1){
-                this.LetterTrue.push(Letter);
+                this.letterTrue.push(letter);
                 document.getElementById(`l${ind}`).classList.add('activ');
-                ind = this.state.CurrentWord.indexOf(Letter, ind + 1);
+                ind = this.state.currentWord.indexOf(letter, ind + 1);
             }    
         }
         else{
-            this.LetterFalse.push(Letter);
-            this.onChangeGal();
+            this.letterFalse.push(letter);
+            this.changeGal();
         };
-        this.onFinishWord();
+        this.finishWord();
     };
 
     componentDidMount() {
-        this.onInit(1);
-        document.addEventListener('keydown', this.listenerLetter, false);
+        this.dataInit(1);
+        document.addEventListener('keydown', this.listenerletter, false);
     }
 
     componentWillUnmount() {
-        document.removeEventListener('keydown', this.listenerLetter, false);
+        document.removeEventListener('keydown', this.listenerletter, false);
     }
 
 
-    onContinue() {
-        this.onInit(2);
-        console.log('continue=', this.state.CurrentWord);
-        document.addEventListener('keydown', this.listenerLetter, false);
+    handleContinue() {
+        this.dataInit(2);
+        document.addEventListener('keydown', this.listenerletter, false);
         document.querySelectorAll('div.letter').forEach(el => el.classList.remove('word-true'));
-        for (let i=1; i<=this.CountLetter; i++){
+        document.querySelectorAll('div.letter').forEach(el => el.classList.remove('word-false'));
+        for (let i=1; i<=this.countletter; i++){
             document.getElementById(`l${i}`).classList.remove('activ');
         };    
     };
 
-    onFinishWord(){
+    finishWord(){
         
-        if (this.state.CurrentWord.length === this.LetterTrue.length){
-            console.log('finish1');
+        if (this.state.currentWord.length === this.letterTrue.length){
+            if ( isPron) {
+                
+            }; 
             document.querySelectorAll('div.letter').forEach(el => el.classList.add('word-true'));
             this.setState({isContinue: true});
-            document.removeEventListener('keydown', this.listenerLetter, false);
+            document.removeEventListener('keydown', this.listenerletter, false);
+            this.changeStatistics(true);
         };
-        if (this.LetterFalse.length >= this.CountLetter){
-            console.log('finish2');
+        if (this.letterFalse.length >= this.countletter){
             document.querySelectorAll('div.letter').forEach(el => el.classList.add('word-false'));
-            document.removeEventListener('keydown', this.listenerLetter, false);
+            document.removeEventListener('keydown', this.listenerletter, false);
+            this.changeStatistics(false);
+            this.setState({isContinue: true});
         }
     }
 
-    getWord(n){
-        if (n===1) var Word = 'download';
-        else Word='listener';
-        return Word.split('');
+    changeStatistics(value){
+        this.setState((state) => {
+            return {wordStat: 
+                {word: this.state.currentWord.join(''),
+                isGuess: value,
+                countMovies: this.letterFalse.length + this.letterTrue.length - 2,
+                //wordStat.unguessletters: 
+                falseletters: this.letterFalse,
+                numberGame: this.state.countGames
+                }        
+            }
+        });
+        this.hangmanLS.push(this.state.wordStat); //to-do: не добавлять повторяющиеся слова, обновить по ним только статистику
+        localStorage.setItem('hangmanLS', this.hangmanLS);
+    }
+
+   
+
+    // getWord(n){
+    //     let word='';
+    //     if (n===1) {
+    //         word = 'download';
+    //     }
+    //     else {
+    //         word='listener';
+    //     }
+    //     return word.split('');
+    // }    
+
+    async getWord(n) {
+        const data = await WordService.getWords(1, 1);
+        return data;
+    }
+
+    dopPron(url){//произношение слова
+        new Pron(AUDIO_URL + url).play();
+        let newIsPron = !this.state.isPron;
+        this.setState({isPron: newIsPron});
     }
 
     render() {
-        const {isContinue} = this.state;
+        const {isContinue, isPron, isStat} = this.state;
+               
         return (
             <div className="hangman">
                 <h1>Hangman</h1>
+                <div className="dop-block">
+                    <button className={isPron ? "dop-block-el dop-active" : "dop-block-el"} onClick={() => this.dopPron()}>
+                        <img style={{width: 30, height: 30}} src={pron} alt='Pron'></img>
+                    </button>
+                    <NavLink to={'/mini-games/hangman/hangmanstat'}>  
+                        <button id="dopStat" className={isStat ? "dop-block-el dop-active" : "dop-block-el"}>  
+                        {/* <button id="dopStat" className={isStat ? "dop-block-el dop-active" : "dop-block-el"} onClick={() => this.setState({isStat: !isStat})}>  */}
+                            <img style={{width: 30, height: 30}} src={stat64} alt='Stat'></img>
+                        </button>
+                    </NavLink> 
+
+                  
+                </div>
                 <div className="gallows">
-                    <img style={{width: 400, height: 500}} src= {this.state.GalImgURL} alt="Gallows"></img> 
+                    <img style={{width: 400, height: 500}} src= {this.state.galImgURL} alt="Gallows"></img> 
                 </div>
                 <div id="word" className="word">
-                    <div id="l0" className="letter activ">{this.state.CurrentWord[0]}</div>
-                    <div id="l1" className="letter">{this.state.CurrentWord[1]}</div>
-                    <div id="l2" className="letter">{this.state.CurrentWord[2]}</div>
-                    <div id="l3" className="letter">{this.state.CurrentWord[3]}</div>
-                    <div id="l4" className="letter">{this.state.CurrentWord[4]}</div>
-                    <div id="l5" className="letter">{this.state.CurrentWord[5]}</div>
-                    <div id="l6" className="letter">{this.state.CurrentWord[6]}</div>
-                    <div id="l7" className="letter activ">{this.state.CurrentWord[7]}</div>
+                <div id="l0" className="letter activ">{this.state.currentWord[0]}</div>
+                    <div id="l1" className="letter">{this.state.currentWord[1]}</div>
+                    <div id="l2" className="letter">{this.state.currentWord[2]}</div>
+                    <div id="l3" className="letter">{this.state.currentWord[3]}</div>
+                    <div id="l4" className="letter">{this.state.currentWord[4]}</div>
+                    <div id="l5" className="letter">{this.state.currentWord[5]}</div>
+                    <div id="l6" className="letter">{this.state.currentWord[6]}</div>
+                    <div id="l7" className="letter activ">{this.state.currentWord[7]}</div>
                 </div>
-                <div id="btn-continue" className={isContinue ? 'btn-continue btn-active' : 'btn-continue'} onClick={() => this.onContinue()}>                    
-                    Continue
+                <div id="btn-continue" className={isContinue ? 'btn-continue btn-active' : 'btn-continue'} onClick={() => this.handleContinue()}>                    
+                        Continue
                 </div>
+
+            <div className="hangmanstat">
+                <h2>Statistics</h2>
+                <div className="stat">
+                    <div className="stat-current">
+                        <h3>Current game</h3>
+                    </div>
+                    <div className="stat-history">
+                    <h3>History</h3>
+                    </div>
+                </div>    
+             
+            </div>
+
+
             </div>
         );
     }
 }
+
+
