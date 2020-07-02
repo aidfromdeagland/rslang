@@ -1,3 +1,99 @@
-.auth {
+@font-face {
+    font-family: "OpenSans";
+    src: local("OpenSans"),
+     url("../../../assets/fonts/OpenSans-Bold.ttf");
+    font-weight: bold;
+    font-style: normal;
+}
+@font-face {
+    font-family: "Literata";
+    src: local("Literata"),
+     url("../../../assets/fonts/Literata-VariableFont.ttf");
+    font-weight: normal;
+    font-style: normal;
+}
 
+.auth {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    &-header {
+        font-family: 'Literata', sans-serif;
+        font-size: 33px;
+        color: #092C70;
+    }
+    &-description {
+        margin: 20px 10px;
+        font-size: 16px;
+    }
+    .spinner {
+        position: absolute;
+        top: 61px;
+    }
+    .auth-form {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        .auth__inputs {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #FAEDE7;
+            width: 100%;
+            .auth-form__input {
+                max-width: 260px;
+                width: calc(100% - 20px);
+                padding: 15px;
+                margin: 20px 10px;
+                border: none;
+                border-radius: 5px;
+            }
+            .auth-form__password-input {
+                margin-top: 0;
+            }
+        }
+        &__error {
+            max-width: 260px;
+            color: #F10002;
+            margin-bottom: 20px;
+        }
+    }
+    .auth__button {
+        font-family: 'OpenSans', sans-serif;
+        font-weight: bold;
+        margin: 10px;
+        padding: 10px 20px;
+        font-size: 20px;
+        cursor: pointer;
+        &:focus {
+            outline:none;
+            box-shadow: none;
+        }
+    }
+    .button__log-in {
+        color: #ffffff;
+        background-color: #092C70;
+        border-radius: 7px;
+        border: none;
+        @media (hover: hover) {
+            &:hover {
+                background-color: #0F4AB4;
+            }
+        }
+    }
+    .button__registration {
+        color: #092C70;
+        background-color: #ffffff;
+        border: none;
+        @media (hover: hover) {
+            &:hover {
+                color: #0F4AB4;
+            }
+        }
+    }
 }
