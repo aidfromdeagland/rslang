@@ -78,6 +78,7 @@ export class Main extends Component {
             isOpenModal: !prev.isOpenModal,
         }));
         this.setState({ settings: this.settings });
+        this.setState({ isInvalidSettings: false });
     }
 
     handleClickSettings = () => {
