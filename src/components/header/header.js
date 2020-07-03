@@ -1,25 +1,27 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Nav } from '../nav/nav';
+import { AuthBlock } from './authBlock';
 import './header.scss';
 
 export class Header extends Component {
     constructor(props) {
         super(props);
-        this.closeMenu = this.closeMenu.bind(this);
         this.state = {
             isOpen: false,
         };
     }
 
-    closeMenu(value) {
+    closeMenu = (value) => {
         this.setState({ isOpen: value });
     }
 
     render() {
         const { isOpen } = this.state;
+        const { isAuth, logOut } = this.props;
         return (
             <header className="header">
-                <Nav isOpen={isOpen} closeMenu={this.closeMenu} />
+                <Nav isOpen={isOpen} isAuth={isAuth} closeMenu={this.closeMenu} />
                 <div className="header__container">
                     <div
                         className="header__hamburger"
@@ -29,11 +31,14 @@ export class Header extends Component {
                         <div className={isOpen ? 'header__hamburger-close' : 'header__hamburger-open'} />
                     </div>
                     <div className="header__logo" />
-                    <div className="header__logout">
-                        Logout
-                    </div>
+                    <AuthBlock isAuth={isAuth} logOut={logOut} />
                 </div>
             </header>
         );
     }
 }
+
+Header.propTypes = {
+    isAuth: PropTypes.bool.isRequired,
+    logOut: PropTypes.func.isRequired,
+};
