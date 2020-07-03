@@ -22,8 +22,6 @@ import { Footer } from './footer/footer';
 import { Study } from './pages/study/study';
 import { Table } from './pages/stats/table';
 import { User } from './pages/auth/user';
-import { UserService } from '../services/userServices';
-import { Storage } from './pages/auth/storage';
 import { Spinner } from './shared/spinner';
 
 export class App extends Component {
@@ -33,30 +31,16 @@ export class App extends Component {
     }
 
     componentDidMount() {
-        if (!User.token) {
-            this.setState({ isChecking: false });
-            return;
-        }
-
-        try {
-            const user = UserService.getUser(User.userId, User.token);
-            if (user) {
-                this.setState({ isAuth: true });
-            }
-        } catch (e) {
-            this.setAppLogouted();
-        } finally {
-            this.setState({ isChecking: false });
-        }
+        User.checkToken(this.setAppLogined, this.setAppLogouted);
     }
 
     setAppLogined = () => {
-        this.setState({ isAuth: true });
+        this.setState({ isAuth: true, isChecking: false });
     }
 
     setAppLogouted = () => {
-        Storage.clearToken();
-        this.setState({ isAuth: false });
+        User.logOut();
+        this.setState({ isAuth: false, isChecking: false });
     }
 
     render() {
