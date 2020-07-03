@@ -1,10 +1,8 @@
-import { gameStartColor, gameDiffColor } from './constants';
-
-export const getDifferentColor = (proccent) => {
+export const getDifferentColor = (proccent, startColor, diffColor) => {
     const color = {
-        r: gameStartColor.r + Math.round(gameDiffColor.r * proccent),
-        g: gameStartColor.g + Math.round(gameDiffColor.g * proccent),
-        b: gameStartColor.b + Math.round(gameDiffColor.b * proccent),
+        r: startColor.r + Math.round(diffColor.r * proccent),
+        g: startColor.g + Math.round(diffColor.g * proccent),
+        b: startColor.b + Math.round(diffColor.b * proccent),
     };
     return `rgb(${color.r}, ${color.g}, ${color.b})`;
 };

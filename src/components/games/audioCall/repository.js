@@ -3,20 +3,20 @@ import { shuffle, randomInteger, getUniqueByKey } from '../../../utils/utils';
 import { WordService } from '../../../services/wordServices';
 import { SettingService } from '../../../services/settingServices';
 import {
-    fileResource, wordsCount, groupCount, pageCount,
+    fileResource, WORDS_COUNT, GROUP_COUNT, PAGE_COUNT,
 } from '../../../constants/globalConstants';
-import { maxIndexQuestWords, maxIndexQuestWordsNotCorrect } from './constants';
-import { levenshtein } from './utils';
+import { MAX_INDEX_QUEST_WORDS, MAX_INDEX_QUEST_WORDS_NOT_CORRECT } from './constants';
+import { levenshtein, getDifferentColor } from './utils';
 
 export class Repository {
     static setNextGame(state) {
         const repositoryState = state;
         let { group, page } = repositoryState.currentSettings;
         page += 1;
-        if (page >= pageCount) {
+        if (page >= PAGE_COUNT) {
             page = 0;
             group += 1;
-            if (group >= groupCount) {
+            if (group >= GROUP_COUNT) {
                 page = 0;
                 group = 0;
             }
@@ -41,7 +41,8 @@ export class Repository {
     constructor(state) {
         this.state = state || {
             indexWord: 0,
-            currentSettings: undefined,
+            currentSettings: undefined, // '{"wordCount":n,"group":n,"page":n,
+            // "colorStart":{"r":n,"g":n,"b":n},"colorEnd":{"r":n,"g":n,"b":n}}',
             allWords: undefined, // все слова. Используются для формирования ошибочных вариантов
             gameWords: undefined, // слова, которые будут заданы в процессе игры
             loaded: undefined,
@@ -56,6 +57,12 @@ export class Repository {
             const settings = await SettingService.get();
             this.state.currentSettings = JSON.parse(settings.optional.audioCall);
             this.state.step = 1 / this.state.currentSettings.wordCount;
+            const { colorStart, colorEnd } = this.state.currentSettings;
+            this.state.colorDiff = {
+                r: colorEnd.r - colorStart.r,
+                g: colorEnd.g - colorStart.g,
+                b: colorEnd.b - colorStart.b,
+            };
             success(this.state.currentSettings);
         } catch (error) {
             // TODO показать ошибку пользователю
@@ -72,7 +79,7 @@ export class Repository {
             this.state.gameWords = undefined;
             // в дальнейшем в бэке скорее всего уберут возможность брать всё,
             // поэтому сразу расчитываю, что есть только слова по группам
-            const aggWords = await WordService.getUserAggWords(group, '', wordsCount);
+            const aggWords = await WordService.getUserAggWords(group, '', WORDS_COUNT);
             const words = aggWords[0].paginatedResults;
             this.state.allWords = words.filter((w) => w.group === group);
             this.state.loadedGroup = group;
@@ -121,8 +128,8 @@ export class Repository {
         gameWords = getUniqueByKey(gameWords, 'wordTranslate');
         gameWords = gameWords.sort((a, b) => levenshtein(a.wordTranslate, wordTranslate)
             - levenshtein(b.wordTranslate, wordTranslate));
-        gameWords = gameWords.slice(0, maxIndexQuestWords);
-        gameWords.splice(randomInteger(maxIndexQuestWordsNotCorrect), 0, word);
+        gameWords = gameWords.slice(0, MAX_INDEX_QUEST_WORDS);
+        gameWords.splice(randomInteger(MAX_INDEX_QUEST_WORDS_NOT_CORRECT), 0, word);
         return gameWords;
     }
 
@@ -130,11 +137,14 @@ export class Repository {
         return new Audio(fileResource + this.getWord().audio);
     }
 
-    getProgress() {
-        return {
-            currentPrecent: this.state.indexWord * this.state.step,
-            step: this.state.step,
-        };
+    getBackgroundProgress() {
+        const startPrecent = this.state.indexWord * this.state.step;
+        const startRoundColor = getDifferentColor(startPrecent,
+            this.state.colorStart, this.state.colorEnd);
+        const endPrecent = startPrecent + this.state.step;
+        const endRoundColor = getDifferentColor(endPrecent,
+            this.state.colorStart, this.state.colorEnd);
+        return `linear-gradient(${startRoundColor}, ${endRoundColor})`;
     }
 
     increment() {

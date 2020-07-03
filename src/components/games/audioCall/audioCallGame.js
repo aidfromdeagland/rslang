@@ -3,9 +3,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { WordList } from './wordList';
 import { fileResource } from '../../../constants/globalConstants';
-import { getDifferentColor } from './utils';
 import { Repository } from './repository';
-import { maxCountQuestWords } from './constants';
+import { MAX_COUNT_QUEST_WORDS } from './constants';
 
 export class AudioCallGame extends Component {
     constructor(props) {
@@ -43,21 +42,12 @@ export class AudioCallGame extends Component {
         document.removeEventListener('keyup', this.keyup);
     }
 
-    static getBackground(startPrecent, endPrecent) {
-        const startRoundColor = getDifferentColor(startPrecent);
-        const endRoundColor = getDifferentColor(endPrecent);
-        return `linear-gradient(${startRoundColor}, ${endRoundColor})`;
-    }
-
     getRound() {
-        const progeress = this.repository.getProgress();
-        const background = AudioCallGame.getBackground(progeress.currentPrecent,
-            progeress.currentPrecent + progeress.step);
         return {
             word: this.repository.getWord(),
             gameWords: this.repository.getWordsForGame(),
             audio: this.repository.getAudio(),
-            background,
+            background: this.repository.getBackgroundProgress(),
         };
     }
 
@@ -83,7 +73,7 @@ export class AudioCallGame extends Component {
             } else {
                 this.handleSelectWord(this.state.round.word, false);
             }
-        } else if (e.key > 0 && e.key <= maxCountQuestWords) {
+        } else if (e.key > 0 && e.key <= MAX_COUNT_QUEST_WORDS) {
             e.preventDefault();
             this.setState({ pressNumber: Number(e.key) });
         }

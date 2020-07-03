@@ -4,7 +4,7 @@ import './audioCall.scss';
 import { AudioCallStart } from './audioCallStart';
 import { AudioCallGame } from './audioCallGame';
 import { AudioCallResult } from './audioCallResult';
-import { gameProgress } from './constants';
+import { GAME_PROGRESS } from './constants';
 import { Repository } from './repository';
 import { Auth } from '../../pages/auth/auth';
 
@@ -23,7 +23,7 @@ import { Auth } from '../../pages/auth/auth';
 export class AudioCall extends Component {
     constructor() {
         super();
-        this.state = { state: gameProgress.start, auth: false };
+        this.state = { state: GAME_PROGRESS.start, auth: false };
     }
 
     setAuth() {
@@ -32,7 +32,7 @@ export class AudioCall extends Component {
 
     startGame(repositoryState) {
         this.setState({
-            state: gameProgress.game,
+            state: GAME_PROGRESS.game,
             repositoryState,
         });
     }
@@ -41,7 +41,7 @@ export class AudioCall extends Component {
         let { repositoryState } = this.state;
         repositoryState = Repository.setNextGame(repositoryState);
         this.setState({
-            state: gameProgress.result,
+            state: GAME_PROGRESS.result,
             gameResult: result,
             repositoryState,
         });
@@ -49,7 +49,7 @@ export class AudioCall extends Component {
 
     nextGame() {
         this.setState({
-            state: gameProgress.start,
+            state: GAME_PROGRESS.start,
             gameResult: undefined,
         });
     }
@@ -63,21 +63,21 @@ export class AudioCall extends Component {
             );
         }
         switch (this.state.state) {
-        case gameProgress.start:
+        case GAME_PROGRESS.start:
             return (
                 <AudioCallStart
                     repositoryState={this.state.repositoryState}
                     startGame={(repositoryState) => this.startGame(repositoryState)}
                 />
             );
-        case gameProgress.game:
+        case GAME_PROGRESS.game:
             return (
                 <AudioCallGame
                     repositoryState={this.state.repositoryState}
                     endGame={(result) => this.endGame(result)}
                 />
             );
-        case gameProgress.result:
+        case GAME_PROGRESS.result:
         default:
             return (
                 <AudioCallResult

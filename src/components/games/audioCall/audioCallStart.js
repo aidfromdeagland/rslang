@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { createIncArray } from '../../../utils/utils';
 import { Spinner } from '../../shared/spinner';
-import { groupCount, pageCount } from '../../../constants/globalConstants';
+import { GROUP_COUNT, PAGE_COUNT } from '../../../constants/globalConstants';
 import { Repository } from './repository';
 import { SimpleSelect } from './simpleSelect';
 
@@ -62,14 +62,14 @@ export class AudioCallStart extends Component {
                         <div className="audio-call__levels">
                             <SimpleSelect
                                 key="group"
-                                values={createIncArray(groupCount)}
+                                values={createIncArray(GROUP_COUNT)}
                                 defaultValue={this.state.group}
                                 onChange={(v) => this.handleGroupChange(v)}
                                 title="level"
                             />
                             <SimpleSelect
                                 key="page"
-                                values={createIncArray(pageCount)}
+                                values={createIncArray(PAGE_COUNT)}
                                 defaultValue={this.state.page}
                                 onChange={(v) => this.handlePageChange(v)}
                                 title="round"
