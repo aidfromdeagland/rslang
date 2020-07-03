@@ -51,7 +51,7 @@ export class AudioCallStart extends Component {
 
     render() {
         if (this.state.isGame) {
-            return (null);
+            return null;
         }
 
         return (

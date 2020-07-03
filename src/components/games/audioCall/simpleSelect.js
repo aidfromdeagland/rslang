@@ -18,7 +18,7 @@ export class SimpleSelect extends Component {
 }
 
 SimpleSelect.defaultProps = {
-    title: undefined,
+    title: '',
 };
 
 SimpleSelect.propTypes = {

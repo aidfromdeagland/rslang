@@ -1,3 +1,4 @@
+/* eslint-disable react/no-access-state-in-setstate */
 /* eslint-disable react/destructuring-assignment */
 import React, { Component } from 'react';
 import './audioCall.scss';
@@ -38,12 +39,11 @@ export class AudioCall extends Component {
     }
 
     endGame(result) {
-        let { repositoryState } = this.state;
-        repositoryState = Repository.setNextGame(repositoryState);
+        const newRepositoryState = Repository.setNextGame(this.state.repositoryState);
         this.setState({
             state: GAME_PROGRESS.result,
             gameResult: result,
-            repositoryState,
+            repositoryState: newRepositoryState,
         });
     }
 
