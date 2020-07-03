@@ -3,7 +3,7 @@ import { shuffle, randomInteger, getUniqueByKey } from '../../../utils/utils';
 import { WordService } from '../../../services/wordServices';
 import { SettingService } from '../../../services/settingServices';
 import {
-    fileResource, WORDS_COUNT, GROUP_COUNT, PAGE_COUNT,
+    MEDIA_PREFIX_URL, WORDS_COUNT, GROUP_COUNT, PAGE_COUNT,
 } from '../../../constants/globalConstants';
 import { MAX_INDEX_QUEST_WORDS, MAX_INDEX_QUEST_WORDS_NOT_CORRECT } from './constants';
 import { levenshtein, getDifferentColor } from './utils';
@@ -134,7 +134,7 @@ export class Repository {
     }
 
     getAudio() {
-        return new Audio(fileResource + this.getWord().audio);
+        return new Audio(MEDIA_PREFIX_URL + this.getWord().audio);
     }
 
     getBackgroundProgress() {

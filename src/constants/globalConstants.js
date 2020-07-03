@@ -1,9 +1,8 @@
 export const backend = 'https://afternoon-falls-25894.herokuapp.com';
-export const fileResource = 'https://raw.githubusercontent.com/olegd89/rslang-data/master/';
 export const WORDS_COUNT = 3600;
 export const GROUP_COUNT = 6;
 export const PAGE_COUNT = 30;
-
+export const MEDIA_PREFIX_URL = 'https://raw.githubusercontent.com/aidfromdeagland/rslang-data/master/';
 export const settingsDefault = {
     word: true,
     textMeaning: true,

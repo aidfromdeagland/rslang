@@ -1,12 +1,12 @@
 /* eslint-disable react/destructuring-assignment */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { fileResource } from '../../../constants/globalConstants';
+import { MEDIA_PREFIX_URL } from '../../../constants/globalConstants';
 
 export class WordInResult extends Component {
     handleSpeak() {
         if (!this.audio) {
-            this.audio = new Audio(fileResource + this.props.word.audio);
+            this.audio = new Audio(MEDIA_PREFIX_URL + this.props.word.audio);
         }
         this.audio.play();
     }

@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { WordList } from './wordList';
-import { fileResource } from '../../../constants/globalConstants';
+import { MEDIA_PREFIX_URL } from '../../../constants/globalConstants';
 import { Repository } from './repository';
 import { MAX_COUNT_QUEST_WORDS } from './constants';
 
@@ -94,7 +94,7 @@ export class AudioCallGame extends Component {
             <div className="audio-call" style={{ background: round.background }}>
                 <span
                     className={`audio-call__word-image ${selectedWord ? 'audio-call__word-image_show' : ''}`}
-                    style={{ backgroundImage: `url("${fileResource + this.state.round.word.image}")` }}
+                    style={{ backgroundImage: `url("${MEDIA_PREFIX_URL + this.state.round.word.image}")` }}
                 />
                 <div className={`audio-call__quest ${selectedWord ? 'audio-call__quest_show' : ''}`}>
                     <span className="audio-call__dinamic" onMouseDown={() => this.handleSpeak()} tabIndex="0" role="button"> </span>
