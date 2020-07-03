@@ -1,3 +1,114 @@
 .sprint {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  width: 100vw;
+  height: calc(100vh - 100px);
+  background-color: rgba(0, 0, 0, 0.5);
+  background-image: url('../../../assets/images/sprint_background.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-blend-mode: multiply;  
+}
 
+.panel {
+  display: flex;
+  width: 600px;
+  justify-content: space-between;
+  align-items: center;
+  height: 100px;
+  margin: 30px 0;
+  background-color: #FAEDE7;
+  border-radius: 50px;
+}
+
+.board {
+  width: 600px;
+  height: 550px;
+  margin-bottom: 30px;
+  border-radius: 50px;
+  background-color: #FAEDE7;
+}
+
+.words_selection {
+  display: flex;
+  justify-content: center;
+  align-items: center;  
+  width: 200px;
+  height: 100%;
+}
+
+.yes_large {
+  visibility: hidden;
+  position: relative;
+  width: 60px;
+  height: 60px;
+  margin: 0 auto;
+  top: -30px;
+  border-radius: 50%;
+  background-color: green;
+  background-image: url('../../../assets/icons/yes.svg');
+  background-size: 40px;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.checking {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+button {
+  cursor: pointer;
+  height: 50px;
+  width: 130px;
+  margin-right: 20px;
+  font-size: 20px;
+  font-weight: bold;
+  border-radius: 7px;
+  border: none;
+  color: #fff;
+}
+
+button:last-child {
+  margin-right: 0;
+}
+
+#success {
+  background-color: green;
+}
+
+#fail {
+  background-color: red;
+}
+
+.arrow_buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 40px;
+  margin-bottom: 30px;
+}
+
+#wrong_arrow,
+#correct_arrow {
+  cursor: pointer;
+  height: 100%;
+  width: 50px;
+  background-color: #FAEDE7;  
+  background-size: 35px;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+#wrong_arrow {
+  margin-right: 20px;
+  background-image: url('../../../assets/icons/arrow_red.svg');
+}
+
+#correct_arrow {
+  background-image: url('../../../assets/icons/arrow_green.svg');
+  transform: scale(-1);
 }
