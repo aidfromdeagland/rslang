@@ -23,13 +23,13 @@ export class Header extends Component {
             <header className="header">
                 <Nav isOpen={isOpen} isAuth={isAuth} closeMenu={this.closeMenu} />
                 <div className="header__container">
-                    <div
+                    <button
+                        type="button"
                         className="header__hamburger"
-                        aria-hidden
                         onClick={() => this.setState({ isOpen: !isOpen })}
                     >
                         <div className={isOpen ? 'header__hamburger-close' : 'header__hamburger-open'} />
-                    </div>
+                    </button>
                     <div className="header__logo" />
                     <AuthBlock isAuth={isAuth} logOut={logOut} />
                 </div>

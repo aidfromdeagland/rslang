@@ -23,15 +23,20 @@ $secondary-color: #092c70;
     }
 
     &__hamburger {
+        position: relative;
         z-index: 20;
-        cursor: pointer;
         width: 1.8rem;
         height: 1.8rem;
+        box-sizing: border-box;
+        padding: 0;
+        border: none;
+        cursor: pointer;
+        background-color: transparent;
 
         &-open {
             cursor: pointer;
             position: relative;
-            top: calc(1.8rem / 2 - 2px);
+            top: 0;
             width: 100%;
             height: 2px;
             background: $secondary-color;
@@ -43,6 +48,7 @@ $secondary-color: #092c70;
                 content: "";
                 position: absolute;
                 top: calc(1.8rem / 2 - 2px);
+                left: 0;
                 z-index: 3;
                 width: 100%;
                 height: 100%;
@@ -58,7 +64,7 @@ $secondary-color: #092c70;
         &-close {
             cursor: pointer;
             position: relative;
-            top: calc(1.8rem / 2 - 2px);
+            top: 0;
             width: 100%;
             height: 0;
             background: $secondary-color;
@@ -68,6 +74,7 @@ $secondary-color: #092c70;
             &:after {
                 content: "";
                 position: absolute;
+                left: 0;
                 z-index: 3;
                 width: 100%;
                 height: 2px;

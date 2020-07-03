@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
 import { Button } from '../shared/button';
-import './authBlock.scss';
 
 export class AuthBlock extends Component {
     render() {
