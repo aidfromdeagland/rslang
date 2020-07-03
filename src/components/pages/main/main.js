@@ -15,6 +15,7 @@ export class Main extends Component {
             totalLearnedWords: 0,
             isOpenModal: false,
             notWordForLearn: false,
+            isInvalidSettings: false,
         };
     }
 
@@ -34,32 +35,49 @@ export class Main extends Component {
     putSettings = () => {
         const settings = SettingService.createObject(12, this.state.settings);
         SettingService.put(settings);
-        this.setState({ settings });
     }
 
     checkboxHandle = (property) => {
         this.setState((prev) => {
             return { settings: { ...prev.settings, [property]: !prev.settings[property] } };
         });
+        this.setState({ isInvalidSettings: false });
     }
 
     checkSettings = () => {
-        const settingsValues = Object.values(this.state);
-        if (!settingsValues.includes(true)) {
+        const settingsValues = Object.entries(this.state.settings).filter((option) => option[0] === 'textMeaning' || option[0] === 'textExample' || option[0] === 'word').find((setting) => setting[1] === true);
+        if (!settingsValues) {
+            this.setState({ isInvalidSettings: true });
             return;
         }
+        this.settings = this.state.settings;
         this.handleCloseModal();
         this.putSettings();
     }
 
-    handleInput = (property, event) => {
-        this.setState({ settings: { ...this.state.settings, [property]: event.target.value } });
+    handleInput = (property, operation) => {
+        let prop = parseFloat(this.state.settings[property]);
+        if (operation === '+') {
+            prop += 10;
+            this.setState(() => ({ settings: { ...this.state.settings, [property]: prop } }));
+            if (property === 'numberLearnWord' && prop > this.state.settings.numberLearnCard) {
+                this.setState(() => ({ settings: { ...this.state.settings, numberLearnCard: prop, [property]: prop } }));
+            }
+        }
+        if (operation === '-') {
+            prop = prop === 0 ? 0 : prop - 10;
+            this.setState({ settings: { ...this.state.settings, [property]: prop } });
+            if (property === 'numberLearnCard' && prop < this.state.settings.numberLearnCard) {
+                this.setState(() => ({ settings: { ...this.state.settings, numberLearnWord: prop, [property]: prop } }));
+            }
+        }
     }
 
     handleCloseModal = () => {
         this.setState((prev) => ({
             isOpenModal: !prev.isOpenModal,
         }));
+        this.setState({ settings: this.settings });
     }
 
     handleClickSettings = () => {
@@ -73,6 +91,7 @@ export class Main extends Component {
             needLearnWordsToday,
             settings,
             isOpenModal,
+            isInvalidSettings,
         } = this.state;
         return (
             <div className="main-page">
@@ -86,6 +105,7 @@ export class Main extends Component {
                         closeModal={this.handleCloseModal}
                         isOpenModal={isOpenModal}
                         checkSettings={this.checkSettings}
+                        isInvalidSettings={isInvalidSettings}
                     />
                     {/* <Start /> */}
                     <Progress />

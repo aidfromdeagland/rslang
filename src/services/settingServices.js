@@ -1,4 +1,4 @@
-import { backend } from '../constants/globalConstants';
+import { backend, settingsDefault } from '../constants/globalConstants';
 import { User } from '../components/pages/auth/user';
 import { ServiceError } from './serviceError';
 
@@ -27,7 +27,8 @@ export class SettingService {
             throw new ServiceError('Access token is missing or invalid', rawResponse.status);
         }
         if (rawResponse.status === 404) {
-            throw new ServiceError('Settings not found', rawResponse.status);
+            // throw new ServiceError('Settings not found', rawResponse.status);
+            return settingsDefault;
         }
 
         const errorText = await rawResponse.text();

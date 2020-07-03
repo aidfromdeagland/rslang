@@ -93,8 +93,22 @@
     position: absolute;
     left: 0;
     top: 0;
+    .check-letter {
+      opacity: 1;
+      transition: 1s;
+      animation: show 2s 1;
+      animation-fill-mode: forwards;
+    }
     .uncorrect-letter {
       color: #d35e27;
+    }
+    @keyframes show {
+      0% {
+        opacity: 1;
+      }
+      100% {
+        opacity: 0.5;
+      }
     }
   }
   .hidden {

@@ -14,6 +14,7 @@ export class Options extends Component {
             clickSettings,
             checkSettings,
             onchangeCheckbox,
+            isInvalidSettings,
         } = this.props;
         return (
             <div className="main-page_options">
@@ -26,6 +27,7 @@ export class Options extends Component {
                             onchangeCheckbox={onchangeCheckbox}
                             clickSettings={clickSettings}
                             checkSettings={checkSettings}
+                            isInvalidSettings={isInvalidSettings}
                         />
                     ) : null}
                 <div className="options-settings">
