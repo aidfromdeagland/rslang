@@ -4,7 +4,7 @@
   max-width: 1020px;
   justify-content: center;
   margin: auto;
-  // height: 100vh;
+  height: 100vh;
   padding: 100px 30px;
   user-select: none;
   .game-puzzle__container {
@@ -32,5 +32,25 @@
         background-color: #092c70;
       }
     }
+  }
+  .button {
+    height: 40px;
+    padding: 12px;
+    outline: 0;
+    border: none;
+    border-radius: 8px;
+    margin-left: 20px;
+    background-color: rgb(187, 67, 59);
+    color: white;
+    cursor: pointer;
+    transition: background 0.3s;
+    &:hover {
+      cursor: pointer;
+      background-color: rgb(255, 252, 241);
+      color: black;
+    }
+  }
+  .btn-start {
+    width: 300px;
   }
 }

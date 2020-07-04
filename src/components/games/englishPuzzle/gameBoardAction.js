@@ -40,11 +40,8 @@ export class GameBoardAction extends Component {
     render() {
         return (
             <div className="game-board__action">
-                <div className="puzzle-container-sentence">
-                    {/* {this.props.isClickedDontKnow ? this.getWordsOfSentence(this.props.correctSentence) : null} */}
-                </div>
+                <div className="puzzle-container-sentence" />
                 <div className="puzzle-pieces">
-                    {/* {this.props.isClickedDontKnow ? null : this.getWordsOfSentence(this.props.sentenceForPuzzle)} */}
                     {this.getWordsOfSentence(this.props.sentenceForPuzzle)}
                 </div>
             </div>

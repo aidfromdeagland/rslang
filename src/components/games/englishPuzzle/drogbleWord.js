@@ -179,11 +179,9 @@ export class DraggableWord extends Component {
     checkSentence = () => {
         const puzzleField = document.querySelector('.puzzle-pieces');
         if (!puzzleField.innerHTML) {
-            // this.props.showCheck(true);
             this.props.showButton('isCheckBtn', true);
             this.props.showButton('isDontKnowBtn', false);
         } else {
-            // this.props.showCheck(false);
             this.props.showButton('isCheckBtn', false);
         }
     }

@@ -4,6 +4,7 @@ import { Spinner } from '../../shared/spinner';
 import './game-puzzle.scss';
 import { Button } from '../../shared/button';
 
+let audio;
 export class ButtonsBlock extends Component {
     handleCheck = () => {
         const correctSentence = this.props.correctSentence.split(' ');
@@ -20,9 +21,13 @@ export class ButtonsBlock extends Component {
         });
 
         if (document.querySelectorAll('.correct-word').length === correctSentence.length) {
+            document.querySelectorAll('.correct-word').forEach((word) => {
+                word.onmousedown = () => false;
+            });
             this.props.showButton('isContinueBtn', true);
+            this.props.showButton('isCheckBtn', false);
             const urlAudio = `https://raw.githubusercontent.com/aidfromdeagland/rslang-data/master/${this.props.audioSentence}`;
-            const audio = new Audio(urlAudio);
+            audio = new Audio(urlAudio);
             if (this.props.isAutoPronunciation) {
                 audio.play();
             }
@@ -36,6 +41,9 @@ export class ButtonsBlock extends Component {
     }
 
     handleContinue = () => {
+        if (audio) {
+            audio.pause();
+        }
         this.props.showButton('isDontKnowBtn', true);
         this.props.showButton('isContinueBtn', false);
         this.props.showButton('isCheckBtn', false);
@@ -44,17 +52,6 @@ export class ButtonsBlock extends Component {
         }
         if (this.props.wordCount === 9) {
             this.props.showResults();
-            // if (this.props.level === 6 && this.props.page === 60) {
-            //     return;
-            // }
-            // if (this.props.page < 60 && this.props.isRoundEnd) {
-            //     this.props.selectLevel(this.props.level, parseFloat(this.props.page) + 1);
-            //     // this.props.getNextWord(0);
-            // } else if (this.props.page < 60) {
-            //     this.props.showResults();
-            // } else {
-            //     this.props.selectLevel(this.props.level + 1, 1);
-            // }
         }
     }
 
@@ -67,18 +64,14 @@ export class ButtonsBlock extends Component {
             document.querySelector('.puzzle-container-sentence').insertAdjacentHTML('beforeend', wordPuzzle);
         });
         this.props.showButton('isContinueBtn', true);
-        // if (this.props.wordCount === 9) {
-        //     this.props.showButton('isResultBtn', true);
-        // }
         const urlAudio = `https://raw.githubusercontent.com/aidfromdeagland/rslang-data/master/${this.props.audioSentence}`;
-        const audio = new Audio(urlAudio);
+        audio = new Audio(urlAudio);
         if (this.props.isAutoPronunciation) {
             audio.play();
         }
         this.props.showButton('isDontKnowBtn', false);
         this.props.showButton('isCheckBtn', false);
         this.props.addToResults('dontKnow', this.props.correctSentence, urlAudio);
-        // this.props.clickDontKnow();
     }
 
     render() {
