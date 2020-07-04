@@ -1,3 +1,11 @@
+export const tryExecute = async (funcExecute, errorFunc) => {
+    try {
+        await funcExecute();
+    } catch (error) {
+        errorFunc(error, funcExecute);
+    }
+};
+
 export const getDifferentColor = (proccent, startColor, diffColor) => {
     const color = {
         r: startColor.r + Math.round(diffColor.r * proccent),

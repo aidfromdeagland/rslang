@@ -29,13 +29,9 @@ export class Repository {
     }
 
     static async saveSettingsAudioCall(currentSettings) {
-        try {
-            const settings = await SettingService.get();
-            settings.optional.audioCall = JSON.stringify(currentSettings);
-            await SettingService.put(settings);
-        } catch (error) {
-            // TODO показать ошибку пользователю
-        }
+        const settings = await SettingService.get();
+        settings.optional.audioCall = JSON.stringify(currentSettings);
+        await SettingService.put(settings);
     }
 
     constructor(state) {
@@ -53,25 +49,21 @@ export class Repository {
     }
 
     async loadSettings(success) {
-        try {
-            const settings = await SettingService.get();
-            this.state.currentSettings = JSON.parse(settings.optional.audioCall);
-            this.state.step = 1 / this.state.currentSettings.wordCount;
-            const { colorStart, colorEnd } = this.state.currentSettings;
-            this.state.colorDiff = {
-                r: colorEnd.r - colorStart.r,
-                g: colorEnd.g - colorStart.g,
-                b: colorEnd.b - colorStart.b,
-            };
-            success(this.state.currentSettings);
-        } catch (error) {
-            // TODO показать ошибку пользователю
-        }
+        const settings = await SettingService.get();
+        this.state.currentSettings = JSON.parse(settings.optional.audioCall);
+        this.state.step = 1 / this.state.currentSettings.wordCount;
+        const { colorStart, colorEnd } = this.state.currentSettings;
+        this.state.colorDiff = {
+            r: colorEnd.r - colorStart.r,
+            g: colorEnd.g - colorStart.g,
+            b: colorEnd.b - colorStart.b,
+        };
+        success(this.state.currentSettings);
     }
 
     async loadData() {
         const { page, group, wordCount } = this.state.currentSettings;
-        const { loadedGroup, loadedPage, loaded } = this.state;
+        const { loadedGroup, loadedPage } = this.state;
 
         const isLoadingPage = loadedPage !== page || loadedGroup !== group;
         if (loadedGroup !== group) {
@@ -92,6 +84,7 @@ export class Repository {
             this.state.loadedPage = page;
         }
         if (this.state.loaded) {
+            const { loaded } = this.state;
             this.state.loaded = undefined;
             loaded();
         }
@@ -101,7 +94,7 @@ export class Repository {
         return this.state.indexWord < this.state.currentSettings.wordCount;
     }
 
-    setLevel(newPage, newGroup) {
+    async setLevel(newPage, newGroup) {
         this.state.currentSettings.page = newPage;
         this.state.currentSettings.group = newGroup;
         this.loadData();
@@ -138,12 +131,14 @@ export class Repository {
     }
 
     getBackgroundProgress() {
+        const { colorStart } = this.state.currentSettings;
+        const { colorDiff } = this.state;
         const startPrecent = this.state.indexWord * this.state.step;
         const startRoundColor = getDifferentColor(startPrecent,
-            this.state.colorStart, this.state.colorEnd);
+            colorStart, colorDiff);
         const endPrecent = startPrecent + this.state.step;
         const endRoundColor = getDifferentColor(endPrecent,
-            this.state.colorStart, this.state.colorEnd);
+            colorStart, colorDiff);
         return `linear-gradient(${startRoundColor}, ${endRoundColor})`;
     }
 

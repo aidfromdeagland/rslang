@@ -5,6 +5,7 @@ import { WordList } from './wordList';
 import { MEDIA_PREFIX_URL } from '../../../constants/globalConstants';
 import { Repository } from './repository';
 import { MAX_COUNT_QUEST_WORDS } from './constants';
+import { tryExecute } from './utils';
 
 export class AudioCallGame extends Component {
     constructor(props) {
@@ -85,7 +86,9 @@ export class AudioCallGame extends Component {
             return;
         }
 
-        this.setState({ selectedWord: false, pressNumber: undefined, round: this.getRound() });
+        tryExecute(async () => {
+            this.setState({ selectedWord: false, pressNumber: undefined, round: this.getRound() });
+        }, this.props.errorFunction);
     }
 
     render() {
@@ -123,4 +126,5 @@ AudioCallGame.propTypes = {
         }),
     }).isRequired,
     endGame: PropTypes.func.isRequired,
+    errorFunction: PropTypes.func.isRequired,
 };

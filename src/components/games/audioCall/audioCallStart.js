@@ -5,6 +5,7 @@ import { createIncArray } from '../../../utils/utils';
 import { Spinner } from '../../shared/spinner';
 import { GROUP_COUNT, PAGE_COUNT } from '../../../constants/globalConstants';
 import { Repository } from './repository';
+import { tryExecute } from './utils';
 import { SimpleSelect } from './simpleSelect';
 
 export class AudioCallStart extends Component {
@@ -21,14 +22,20 @@ export class AudioCallStart extends Component {
 
     componentDidMount() {
         this.repository = new Repository(this.props.repositoryState);
-        if (!this.state.isLoadingSettings) {
-            this.repository.setLevel(this.state.page, this.state.group);
-            return;
-        }
-        this.repository.loadSettings((settings) => {
-            this.repository.loadData();
-            this.setState({ isLoadingSettings: false, group: settings.group, page: settings.page });
-        });
+        tryExecute(async () => {
+            if (!this.state.isLoadingSettings) {
+                await this.repository.setLevel(this.state.page, this.state.group);
+            } else {
+                await this.repository.loadSettings((settings) => {
+                    this.repository.loadData();
+                    this.setState({
+                        isLoadingSettings: false,
+                        group: settings.group,
+                        page: settings.page,
+                    });
+                });
+            }
+        }, this.props.errorFunction);
     }
 
     handleGroupChange(group) {
@@ -40,7 +47,10 @@ export class AudioCallStart extends Component {
     }
 
     handleStartGame() {
-        this.repository.setLevel(this.state.page, this.state.group);
+        tryExecute(async () => {
+            this.repository.setLevel(this.state.page, this.state.group);
+        }, this.props.errorFunction);
+
         if (!this.repository.checkLoaded(() => {
             this.setState({ isGame: true, isLoading: false });
             this.props.startGame(this.repository.state);
@@ -100,4 +110,5 @@ AudioCallStart.propTypes = {
         }),
     }),
     startGame: PropTypes.func.isRequired,
+    errorFunction: PropTypes.func.isRequired,
 };

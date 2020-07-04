@@ -24,11 +24,21 @@ import { Auth } from '../../pages/auth/auth';
 export class AudioCall extends Component {
     constructor() {
         super();
-        this.state = { state: GAME_PROGRESS.start, auth: false };
+        this.state = { auth: true, state: GAME_PROGRESS.start };
     }
 
-    setAuth() {
-        this.setState({ auth: true });
+    errorFunction = (error, failedFunction) => {
+        if (error.status === 401) {
+            this.setState({ auth: false, failedFunction });
+        } else {
+            // отобразить ошибку error.message
+        }
+    }
+
+    afterAuth() {
+        const { failedFunction } = this.state;
+        failedFunction();
+        this.setState({ auth: true, failedFunction: undefined });
     }
 
     startGame(repositoryState) {
@@ -58,7 +68,7 @@ export class AudioCall extends Component {
         if (!this.state.auth) {
             return (
                 <div className="audio-call">
-                    <Auth isChecking logIn={() => { this.setAuth(); }} />
+                    <Auth isChecking={false} logIn={() => { this.afterAuth(); }} />
                 </div>
             );
         }
@@ -68,6 +78,7 @@ export class AudioCall extends Component {
                 <AudioCallStart
                     repositoryState={this.state.repositoryState}
                     startGame={(repositoryState) => this.startGame(repositoryState)}
+                    errorFunction={this.errorFunction}
                 />
             );
         case GAME_PROGRESS.game:
@@ -75,6 +86,7 @@ export class AudioCall extends Component {
                 <AudioCallGame
                     repositoryState={this.state.repositoryState}
                     endGame={(result) => this.endGame(result)}
+                    errorFunction={this.errorFunction}
                 />
             );
         case GAME_PROGRESS.result:
