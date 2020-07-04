@@ -93,12 +93,12 @@ export class SavannahGame extends Component {
         new Audio(AUDIO_URL + url).play();
     }
 
-     getWord = async () => {
-         const { group } = this.props;
-         const page = Math.floor(Math.random() * (29 - 0)) + 0;
-         const data = await WordService.getWords(group, page);
-         return data;
-     }
+        getWord = async () => {
+            const { group } = this.props;
+            const page = Math.floor(Math.random() * (29 - 0)) + 0;
+            const data = await WordService.getWords(group, page);
+            return data;
+        }
 
     getRightAnswer = () => {
         const {
