@@ -34,7 +34,7 @@ export class ModalResult extends Component {
                                     <div className="result-body">
                                         {this.props.results.dontKnow.map((result, index) => {
                                             return (
-                                                <div>
+                                                <div key={index}>
                                                     <button className="dynamic-btn" onClick={() => this.handlePlayAudio('dontKnow', index)} />
                                                     <span>{result.sentence}</span>
                                                 </div>

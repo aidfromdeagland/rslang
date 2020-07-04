@@ -5,6 +5,7 @@ import './game-puzzle.scss';
 import { Button } from '../../shared/button';
 
 let audio;
+let audioPlay;
 export class ButtonsBlock extends Component {
     handleCheck = () => {
         const correctSentence = this.props.correctSentence.split(' ');
@@ -29,7 +30,7 @@ export class ButtonsBlock extends Component {
             const urlAudio = `https://raw.githubusercontent.com/aidfromdeagland/rslang-data/master/${this.props.audioSentence}`;
             audio = new Audio(urlAudio);
             if (this.props.isAutoPronunciation) {
-                audio.play();
+                audioPlay = audio.play();
             }
             this.props.addToResults('know', this.props.correctSentence, urlAudio);
             if (this.props.wordCount === 9) {
@@ -41,8 +42,13 @@ export class ButtonsBlock extends Component {
     }
 
     handleContinue = () => {
-        if (audio) {
-            audio.pause();
+        if (audioPlay) {
+            // audio.pause();
+            audioPlay.then(() => {
+                // Automatic playback started!
+                // Show playing UI.
+                audio.pause();
+            })
         }
         this.props.showButton('isDontKnowBtn', true);
         this.props.showButton('isContinueBtn', false);
@@ -67,11 +73,17 @@ export class ButtonsBlock extends Component {
         const urlAudio = `https://raw.githubusercontent.com/aidfromdeagland/rslang-data/master/${this.props.audioSentence}`;
         audio = new Audio(urlAudio);
         if (this.props.isAutoPronunciation) {
-            audio.play();
+            audioPlay = audio.play();
         }
         this.props.showButton('isDontKnowBtn', false);
         this.props.showButton('isCheckBtn', false);
         this.props.addToResults('dontKnow', this.props.correctSentence, urlAudio);
+    }
+
+    handlePlayAudio = () => {
+        const url = `https://raw.githubusercontent.com/aidfromdeagland/rslang-data/master/${this.props.audioSentence}`;
+        audio = new Audio(url);
+        audioPlay = audio.play();
     }
 
     render() {
@@ -81,6 +93,7 @@ export class ButtonsBlock extends Component {
                 {this.props.isDontKnowBtn && <Button className="dont-know-sentence puzzle-btn button" title="Don\'t know" onClick={this.handleDontKnow} />}
                 {this.props.isContinueBtn && <Button className="continue-sentence puzzle-btn button" title="Continue" onClick={this.handleContinue} />}
                 {this.props.isResultBtn && <Button className="puzzle-result puzzle-btn button" title="Results" />}
+                <button className="dynamic-btn" onClick={this.handlePlayAudio} />
             </div>
         );
     }

@@ -28,7 +28,9 @@ export class GamePuzzle extends Component {
             isResultBtn: false,
             isClickedDontKnow: false,
             isAutoPronunciation: true,
+            isPicture: false,
             isRoundEnd: false,
+            isNext: true,
         };
     }
 
@@ -42,6 +44,9 @@ export class GamePuzzle extends Component {
         if (!this.state.haveWords) {
             this.loadWords();
         }
+        if (!this.state.isNext) {
+            this.createDataForGame(this.state.wordCount);
+        }
     }
 
     loadWords = async () => {
@@ -52,7 +57,14 @@ export class GamePuzzle extends Component {
         } = this.state;
         const calculatingPage = Math.floor((page - 1) / 2);
         const calculatingLevel = level - 1;
-        this.allWords = await WordService.getWords(calculatingLevel, calculatingPage);
+        if (this.props.isGameWithLevels) {
+            this.allWords = await WordService.getWords(calculatingLevel, calculatingPage);
+        }
+        if (this.props.isGameWithUserWords) {
+            this.allWords = await WordService.getUserWords();
+            // this.allWords = this.getRandomData(userWords);
+        }
+
         this.createDataForGame(wordCount);
         // const wordsForGameRound = (page - 1) % 2 === 0 ? this.allWords.slice(0, 10) : this.allWords.slice(10, 20);
         // this.setState({
@@ -74,16 +86,25 @@ export class GamePuzzle extends Component {
             page,
             // wordCount,
         } = this.state;
-        const wordsForGameRound = (page - 1) % 2 === 0 ? this.allWords.slice(0, 10) : this.allWords.slice(10, 20);
+        let wordsForGameRound;
+        if (this.props.isGameWithLevels) {
+            wordsForGameRound = (page - 1) % 2 === 0 ? this.allWords.slice(0, 10) : this.allWords.slice(10, 20);
+        }
+        if (this.props.isGameWithUserWords) {
+            wordsForGameRound = this.getRandomData(this.allWords);
+        }
         this.sentence = wordsForGameRound[wordCount].textExample.replace(/(<([^>]+)>)/g, '');
         this.sentenceForPuzzle = this.mixWords(this.sentence);
         this.translateSentence = wordsForGameRound[wordCount].textExampleTranslate;
         this.audioSentence = wordsForGameRound[wordCount].audioExample;
+        this.image = wordsForGameRound[wordCount].image;
         this.setState({
-            sentence: wordsForGameRound[wordCount].textExample.replace(/(<([^>]+)>)/g, ''),
-            sentenceForPuzzle: this.mixWords(this.sentence),
-            translateSentence: wordsForGameRound[wordCount].textExampleTranslate,
-            audioSentence: wordsForGameRound[wordCount].audioExample,
+            sentence: this.sentence,
+            sentenceForPuzzle: this.sentenceForPuzzle,
+            translateSentence: this.translateSentence,
+            audioSentence: this.audioSentence,
+            image: this.image,
+            isNext: true,
         });
     }
 
@@ -96,6 +117,17 @@ export class GamePuzzle extends Component {
             newSentence.splice(randomIndex, 1);
         }
         return randomSentence.join(' ');
+    }
+
+    getRandomData = (data) => {
+        const newData = data.slice();
+        const randomData = [];
+        for (let i = 0; i < 10; i += 1) {
+            const randomIndex = this.randomInteger(0, newData.length);
+            randomData.push(newData[randomIndex]);
+            newData.splice(randomIndex, 1);
+        }
+        return randomData;
     }
 
     randomInteger = (min, max) => {
@@ -114,31 +146,44 @@ export class GamePuzzle extends Component {
     getNextWord = (count) => {
         this.setState({
             wordCount: count,
-            // haveWords: false,
             isCheckBtn: false,
             isContinueBtn: false,
             isDontKnowBtn: true,
             isResultBtn: false,
+            isNext: false,
         });
-        this.createDataForGame(count);
     }
 
     selectLevel = (level, page) => {
-        this.setState({
-            level,
-            page,
-            haveWords: false,
-            wordCount: 0,
-            isCheckBtn: false,
-            isContinueBtn: false,
-            isDontKnowBtn: true,
-            isResultBtn: false,
-        });
+        if (this.props.isGameWithLevels) {
+            this.setState({
+                level,
+                page,
+                haveWords: false,
+                wordCount: 0,
+                isCheckBtn: false,
+                isContinueBtn: false,
+                isDontKnowBtn: true,
+                isResultBtn: false,
+            });
+        }
+        if (this.props.isGameWithUserWords) {
+            this.setState({
+                wordCount: 0,
+                isCheckBtn: false,
+                isContinueBtn: false,
+                isDontKnowBtn: true,
+                isResultBtn: false,
+                isNext: false,
+            });
+        }
+        this.results.know = [];
+        this.results.dontKnow = [];
     }
 
-    checkBoxHandle = () => {
+    checkBoxHandle = (prop) => {
         this.setState((prev) => ({
-            isAutoPronunciation: !prev.isAutoPronunciation,
+            [prop]: !prev[prop],
         }));
     }
 
@@ -171,8 +216,8 @@ export class GamePuzzle extends Component {
             sentenceForPuzzle,
             translateSentence,
             audioSentence,
+            isNext,
         } = this.state;
-        console.log(this.state)
         if (haveWords) {
             return (
                 <div className="game-puzzle__container">
@@ -186,30 +231,38 @@ export class GamePuzzle extends Component {
                         <Checkbox
                             text="Auto pronunciation"
                             checked={this.state.isAutoPronunciation}
-                            checkBoxHandle={this.checkBoxHandle}
+                            checkBoxHandle={() => this.checkBoxHandle('isAutoPronunciation')}
+                        />
+                        <Checkbox
+                            text="Show Picture"
+                            checked={this.state.isPicture}
+                            checkBoxHandle={() => this.checkBoxHandle('isPicture')}
                         />
                     </div>
                     <div className="game-board">
+                        {this.state.isPicture && (
+                            <div className="image-container">
+                                <img src={`https://raw.githubusercontent.com/aidfromdeagland/rslang-data/master/${this.state.image}`} alt="img" />
+                            </div>
+                        )}
                         <div className="game-board__translation">
                             <span>{translateSentence}</span>
                         </div>
-                        <GameBoardAction
-                            // sentenceForPuzzle={this.sentenceForPuzzle}
-                            // correctSentence={this.sentence}
-                            sentenceForPuzzle={sentenceForPuzzle}
-                            correctSentence={sentence}
-
-                            showCheck={this.showCheck}
-                            showButton={this.showButton}
-                            isClickedDontKnow={this.state.isClickedDontKnow}
-                        />
+                        {isNext ? (
+                            <GameBoardAction
+                                sentenceForPuzzle={sentenceForPuzzle}
+                                correctSentence={sentence}
+                                showCheck={this.showCheck}
+                                showButton={this.showButton}
+                                isClickedDontKnow={this.state.isClickedDontKnow}
+                            />
+                        ) : ''}
                         <ButtonsBlock
                             wordCount={this.state.wordCount}
                             isCheckBtn={this.state.isCheckBtn}
                             isContinueBtn={this.state.isContinueBtn}
                             isDontKnowBtn={this.state.isDontKnowBtn}
                             isResultBtn={this.state.isResultBtn}
-                            // correctSentence={this.sentence}
                             correctSentence={sentence}
                             showButton={this.showButton}
                             getNextWord={this.getNextWord}
@@ -217,7 +270,6 @@ export class GamePuzzle extends Component {
                             selectLevel={this.selectLevel}
                             level={this.state.level}
                             page={this.state.page}
-                            // audioSentence={this.audioSentence}
                             audioSentence={audioSentence}
                             isAutoPronunciation={this.state.isAutoPronunciation}
                             addToResults={this.addToResults}

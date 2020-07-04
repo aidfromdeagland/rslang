@@ -53,4 +53,24 @@
   .btn-start {
     width: 300px;
   }
+
+  .dynamic-btn {
+    background-image: url(../../../assets/icons/dynamic.svg);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    padding: 0;
+    border: 0;
+    background-color: #f5f7f8;
+    margin-right: 20px;
+    width: 30px;
+    height: 30px;
+    &:hover {
+      cursor: pointer;
+    }
+    &:active,
+    &:focus {
+      outline: none !important;
+    }
+  }
 }

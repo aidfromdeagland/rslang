@@ -13,7 +13,7 @@ import { Stats } from './pages/stats/stats';
 import { Vocabulary } from './pages/vocabulary/vocabulary';
 import { NotFound } from './pages/notFound/notFound';
 import { SpeakIt } from './games/speackit/SpeakIt';
-import { EnglishPuzzle } from './games/englishPuzzle/EnglishPuzzle';
+import { EnglishPuzzle } from './games/englishPuzzle/englishPuzzle';
 import { Savannah } from './games/savannah/Savannah';
 import { AudioCall } from './games/audioCall/AudioCall';
 import { Sprint } from './games/sprint/Sprint';

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './englishPuzzle.scss';
-import { StartPage } from './StartPage';
+import { StartPage } from './startPage';
 
 export class EnglishPuzzle extends Component {
     render() {
