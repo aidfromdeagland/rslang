@@ -15,7 +15,7 @@ import { NotFound } from './pages/notFound/notFound';
 import { SpeakIt } from './games/speackit/SpeakIt';
 import { EnglishPuzzle } from './games/englishPuzzle/EnglishPuzzle';
 import { Savannah } from './games/savannah/savannah';
-import { SavannahGame } from './games/savannah/savannahGame';
+
 import { AudioCall } from './games/audioCall/AudioCall';
 import { Sprint } from './games/sprint/Sprint';
 import { Hangman } from './games/hangman/Hangman';
@@ -45,9 +45,6 @@ export class App extends Component {
                             </Route>
                             <Route exact path="/mini-games/savannah">
                                 <Savannah />
-                            </Route>
-                            <Route path="/mini-games/savannah/savannahGame">
-                                <SavannahGame />
                             </Route>
                             <Route path="/mini-games/audio-call">
                                 <AudioCall />

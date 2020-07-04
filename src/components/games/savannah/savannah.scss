@@ -6,6 +6,8 @@ $lives-color: #d372e2;
 $shadow-color: #4abbff;
 $success-color: #56e4c3;
 $error-color: #e2727d;
+$btn-color: #092c70;
+$btn-hover-color: #0f4ab4;
 
 .savannah {
     position: absolute;
@@ -33,7 +35,7 @@ $error-color: #e2727d;
         text-align: center;
         display: flex;
         color: #fff;
-
+        
         &-text {
             padding-top: 2rem;
             font-size: 2rem;
@@ -55,33 +57,105 @@ $error-color: #e2727d;
             }
         }
 
+        &-select{
+            margin-left: 2rem;
+            display: flex;
+            align-items: baseline;
+
+            select {
+                appearance: none;
+                outline: 0;
+                box-shadow: none;
+                border: 0 ;
+                background: $btn-color;
+                background-image: none;
+                font-size: 1.2rem;
+              }
+            
+             .select {
+                position: relative;
+                display: flex;
+                width: 15rem;
+                height: 3rem;
+                background: $bg-color;
+                overflow: hidden;
+                border-radius: .25em;
+                margin-left: 2rem;
+              }
+              select {
+                flex: 1;
+                padding: 0.5rem;
+                color: #fff;
+                cursor: pointer;
+              }
+              /* Arrow */
+              .select::after {
+                content: '\25BC';
+                position: absolute;
+                top: 0;
+                right: 0;
+                padding: 0.2rem 1rem;
+                background: $btn-color;
+                cursor: pointer;
+                pointer-events: none;
+                transition: .25s all ease;
+              }
+             
+              .select:hover::after {
+                color: $btn-hover-color;
+              }
+        }
+
         &-btn {
+            height: 3rem;
             margin: 3rem 0 0 3rem;
             border: 1px solid transparent;
             border-radius: 7px;
-            background-color: #092c70;
+            background-color: $btn-color;
             color: #fff;
             padding: 1rem 2rem;
             cursor: pointer;
             font-size: 1.1rem;
             &:hover {
-                background-color: #0f4ab4;
+                background-color: $btn-hover-color;
             }
         }
     }
 
-    &__lives {
+    &__header {
         display: flex;
-        justify-content: flex-end;
-        padding: 2rem;
-
-        &-life {
+        justify-content: space-between;
+        padding: 0 1rem;
+        &-lives {
             display: flex;
-            width: 40px;
-            height: 40px;
-            background-image: url("./../../../assets/icons/heart-savannah.svg");
+            justify-content: flex-end;
+            padding: 2rem;
+            align-items: baseline;
+       
+    
+    
+            &-life {
+                display: flex;
+                width: 40px;
+                height: 40px;
+                background-image: url("./../../../assets/icons/heart-savannah.svg");
+            }
+              
+        }
+        &-btnClose {
+            font-size: 2rem;
+            padding: 1rem;
+            cursor: pointer;
+          
+        }
+
+        a{
+            color: #fff;
+            text-decoration: none;
         }
     }
+
+   
 
     &__cards {
         max-width: 1020px;
@@ -125,18 +199,20 @@ $error-color: #e2727d;
 
     &__statistics {
         position: relative;
-        margin: 0 auto;
+        margin: 5rem auto;
         background-color: $bg-color;
         width: 50%;
-        height: 70%;
+        max-height: 70%;
         overflow-y: scroll;
         overflow-x: hidden;
-        border-radius: 10px;
+        border-radius: 5px;
         color: #000;
         text-align: center;
         display: flex;
         flex-direction: column;
         padding: 2rem;
+        box-shadow: 0 0 20px $shadow-color;
+        
 
         &-row {
             display: flex;
@@ -180,13 +256,13 @@ $error-color: #e2727d;
             margin: 3rem 0;
             border: 1px solid transparent;
             border-radius: 7px;
-            background-color: $text-color;
+            background-color: $btn-color;
             color: #fff;
             padding: 0.5rem 1rem;
             cursor: pointer;
             font-size: 1.1rem;
             &:hover {
-                background-color: $lives-color;
+                background-color: $btn-hover-color;
             }
         }
 
@@ -204,7 +280,7 @@ $error-color: #e2727d;
         }
 
         h1 {
-            color: $success-color;
+            color: $btn-color;
         }
     }
 

@@ -2,18 +2,34 @@ import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Button } from '../../shared/button';
+import { SavannahStart } from './savannah-start';
 
 export class SavannahStatistics extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            isRepeat: false,
+        };
+    }
+
+    repeatGame = () => {
+        this.setState({
+            isRepeat: true,
+        });
+    }
+
     render() {
         const { wrongAnswers, rightAnswers, getAudio } = this.props;
         const successPercent = Math.round((rightAnswers.length * 100) / (rightAnswers.length + wrongAnswers.length));
-
+        if (this.state.isRepeat) {
+            return <SavannahStart />;
+        }
         return (
             <div
                 className="savannah__statistics"
             >
                 <div className="savannah__statistics-btnClose">
-                    <NavLink className="savannah__statistics-link" to="/main">
+                    <NavLink className="savannah__statistics-link" to="/mini-games">
                         &#10006;
                     </NavLink>
                 </div>
@@ -28,7 +44,6 @@ export class SavannahStatistics extends Component {
                 { wrongAnswers.map((row, index) => (
                     <div
                         className="savannah__statistics-row"
-                        aria-hidden
                         key={index}
                     >
                         <div className="savannah__statistics-row_word">
@@ -42,8 +57,10 @@ export class SavannahStatistics extends Component {
                         </div>
                         <div
                             className="savannah__statistics-row_sound"
-                            aria-hidden
-                            onClick={() => getAudio(row.audio)}
+                            onMouseDown={() => getAudio(row.audio)}
+                            tabIndex="0"
+                            role="button"
+                            label="audio"
                         />
 
                     </div>
@@ -54,7 +71,6 @@ export class SavannahStatistics extends Component {
                 { rightAnswers.map((row, index) => (
                     <div
                         className="savannah__statistics-row"
-                        aria-hidden
                         key={index}
                     >
                         <div className="savannah__statistics-row_word">
@@ -69,15 +85,21 @@ export class SavannahStatistics extends Component {
                         <div
                             className="savannah__statistics-row_sound"
                             aria-hidden
-                            onClick={() => getAudio(row.audio)}
+                            onMouseDown={() => getAudio(row.audio)}
+                            tabIndex="0"
+                            role="button"
+                            label="audio"
                         />
 
                     </div>
 
                 )) }
-                <NavLink className="savannah__statistics-link" to="/mini-games/savannah">
-                    <Button className="savannah__statistics-btn" title="Try again!" />
-                </NavLink>
+
+                <Button
+                    onClick={this.repeatGame}
+                    className="savannah__statistics-btn"
+                    title="Try again!"
+                />
 
             </div>
 

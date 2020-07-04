@@ -5,7 +5,7 @@ export class SavannahCards extends Component {
     render() {
         const {
             translateWords, word, getRightAnswer, getWrongAnswer, stopTimer,
-            startTimer, showRightCard, showWrongCard, getClassName,
+            startTimer, showRightCard, showWrongCard, getClassName, showRightWordByClick,
         } = this.props;
         return (
             <div className="savannah__cards">
@@ -15,7 +15,8 @@ export class SavannahCards extends Component {
                         className={getClassName(index)}
                         aria-hidden
                         key={index}
-                        onClick={() => {
+                        onMouseDown={() => {
+                            showRightWordByClick();
                             stopTimer();
                             if (card.id === word.id) {
                                 showRightCard(index);
@@ -27,6 +28,8 @@ export class SavannahCards extends Component {
                                 startTimer();
                             }
                         }}
+                        tabIndex="0"
+                        role="button"
                     >
                         {`${index + 1}. ${card.translate}`}
                     </div>
@@ -49,4 +52,5 @@ SavannahCards.propTypes = {
     showRightCard: PropTypes.func.isRequired,
     showWrongCard: PropTypes.func.isRequired,
     getClassName: PropTypes.func.isRequired,
+    showRightWordByClick: PropTypes.isRequired,
 };

@@ -6,10 +6,10 @@ export class SavannahLives extends Component {
         const { lives } = this.props;
         const livesArr = [];
         for (let i = 0; i < lives; i += 1) {
-            livesArr.push(<div className="savannah__lives-life" key={i} />);
+            livesArr.push(<div className="savannah__header-lives-life" key={i} />);
         }
         return (
-            <div className="savannah__lives">
+            <div className="savannah__header-lives">
                 { livesArr }
             </div>
         );

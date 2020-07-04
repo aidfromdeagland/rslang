@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
+import { NavLink } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import { WordService } from '../../../services/wordServices';
-import { SavannahCards } from './savannahCards';
-import { SavannahLives } from './savannahLives';
-import { SavannahWord } from './savannahWord';
-import { SavannahImage } from './savannahImage';
-import { SavannahStatistics } from './savannahStatistics';
+import { SavannahCards } from './savannah-cards';
+import { SavannahLives } from './savannah-lives';
+import { SavannahWord } from './savannah-word';
+import { SavannahImage } from './savannah-image';
+import { SavannahStatistics } from './savannah-statistics';
 import { AUDIO_URL } from '../../../constants/globalConstants';
 import soundCorrect from '../../../assets/audio/correct.mp3';
 import soundError from '../../../assets/audio/error.mp3';
@@ -46,7 +48,6 @@ export class SavannahGame extends Component {
 
         document.addEventListener('keydown', this.keydown);
         document.addEventListener('keyup', this.keyup);
-        document.addEventListener('mousedown', this.showRightWordByClick);
     }
 
     componentDidUpdate() {
@@ -56,9 +57,9 @@ export class SavannahGame extends Component {
     }
 
     componentWillUnmount() {
+        this.stopTimer();
         document.removeEventListener('keydown', this.keydown);
         document.removeEventListener('keyup', this.keyup);
-        document.removeEventListener('mousedown', this.showRightWordByClick);
     }
 
     handleClickByKeyboard =() => {
@@ -93,7 +94,7 @@ export class SavannahGame extends Component {
     }
 
      getWord = async () => {
-         const group = Math.floor(Math.random() * (5 - 0)) + 0;
+         const { group } = this.props;
          const page = Math.floor(Math.random() * (29 - 0)) + 0;
          const data = await WordService.getWords(group, page);
          return data;
@@ -230,12 +231,32 @@ export class SavannahGame extends Component {
             rightAnswers, wrongAnswers,
         } = this.state;
 
+        if (this.state.lives < 1) {
+            return (
+                <SavannahStatistics
+                    rightAnswers={rightAnswers}
+                    wrongAnswers={wrongAnswers}
+                    getAudio={this.getAudio}
+                />
+            );
+        }
+
         return (
             <div className="savannah">
+                {this.state.lives >= 1
+                   && (
+                       <div className="savannah__header">
+                           <div className="savannah__header-btnClose">
+                               <NavLink to="/mini-games">
+                                   &#10006;
+                               </NavLink>
+                           </div>
+                           <SavannahLives
+                               lives={lives}
+                           />
+                       </div>
 
-                <SavannahLives
-                    lives={lives}
-                />
+                   )}
 
                 {{ word } && this.state.lives >= 1
                     && (
@@ -258,24 +279,22 @@ export class SavannahGame extends Component {
                             getClassName={this.getClassName}
                             showRightCard={this.showRightCard}
                             showWrongCard={this.showWrongCard}
+                            showRightWordByClick={this.showRightWordByClick}
                         />
                     )}
 
-                {this.state.lives < 1
+                {this.state.lives >= 1
                    && (
-                       <SavannahStatistics
-                           rightAnswers={rightAnswers}
-                           wrongAnswers={wrongAnswers}
-                           getAudio={this.getAudio}
+                       <SavannahImage
+                           imageWidth={imageWidth}
+                           imageHeight={imageHeight}
                        />
                    )}
-
-                <SavannahImage
-                    imageWidth={imageWidth}
-                    imageHeight={imageHeight}
-                />
-
             </div>
         );
     }
 }
+
+SavannahStatistics.propTypes = {
+    group: PropTypes.number.isRequired,
+};
