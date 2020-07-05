@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './hangman.scss';
-//import {Hangmanstat} from './hangmanstat.js';
+
 import gal0 from '../../../components/games/hangman/hangmanimg/gal0.png';
 import gal1 from '../../../components/games/hangman/hangmanimg/gal1.png';
 import gal2 from '../../../components/games/hangman/hangmanimg/gal2.png';
@@ -13,7 +13,6 @@ import stat64 from '../../../components/games/hangman/hangmanimg/stat-64.png';
 import { NavLink } from 'react-router-dom';
 import { WordService } from '../../../services/wordServices';
 import { AUDIO_URL } from '../../../constants/globalConstants';
-
 import './hangmanstat.scss';
 
 export class Hangman extends Component {
@@ -147,24 +146,12 @@ export class Hangman extends Component {
     }
 
    
-
-    // getWord(n){
-    //     let word='';
-    //     if (n===1) {
-    //         word = 'download';
-    //     }
-    //     else {
-    //         word='listener';
-    //     }
-    //     return word.split('');
-    // }    
-
     async getWord(n) {
         const data = await WordService.getWords(1, 1);
         return data;
     }
 
-    dopPron(url){//произношение слова
+    dopPron(url){
         new Pron(AUDIO_URL + url).play();
         let newIsPron = !this.state.isPron;
         this.setState({isPron: newIsPron});
@@ -182,7 +169,6 @@ export class Hangman extends Component {
                     </button>
                     <NavLink to={'/mini-games/hangman/hangmanstat'}>  
                         <button id="dopStat" className={isStat ? "dop-block-el dop-active" : "dop-block-el"}>  
-                        {/* <button id="dopStat" className={isStat ? "dop-block-el dop-active" : "dop-block-el"} onClick={() => this.setState({isStat: !isStat})}>  */}
                             <img style={{width: 30, height: 30}} src={stat64} alt='Stat'></img>
                         </button>
                     </NavLink> 
@@ -205,21 +191,6 @@ export class Hangman extends Component {
                 <div id="btn-continue" className={isContinue ? 'btn-continue btn-active' : 'btn-continue'} onClick={() => this.handleContinue()}>                    
                         Continue
                 </div>
-
-            <div className="hangmanstat">
-                <h2>Statistics</h2>
-                <div className="stat">
-                    <div className="stat-current">
-                        <h3>Current game</h3>
-                    </div>
-                    <div className="stat-history">
-                    <h3>History</h3>
-                    </div>
-                </div>    
-             
-            </div>
-
-
             </div>
         );
     }
