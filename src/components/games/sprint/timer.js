@@ -5,8 +5,7 @@ import './timer.scss';
 export class Timer extends Component {
     constructor(props) {
         super(props);
-        const INTERVAL = 60;
-        this.state = { seconds: INTERVAL };
+        this.state = { seconds: 60 };
     }
 
     componentDidMount() {
@@ -28,8 +27,6 @@ export class Timer extends Component {
             this.setState({
                 seconds: seconds - 1,
             });
-        } else {
-            this.componentWillUnmount();
         }
     }
 
