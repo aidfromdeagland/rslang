@@ -16,7 +16,7 @@ import { SpeakIt } from './games/speackit/SpeakIt';
 import { EnglishPuzzle } from './games/englishPuzzle/EnglishPuzzle';
 import { Savannah } from './games/savannah/Savannah';
 import { AudioCall } from './games/audioCall/AudioCall';
-import { Sprint } from './games/sprint/Sprint';
+import { Sprint } from './games/sprint/sprint';
 import { Hangman } from './games/hangman/Hangman';
 import { Footer } from './footer/footer';
 import { Study } from './pages/study/study';
