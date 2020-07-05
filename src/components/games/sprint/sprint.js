@@ -30,7 +30,7 @@ export class Sprint extends Component {
     }
 
     componentDidMount() {
-        document.addEventListener('keydown', (event) => this.HandleKeyDown(event));
+        document.addEventListener('keydown', (event) => this.handleKeyDown(event));
         this.getWords(0, 0);
     }
 
@@ -62,7 +62,7 @@ export class Sprint extends Component {
         return { word, wordTranslate, right };
     }
 
-    HandleSuccessClick() {
+    handleSuccessClick() {
         if (this.state.right === true) {
             this.successUpdate();
         } else {
@@ -96,7 +96,7 @@ export class Sprint extends Component {
         );
     }
 
-    HandleFailClick() {
+    handleFailClick() {
         const { right } = this.state;
         if (right) {
             this.failureUpdate();
@@ -123,12 +123,12 @@ export class Sprint extends Component {
         });
     }
 
-    HandleKeyDown(event) {
+    handleKeyDown(event) {
         if (event.key === Constants.ARROW_LEFT_KEY) {
-            this.HandleFailClick();
+            this.handleFailClick();
         }
         if (event.key === Constants.ARROW_RIGHT_KEY) {
-            this.HandleSuccessClick();
+            this.handleSuccessClick();
         }
     }
 
@@ -149,13 +149,13 @@ export class Sprint extends Component {
                     <Words wordEng={wordEng} wordRus={wordRus} />
                     <div className="yes_large">&nbsp;</div>
                     <div className="checking">
-                        <button id="fail" type="button" onClick={this.HandleFailClick.bind(this)}>Wrong</button>
-                        <button id="success" type="button" onClick={this.HandleSuccessClick.bind(this)}>Correct</button>
+                        <button id="fail" type="button" onClick={this.handleFailClick.bind(this)}>Wrong</button>
+                        <button id="success" type="button" onClick={this.handleSuccessClick.bind(this)}>Correct</button>
                     </div>
                 </div>
                 <div className="arrow_buttons">
-                    <button id="wrong_arrow" type="button" onClick={this.HandleFailClick.bind(this)}>&nbsp;</button>
-                    <button id="correct_arrow" type="button" onClick={this.HandleSuccessClick.bind(this)}>&nbsp;</button>
+                    <button id="wrong_arrow" type="button" onClick={this.handleFailClick.bind(this)}>&nbsp;</button>
+                    <button id="correct_arrow" type="button" onClick={this.handleSuccessClick.bind(this)}>&nbsp;</button>
                 </div>
             </div>
         );
