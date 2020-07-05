@@ -27,7 +27,9 @@ export class SavannahGame extends Component {
             keyPressed: null,
             isCorrect: null,
             isWrong: null,
-
+            wordInx: 0,
+            allRightWords: 0,
+            allWrongWords: 0,
         };
     }
 
@@ -62,6 +64,15 @@ export class SavannahGame extends Component {
         document.removeEventListener('keyup', this.keyup);
     }
 
+    getDataToStatistics = () => {
+        const { allRightWords, allWrongWords } = this.state;
+        const savannahData = {
+            rightWords: allRightWords,
+            wrongWords: allWrongWords,
+        };
+        return savannahData;
+    }
+
     handleClickByKeyboard =() => {
         const { translateWords, word, keyPressed } = this.state;
         this.stopTimer();
@@ -93,16 +104,22 @@ export class SavannahGame extends Component {
         new Audio(AUDIO_URL + url).play();
     }
 
-        getWord = async () => {
-            const { group } = this.props;
-            const page = Math.floor(Math.random() * (29 - 0)) + 0;
-            const data = await WordService.getWords(group, page);
-            return data;
-        }
+    getWord = async () => {
+        const { group, page } = this.props;
+        const data = await WordService.getWords(group, page);
+        return data;
+    }
+
+    getWrongWords = async () => {
+        const { group } = this.props;
+        const data = await WordService.getUserAggWords(group, '', 100);
+        return data[0].paginatedResults;
+    }
 
     getRightAnswer = () => {
+        this.getNextPage();
         const {
-            imageHeight, imageWidth, word, rightAnswers,
+            imageHeight, imageWidth, word, rightAnswers, wordInx, allRightWords,
         } = this.state;
         this.getNewCards();
         const row = {
@@ -116,12 +133,26 @@ export class SavannahGame extends Component {
             wordClass: 'savannah__card-transition',
             imageHeight: imageHeight + 10,
             imageWidth: imageWidth + 10,
+            wordInx: wordInx + 1,
+            allRightWords: allRightWords + 1,
         });
         new Audio(soundCorrect).play();
     }
 
+    getNextPage = () => {
+        const { page, getNextPage } = this.props;
+        const { wordInx } = this.state;
+        if (wordInx > 19) {
+            getNextPage(page + 1);
+            this.setState({
+                wordInx: 0,
+            });
+        }
+    }
+
     getWrongAnswer = () => {
-        const { word, wrongAnswers } = this.state;
+        this.getNextPage();
+        const { word, wrongAnswers, allWrongWords } = this.state;
         this.getNewCards();
         const row = {
             word: word.word,
@@ -133,6 +164,7 @@ export class SavannahGame extends Component {
             wordClass: 'savannah__card-transition',
             lives: this.state.lives - 1,
             wrongAnswers: [...wrongAnswers, row],
+            allWrongWords: allWrongWords + 1,
         });
         new Audio(soundError).play();
     }
@@ -158,34 +190,36 @@ export class SavannahGame extends Component {
         return 'savannah__cards-card';
     }
 
+    getRandomIndex = () => Math.floor(Math.random() * (99 - 0)) + 0;
+
     getNewCards = async () => {
-        const wordInx = Math.floor(Math.random() * (19 - 0)) + 0;
-        const rightWord = await this.getWord();
-        const wrongWord1 = await this.getWord();
-        const wrongWord2 = await this.getWord();
-        const wrongWord3 = await this.getWord();
+        const { wordInx } = this.state;
+        const { mode } = this.props;
+        const userWord = await WordService.getUserWords();
+        const rightWord = mode === 'userWords' && userWord.length > 30 ? userWord : await this.getWord();
+        const wrongWords = await this.getWrongWords();
+
         const arrayOfWords = [
             {
                 translate: rightWord[wordInx].wordTranslate,
                 id: rightWord[wordInx].id,
             },
             {
-                translate: wrongWord1[wordInx].wordTranslate,
-                id: wrongWord1[wordInx].id,
+                translate: wrongWords[this.getRandomIndex()].wordTranslate,
+                id: wrongWords[this.getRandomIndex()].id,
 
             },
             {
-                translate: wrongWord2[wordInx].wordTranslate,
-                id: wrongWord2[wordInx].id,
+                translate: wrongWords[this.getRandomIndex()].wordTranslate,
+                id: wrongWords[this.getRandomIndex()].id,
             },
             {
-                translate: wrongWord3[wordInx].wordTranslate,
-                id: wrongWord3[wordInx].id,
+                translate: wrongWords[this.getRandomIndex()].wordTranslate,
+                id: wrongWords[this.getRandomIndex()].id,
             },
         ];
 
-        Promise.all([rightWord, wrongWord1, wrongWord2, wrongWord3]).then(
-
+        Promise.all([rightWord, wrongWords]).then(
             this.setState({
                 word: {
                     id: rightWord[wordInx].id,
@@ -197,6 +231,8 @@ export class SavannahGame extends Component {
 
                 translateWords: arrayOfWords.sort(() => 0.5 - Math.random()),
                 wordClass: 'savannah__card-transition card-bottom',
+                wordInx: wordInx + 1,
+
             }),
 
         );
@@ -295,6 +331,9 @@ export class SavannahGame extends Component {
     }
 }
 
-SavannahStatistics.propTypes = {
+SavannahGame.propTypes = {
     group: PropTypes.number.isRequired,
+    page: PropTypes.number.isRequired,
+    mode: PropTypes.string.isRequired,
+    getNextPage: PropTypes.func.isRequired,
 };

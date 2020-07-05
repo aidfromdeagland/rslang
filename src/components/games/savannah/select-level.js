@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-export class Select extends Component {
+export class SelectLevel extends Component {
     constructor(props) {
         super(props);
         this.state = { group: 0 };
@@ -16,7 +16,7 @@ export class Select extends Component {
         return (
             <div
                 className="select"
-                onMouseDown={() => { this.props.getGroup(this.state.group); }}
+                onMouse={() => { this.props.getGroup(this.state.group); }}
                 tabIndex="0"
                 role="button"
             >

@@ -14,8 +14,8 @@ $btn-hover-color: #0f4ab4;
     top: 0;
     left: 0;
     z-index: 10;
-    width: 100vw;
-    height: 100vh;
+    min-height: 100vh;
+    width:100%;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -29,8 +29,7 @@ $btn-hover-color: #0f4ab4;
         background-image: url("./../../../assets/images/lion.jpg");
         background-size: cover;
         background-position: left;
-        width: 100vw;
-        height: 100vh;
+        min-height: calc(100vh - 100px);
         margin: 0 auto;
         text-align: center;
         display: flex;
@@ -57,6 +56,17 @@ $btn-hover-color: #0f4ab4;
             }
         }
 
+        &-warning {
+           color: $error-color;
+        }
+
+        &-form {
+                margin: 1rem 2rem;
+                font-size: 1.2rem;
+                text-align: left;
+              
+        }
+
         &-select{
             margin-left: 2rem;
             display: flex;
@@ -75,12 +85,12 @@ $btn-hover-color: #0f4ab4;
              .select {
                 position: relative;
                 display: flex;
-                width: 15rem;
+                width: 10rem;
                 height: 3rem;
                 background: $bg-color;
                 overflow: hidden;
                 border-radius: .25em;
-                margin-left: 2rem;
+                margin: 0 1rem;
               }
               select {
                 flex: 1;
@@ -88,7 +98,7 @@ $btn-hover-color: #0f4ab4;
                 color: #fff;
                 cursor: pointer;
               }
-              /* Arrow */
+             
               .select::after {
                 content: '\25BC';
                 position: absolute;
@@ -179,6 +189,7 @@ $btn-hover-color: #0f4ab4;
             cursor: pointer;
             font-size: 1.1rem;
             box-shadow: 0 0 10px $shadow-color;
+            outline: none;
 
             &-success {
                 background-color: $success-color;
@@ -240,6 +251,7 @@ $btn-hover-color: #0f4ab4;
                 background-size: contain;
                 background-repeat: no-repeat;
                 cursor: pointer;
+                outline: none;
             }
         }
 
@@ -302,4 +314,6 @@ $btn-hover-color: #0f4ab4;
         color: $secondary-color;
         transition: all 7s linear;
     }
+  
 }
+
