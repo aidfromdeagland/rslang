@@ -33,13 +33,35 @@
         }
     }
 
+    .wordtransl {
+        display: none;
+        font-size: 2rem;
+        font-weight: 700;
+        
+    }
+
+    .wordtransl-active{
+        display: block;
+    }
+
     .gallows {
         width: 400px;
         height: 500px;
         margin: auto;
         align-items: center;
         background-color: lightgray;
-    }   
+
+        .gallows-visible {
+            position: absolute;
+            visibility: visible;
+            padding-left: 0;
+            padding-top: 0;
+        }
+
+        .gallows-hidden {
+            visibility: hidden;
+        }
+    }
 
     .word {
         height: 50px;

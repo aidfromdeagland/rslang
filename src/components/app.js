@@ -17,8 +17,7 @@ import { EnglishPuzzle } from './games/englishPuzzle/EnglishPuzzle';
 import { Savannah } from './games/savannah/Savannah';
 import { AudioCall } from './games/audioCall/AudioCall';
 import { Sprint } from './games/sprint/Sprint';
-import { Hangman } from './games/hangman/Hangman';
-import { Hangmanstat } from './games/hangman/hangmanstat';
+import { Hangman } from './games/hangman/hangman';
 import { Footer } from './footer/footer';
 import { Study } from './pages/study/study';
 import { Table } from './pages/stats/table';
@@ -54,9 +53,6 @@ export class App extends Component {
                             </Route>
                             <Route path="/mini-games/hangman">
                                 <Hangman />
-                            </Route>
-                            <Route path="/mini-games/hangman/hangmanstat">
-                                <Hangmanstat />
                             </Route>
                             <Route exact path="/main">
                                 <Main />
