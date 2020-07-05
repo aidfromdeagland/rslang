@@ -50,7 +50,12 @@ export class Repository {
 
     async loadSettings(success) {
         const settings = await SettingService.get();
-        this.state.currentSettings = JSON.parse(settings.optional.audioCall);
+        this.setSettings(JSON.parse(settings.optional.audioCall));
+        success(this.state.currentSettings);
+    }
+
+    setSettings(currentSettings) {
+        this.state.currentSettings = currentSettings;
         this.state.step = 1 / this.state.currentSettings.wordCount;
         const { colorStart, colorEnd } = this.state.currentSettings;
         this.state.colorDiff = {
@@ -58,7 +63,6 @@ export class Repository {
             g: colorEnd.g - colorStart.g,
             b: colorEnd.b - colorStart.b,
         };
-        success(this.state.currentSettings);
     }
 
     async loadData() {
@@ -76,7 +80,7 @@ export class Repository {
             this.state.allWords = words.filter((w) => w.group === group);
             this.state.loadedGroup = group;
         }
-        if (isLoadingPage) {
+        if (isLoadingPage) { // Добавить проверку на совпадение колисества слов
             this.state.gameWords = undefined;
             this.state.gameWords = shuffle(
                 this.state.allWords.filter((w) => w.page === page),
@@ -100,8 +104,23 @@ export class Repository {
         this.loadData();
     }
 
+    async setNewSettings(currentSettings) {
+        const newCurrentSettings = currentSettings;
+        if (newCurrentSettings.page === undefined) {
+            newCurrentSettings.page = this.state.currentSettings.page || 0;
+            newCurrentSettings.group = this.state.currentSettings.group || 0;
+        }
+        if (JSON.stringify(newCurrentSettings) === JSON.stringify(this.state.currentSettings)) {
+            return;
+        }
+        this.setSettings(newCurrentSettings);
+
+        await Repository.saveSettingsAudioCall(newCurrentSettings);
+        await this.loadData();
+    }
+
     checkLoaded(resolve) {
-        if (this.state.gameWords) {
+        if (this.state.gameWords) { // TODO Добавить проверку на совпадение режима
             resolve();
             return true;
         }
@@ -131,12 +150,13 @@ export class Repository {
     }
 
     getBackgroundProgress() {
-        const { colorStart } = this.state.currentSettings;
-        const { colorDiff } = this.state;
-        const startPrecent = this.state.indexWord * this.state.step;
+        const {
+            currentSettings: { colorStart }, colorDiff, step, indexWord,
+        } = this.state;
+        const startPrecent = indexWord * step;
         const startRoundColor = getDifferentColor(startPrecent,
             colorStart, colorDiff);
-        const endPrecent = startPrecent + this.state.step;
+        const endPrecent = startPrecent + step;
         const endRoundColor = getDifferentColor(endPrecent,
             colorStart, colorDiff);
         return `linear-gradient(${startRoundColor}, ${endRoundColor})`;

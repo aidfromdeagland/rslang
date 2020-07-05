@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/control-has-associated-label */
 /* eslint-disable react/destructuring-assignment */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
@@ -7,29 +8,29 @@ import { GROUP_COUNT, PAGE_COUNT } from '../../../constants/globalConstants';
 import { Repository } from './repository';
 import { tryExecute } from './utils';
 import { SimpleSelect } from './simpleSelect';
+import { ModalSettings } from './modal';
 
 export class AudioCallStart extends Component {
     constructor(props) {
         super(props);
-        const isLoadingSettings = !props.repositoryState;
         this.state = {
             isLoading: false,
-            isLoadingSettings,
-            group: isLoadingSettings || props.repositoryState.currentSettings.group,
-            page: isLoadingSettings || props.repositoryState.currentSettings.page,
+            repositoryState: props.repositoryState,
+            group: props.repositoryState ? props.repositoryState.currentSettings.group : undefined,
+            page: props.repositoryState ? props.repositoryState.currentSettings.page : undefined,
         };
     }
 
     componentDidMount() {
         this.repository = new Repository(this.props.repositoryState);
         tryExecute(async () => {
-            if (!this.state.isLoadingSettings) {
+            if (this.state.repositoryState) {
                 await this.repository.setLevel(this.state.page, this.state.group);
             } else {
                 await this.repository.loadSettings((settings) => {
                     this.repository.loadData();
                     this.setState({
-                        isLoadingSettings: false,
+                        repositoryState: this.repository.state,
                         group: settings.group,
                         page: settings.page,
                     });
@@ -44,6 +45,13 @@ export class AudioCallStart extends Component {
 
     handlePageChange(page) {
         this.setState({ page });
+    }
+
+    handleSettingsChange(currentSettings) {
+        tryExecute(async () => {
+            await this.repository.setNewSettings(currentSettings);
+        }, this.props.errorFunction);
+        this.setState({ repositoryState: this.repository.state, isOpenModal: false });
     }
 
     handleStartGame() {
@@ -66,8 +74,16 @@ export class AudioCallStart extends Component {
 
         return (
             <div className="audio-call">
+                {this.state.isOpenModal && this.state.repositoryState
+                    ? (
+                        <ModalSettings
+                            ok={(data) => { this.handleSettingsChange(data); }}
+                            close={() => { this.setState({ isOpenModal: false }); }}
+                            currentSettings={this.state.repositoryState.currentSettings}
+                        />
+                    ) : null}
                 <h1 className="audio-call__header">Audio Call</h1>
-                {!this.state.modeIsUserWords && !this.state.isLoadingSettings
+                {!this.state.modeIsUserWords && this.state.repositoryState
                     && (
                         <div className="audio-call__levels">
                             <SimpleSelect
@@ -89,9 +105,25 @@ export class AudioCallStart extends Component {
                 <span className="audio-call__description">Select the translation of the spoken word</span>
                 <span className="audio-call__train">Improves the perception of English speech by ear</span>
                 {
-                    this.state.isLoading || this.state.isLoadingSettings
+                    this.state.isLoading || !this.state.repositoryState
                         ? <Spinner />
-                        : <button className="audio-call__button audio-call__start-game" type="button" onClick={() => this.handleStartGame()}>Start game</button>
+                        : (
+                            <div className="audio-call__buttons">
+                                <button
+                                    className="audio-call__button audio-call__start-game"
+                                    type="button"
+                                    onClick={() => this.handleStartGame()}
+                                >
+                                    Start game
+                                </button>
+                                <button
+                                    className="audio-call__button audio-call__setting-button"
+                                    type="button"
+                                    title="Game settings"
+                                    onClick={() => this.setState({ isOpenModal: true })}
+                                />
+                            </div>
+                        )
                 }
             </div>
         );
@@ -99,7 +131,7 @@ export class AudioCallStart extends Component {
 }
 
 AudioCallStart.defaultProps = {
-    repositoryState: undefined,
+    repositoryState: null,
 };
 
 AudioCallStart.propTypes = {

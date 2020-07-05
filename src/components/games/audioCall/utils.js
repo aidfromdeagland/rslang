@@ -6,6 +6,21 @@ export const tryExecute = async (funcExecute, errorFunc) => {
     }
 };
 
+export const hexToRgb = (hex) => {
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16),
+    } : null;
+};
+
+// eslint-disable-next-line no-bitwise
+export const rgbToHex = (rgb) => `#${((1 << 24) + (rgb.r << 16) + (rgb.g << 8) + rgb.b).toString(16).slice(1)}`;
+
+export const getKeyByValue = (object, value) => Object.keys(object)
+    .find((key) => object[key] === value);
+
 export const getDifferentColor = (proccent, startColor, diffColor) => {
     const color = {
         r: startColor.r + Math.round(diffColor.r * proccent),
