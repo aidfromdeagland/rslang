@@ -158,7 +158,11 @@ export class Auth extends Component {
     }
 }
 
+Auth.defaultProps = {
+    isChecking: false,
+};
+
 Auth.propTypes = {
     logIn: PropTypes.func.isRequired,
-    isChecking: PropTypes.bool.isRequired,
+    isChecking: PropTypes.bool,
 };

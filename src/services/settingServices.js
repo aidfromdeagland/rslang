@@ -27,7 +27,6 @@ export class SettingService {
             throw new ServiceError('Access token is missing or invalid', rawResponse.status);
         }
         if (rawResponse.status === 404) {
-            // throw new ServiceError('Settings not found', rawResponse.status);
             return settingsDefault;
         }
 
