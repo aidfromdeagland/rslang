@@ -250,8 +250,9 @@ export class Repository {
             const aggWords = await WordService.getUserAggWords(group, '', GROUP_WORDS_COUNT);
             const words = aggWords[0].paginatedResults;
             this.state.allWords = words;
+            this.state.load.loaded.group = group;
         }
-        if (this.state.loadedGroup !== undefined && (isLoadingPage
+        if (this.state.load.loaded.group !== undefined && (isLoadingPage
                 || this.state.gameWords.length === wordCount)) {
             this.state.gameWords = undefined;
             this.state.gameWords = shuffle(
