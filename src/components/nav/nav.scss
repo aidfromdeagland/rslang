@@ -19,7 +19,7 @@ $secondary-color: #092c70;
     top: 0;
     list-style: none;
     margin: 0;
-    padding: 0;
+    padding: 40px 0;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -33,17 +33,9 @@ $secondary-color: #092c70;
 
     li {
       display: flex;
-
-      &:hover {
-        background: #fff;
-      }
-
-      .link_active {
-        background-color: #fff;
-      }
     }
 
-    a {
+    .navigation__link {
       text-decoration: none;
       color: $text-color;
       font-family: "OpenSans", sans-serif;
@@ -53,6 +45,27 @@ $secondary-color: #092c70;
       display: flex;
       align-items: center;
       width: 100%;
+      cursor: pointer;
+
+      &:hover {
+        background-color: #fff;
+      }
+
+      &_active {
+        color: #ffffff;
+        background-color: #092c70;
+        cursor: default;
+
+        &:hover {
+          background-color: #092c70;
+        }
+      }
+
+      &_disabled {
+        cursor: default;
+        pointer-events: none;
+        filter: grayscale(100%);
+      }
     }
   }
 
@@ -72,7 +85,7 @@ $secondary-color: #092c70;
     &_vocabulary {
       background-image: url("./../../assets/icons/vocabulary.svg");
     }
-    &_minigames {
+    &_mini-games {
       background-image: url("./../../assets/icons/minigames.svg");
     }
     &_statistics {
@@ -81,7 +94,7 @@ $secondary-color: #092c70;
     &_promo {
       background-image: url("./../../assets/icons/promo.svg");
     }
-    &_aboutteam {
+    &_about-team {
       background-image: url("./../../assets/icons/aboutteam.svg");
     }
   }
