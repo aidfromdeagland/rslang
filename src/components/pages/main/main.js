@@ -33,42 +33,55 @@ export class Main extends Component {
     }
 
     putSettings = () => {
-        const settings = SettingService.createObject(12, this.state.settings);
-        SettingService.put(settings);
+        const { settings } = this.state;
+        const newSettings = SettingService.createObject(12, settings);
+        SettingService.put(newSettings);
     }
 
     checkboxHandle = (property) => {
-        this.setState((prev) => {
-            return { settings: { ...prev.settings, [property]: !prev.settings[property] } };
-        });
-        this.setState({ isInvalidSettings: false });
+        this.setState((prev) => (
+            {
+                settings: { ...prev.settings, [property]: !prev.settings[property] },
+                isInvalidSettings: false,
+            }
+        ));
     }
 
     checkSettings = () => {
-        const settingsValues = Object.entries(this.state.settings).filter((option) => option[0] === 'textMeaning' || option[0] === 'textExample' || option[0] === 'word').find((setting) => setting[1] === true);
+        const { settings } = this.state;
+        const settingsValues = Object.entries(settings).filter((option) => option[0] === 'textMeaning' || option[0] === 'textExample' || option[0] === 'word').find((setting) => setting[1] === true);
         if (!settingsValues) {
             this.setState({ isInvalidSettings: true });
             return;
         }
-        this.settings = this.state.settings;
+        this.settings = settings;
         this.handleCloseModal();
         this.putSettings();
     }
 
     handleInput = (property, operation) => {
-        let prop = parseFloat(this.state.settings[property]);
+        const { settings } = this.state;
+        let wordsQuantity = parseInt(settings[property], 10);
         if (operation === '+') {
-            prop += 10;
-            this.setState(() => ({ settings: { ...this.state.settings, [property]: prop } }));
-            if (property === 'numberLearnWord' && prop > this.state.settings.numberLearnCard) {
-                this.setState(() => ({ settings: { ...this.state.settings, numberLearnCard: prop, [property]: prop } }));
+            wordsQuantity += 10;
+            this.setState(() => ({ settings: { ...settings, [property]: wordsQuantity } }));
+            if (property === 'numberLearnWord' && wordsQuantity > settings.numberLearnCard) {
+                this.setState(() => ({
+                    settings: {
+                        ...settings, numberLearnCard: wordsQuantity, [property]: wordsQuantity,
+                    },
+                }));
             }
         }
         if (operation === '-') {
-            prop = prop === 0 ? 0 : prop - 10;
-            this.setState({ settings: { ...this.state.settings, [property]: prop } });
-            if (property === 'numberLearnCard' && prop < this.state.settings.numberLearnCard) {
-                this.setState(() => ({ settings: { ...this.state.settings, numberLearnWord: prop, [property]: prop } }));
+            wordsQuantity = wordsQuantity === 0 ? 0 : wordsQuantity - 10;
+            this.setState({ settings: { ...settings, [property]: wordsQuantity } });
+            if (property === 'numberLearnCard' && wordsQuantity < settings.numberLearnCard) {
+                this.setState(() => ({
+                    settings: {
+                        ...settings, numberLearnWord: wordsQuantity, [property]: wordsQuantity
+                    },
+                }));
             }
         }
     }
@@ -76,9 +89,9 @@ export class Main extends Component {
     handleCloseModal = () => {
         this.setState((prev) => ({
             isOpenModal: !prev.isOpenModal,
+            settings: this.settings,
+            isInvalidSettings: false,
         }));
-        this.setState({ settings: this.settings });
-        this.setState({ isInvalidSettings: false });
     }
 
     handleClickSettings = () => {
