@@ -15,6 +15,7 @@ export class Main extends Component {
             totalLearnedWords: 0,
             isOpenModal: false,
             notWordForLearn: false,
+            isInvalidSettings: false,
         };
     }
 
@@ -32,33 +33,64 @@ export class Main extends Component {
     }
 
     putSettings = () => {
-        const settings = SettingService.createObject(12, this.state.settings);
-        SettingService.put(settings);
-        this.setState({ settings });
+        const { settings } = this.state;
+        const newSettings = SettingService.createObject(12, settings);
+        SettingService.put(newSettings);
     }
 
     checkboxHandle = (property) => {
-        this.setState((prev) => {
-            return { settings: { ...prev.settings, [property]: !prev.settings[property] } };
-        });
+        this.setState((prev) => (
+            {
+                settings: { ...prev.settings, [property]: !prev.settings[property] },
+                isInvalidSettings: false,
+            }
+        ));
     }
 
     checkSettings = () => {
-        const settingsValues = Object.values(this.state);
-        if (!settingsValues.includes(true)) {
+        const { settings } = this.state;
+        const settingsValues = Object.entries(settings).filter((option) => option[0] === 'textMeaning' || option[0] === 'textExample' || option[0] === 'word').find((setting) => setting[1] === true);
+        if (!settingsValues) {
+            this.setState({ isInvalidSettings: true });
             return;
         }
+        this.settings = settings;
         this.handleCloseModal();
         this.putSettings();
     }
 
-    handleInput = (property, event) => {
-        this.setState({ settings: { ...this.state.settings, [property]: event.target.value } });
+    handleInput = (property, operation) => {
+        const { settings } = this.state;
+        let wordsQuantity = parseInt(settings[property], 10);
+        if (operation === '+') {
+            wordsQuantity += 10;
+            this.setState(() => ({ settings: { ...settings, [property]: wordsQuantity } }));
+            if (property === 'numberLearnWord' && wordsQuantity > settings.numberLearnCard) {
+                this.setState(() => ({
+                    settings: {
+                        ...settings, numberLearnCard: wordsQuantity, [property]: wordsQuantity,
+                    },
+                }));
+            }
+        }
+        if (operation === '-') {
+            wordsQuantity = wordsQuantity === 0 ? 0 : wordsQuantity - 10;
+            this.setState({ settings: { ...settings, [property]: wordsQuantity } });
+            if (property === 'numberLearnCard' && wordsQuantity < settings.numberLearnCard) {
+                this.setState(() => ({
+                    settings: {
+                        ...settings, numberLearnWord: wordsQuantity, [property]: wordsQuantity
+                    },
+                }));
+            }
+        }
     }
 
     handleCloseModal = () => {
         this.setState((prev) => ({
             isOpenModal: !prev.isOpenModal,
+            settings: this.settings,
+            isInvalidSettings: false,
         }));
     }
 
@@ -73,6 +105,7 @@ export class Main extends Component {
             needLearnWordsToday,
             settings,
             isOpenModal,
+            isInvalidSettings,
         } = this.state;
         return (
             <div className="main-page">
@@ -86,6 +119,7 @@ export class Main extends Component {
                         closeModal={this.handleCloseModal}
                         isOpenModal={isOpenModal}
                         checkSettings={this.checkSettings}
+                        isInvalidSettings={isInvalidSettings}
                     />
                     {/* <Start /> */}
                     <Progress />

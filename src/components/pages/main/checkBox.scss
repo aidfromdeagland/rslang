@@ -36,6 +36,9 @@ label {
     outline: none;
     position: relative;
     z-index: 1000;
+    &.invalid-property {
+      box-shadow: 0 0 1rem 0 rgba(226,31,31,.87);
+    }
   }
   .option-input:hover {
     background: #9faab7;

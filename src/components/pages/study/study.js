@@ -66,7 +66,7 @@ export class Study extends Component {
         const studiedWord = this.dataForCard.word;
 
         const word = studiedWord.split('').map((letter, index) => {
-            return <span className={letter === actualValue[index] ? 'correct-letter' : 'uncorrect-letter'} key={index}>{letter}</span>;
+            return <span className={letter === actualValue[index] ? 'correct-letter check-letter' : 'uncorrect-letter check-letter'} key={index}>{letter}</span>;
         });
         return word;
     }
