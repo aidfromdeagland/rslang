@@ -8,4 +8,5 @@ export const settingsDefault = {
     showTranscription: true,
     numberLearnWord: 10,
     numberLearnCard: 10,
+    gamePuzzle: '{"level":1,"page":2}',
 };

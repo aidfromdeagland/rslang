@@ -1,18 +1,22 @@
 import React, { Component } from 'react';
 import './startPage.scss';
+import PropTypes from 'prop-types';
 import { Dropdown } from './dropDown/DropDown';
 import { Checkbox } from './checkBox/checkBox';
 import { WordService } from '../../../services/wordServices';
 import { Spinner } from '../../shared/spinner';
 import './game-puzzle.scss';
 import { GameBoardAction } from './gameBoardAction';
-import { Button } from '../../shared/button';
 import { ButtonsBlock } from './buttonsGame';
 import { ModalResult } from './modalStatistics/modalResult';
+import { SettingService } from '../../../services/settingServices';
+import { settingsDefault } from '../../../constants/globalConstants';
+import { StatisticService } from '../../../services/statisticServices';
 
 export class GamePuzzle extends Component {
     constructor(props) {
         super(props);
+        this.statistic = [];
         this.results = {
             know: [],
             dontKnow: [],
@@ -28,70 +32,130 @@ export class GamePuzzle extends Component {
             isResultBtn: false,
             isClickedDontKnow: false,
             isAutoPronunciation: true,
-            isPicture: false,
+            isPicture: true,
             isRoundEnd: false,
             isNext: true,
         };
     }
 
     componentDidMount() {
-        if (!this.state.haveWords) {
-            this.loadWords();
+        const { haveWords } = this.state;
+        if (!haveWords) {
+            this.loadSettings();
+            this.loadStatistic();
         }
     }
 
     componentDidUpdate() {
-        if (!this.state.haveWords) {
+        const {
+            haveWords,
+            isNext,
+            wordCount,
+        } = this.state;
+        if (!haveWords) {
             this.loadWords();
         }
-        if (!this.state.isNext) {
-            this.createDataForGame(this.state.wordCount);
+        if (!isNext) {
+            this.createDataForGame(wordCount);
         }
     }
 
+    loadSettings = async () => {
+        this.settings = await SettingService.get();
+        const settingsForGame = this.settings.optional.gamePuzzle
+            ? JSON.parse(this.settings.optional.gamePuzzle)
+            : JSON.parse(settingsDefault.gamePuzzle);
+        this.setState({
+            level: settingsForGame.level,
+            page: settingsForGame.page,
+        });
+        this.loadWords();
+    }
+
+    putSettings = (level, page) => {
+        const gameSettings = JSON.stringify({
+            level,
+            page,
+        });
+        this.settings.optional.gamePuzzle = gameSettings;
+        const settings = SettingService.createObject(this.settings.wordsPerDay, this.settings.optional);
+        SettingService.put(settings);
+    }
+
+    loadStatistic = async () => {
+        this.statistic = await StatisticService.get();
+        console.log(this.statistic);
+        this.gameStatistic = this.statistic.optional.gamePuzzle ? JSON.parse(this.statistic.optional.gamePuzzle) : [];
+    }
+
+    putStatistic = () => {
+        const gameStatistic = JSON.stringify(this.gameStatistic);
+        this.statistic.optional.gamePuzzle = gameStatistic;
+        const statistic = StatisticService.createObject(0, this.statistic.optional);
+        console.log(statistic);
+        StatisticService.put(statistic);
+    }
+
+    addStatisticsData = (level, page) => {
+        const options = {
+            day: 'numeric',
+            month: 'long',
+            hour: 'numeric',
+            minute: 'numeric',
+            second: 'numeric',
+            hour12: false,
+        };
+        const date = new Date();
+        const dateString = date.toLocaleString('en', options);
+
+        const statisticsField = `${dateString}:  Level: ${level}, Page: ${page} - I don't know: ${this.results.dontKnow.length}; I know: ${this.results.know.length}`;
+        this.gameStatistic.push(statisticsField);
+        this.putStatistic();
+        // return statisticsField;
+        // activeUser.complete.push({ level, page });
+        // document.querySelector('.option-container-pages').children[page - 1].classList.add('completed-page');
+        // activeUser.statistics.push(statisticsField);
+    }
+
     loadWords = async () => {
+        const {
+            isGameWithUserWords,
+            isGameWithLevels,
+        } = this.props;
         const {
             level,
             page,
             wordCount,
         } = this.state;
-        const calculatingPage = Math.floor((page - 1) / 2);
-        const calculatingLevel = level - 1;
-        if (this.props.isGameWithLevels) {
+        if (isGameWithLevels) {
+            const calculatingPage = Math.floor((page - 1) / 2);
+            const calculatingLevel = level - 1;
             this.allWords = await WordService.getWords(calculatingLevel, calculatingPage);
         }
-        if (this.props.isGameWithUserWords) {
-            this.allWords = await WordService.getUserWords();
-            // this.allWords = this.getRandomData(userWords);
+        if (isGameWithUserWords) {
+            const data = await WordService.getUserWords();
+            this.allWords = this.getRandomData(data);
         }
-
         this.createDataForGame(wordCount);
-        // const wordsForGameRound = (page - 1) % 2 === 0 ? this.allWords.slice(0, 10) : this.allWords.slice(10, 20);
-        // this.setState({
-        //     sentence: wordsForGameRound[wordCount].textExample.replace(/(<([^>]+)>)/g, ''),
-        //     sentenceForPuzzle: this.mixWords(this.sentence),
-        //     translateSentence: wordsForGameRound[wordCount].textExampleTranslate,
-        //     audioSentence: wordsForGameRound[wordCount].audioExample,
-        // });
-        // this.sentence = wordsForGameRound[wordCount].textExample.replace(/(<([^>]+)>)/g, '');
-        // this.sentenceForPuzzle = this.mixWords(this.sentence);
-        // this.translateSentence = wordsForGameRound[wordCount].textExampleTranslate;
-        // this.audioSentence = wordsForGameRound[wordCount].audioExample;
         this.setState({ haveWords: true });
     }
 
     createDataForGame = (wordCount) => {
         const {
-            level,
+            isGameWithUserWords,
+            isGameWithLevels,
+        } = this.props;
+        const {
             page,
-            // wordCount,
         } = this.state;
         let wordsForGameRound;
-        if (this.props.isGameWithLevels) {
-            wordsForGameRound = (page - 1) % 2 === 0 ? this.allWords.slice(0, 10) : this.allWords.slice(10, 20);
+        if (isGameWithLevels) {
+            wordsForGameRound = (page - 1) % 2 === 0
+                ? this.allWords.slice(0, 10)
+                : this.allWords.slice(10, 20);
         }
-        if (this.props.isGameWithUserWords) {
-            wordsForGameRound = this.getRandomData(this.allWords);
+        if (isGameWithUserWords) {
+            wordsForGameRound = this.allWords.slice();
         }
         this.sentence = wordsForGameRound[wordCount].textExample.replace(/(<([^>]+)>)/g, '');
         this.sentenceForPuzzle = this.mixWords(this.sentence);
@@ -122,8 +186,8 @@ export class GamePuzzle extends Component {
     getRandomData = (data) => {
         const newData = data.slice();
         const randomData = [];
-        for (let i = 0; i < 10; i += 1) {
-            const randomIndex = this.randomInteger(0, newData.length);
+        for (let i = 9; i >= 0; i -= 1) {
+            const randomIndex = this.randomInteger(0, newData.length - 1);
             randomData.push(newData[randomIndex]);
             newData.splice(randomIndex, 1);
         }
@@ -155,7 +219,11 @@ export class GamePuzzle extends Component {
     }
 
     selectLevel = (level, page) => {
-        if (this.props.isGameWithLevels) {
+        const {
+            isGameWithUserWords,
+            isGameWithLevels,
+        } = this.props;
+        if (isGameWithLevels) {
             this.setState({
                 level,
                 page,
@@ -167,18 +235,19 @@ export class GamePuzzle extends Component {
                 isResultBtn: false,
             });
         }
-        if (this.props.isGameWithUserWords) {
-            this.setState({
+        if (isGameWithUserWords) {
+            this.setState(() => ({
                 wordCount: 0,
                 isCheckBtn: false,
                 isContinueBtn: false,
                 isDontKnowBtn: true,
                 isResultBtn: false,
-                isNext: false,
-            });
+                haveWords: false,
+            }));
         }
         this.results.know = [];
         this.results.dontKnow = [];
+        this.putSettings(level, page);
     }
 
     checkBoxHandle = (prop) => {
@@ -192,18 +261,25 @@ export class GamePuzzle extends Component {
     }
 
     showResults = () => {
+        const { level, page } = this.state;
         this.setState({ isRoundEnd: true });
+        this.addStatisticsData(level, page);
+        console.log(this.statistic)
     }
 
     handleByNextRound = () => {
+        const {
+            level,
+            page,
+        } = this.state;
         this.setState({ isRoundEnd: false });
-        if (this.props.level === 6 && this.props.page === 60) {
+        if (level === 6 && page === 60) {
             this.selectLevel(1, 1);
         }
-        if (this.state.page < 60) {
-            this.selectLevel(this.state.level, parseFloat(this.state.page) + 1);
+        if (page < 60) {
+            this.selectLevel(level, parseFloat(page) + 1);
         } else {
-            this.selectLevel(this.state.level + 1, 1);
+            this.selectLevel(level + 1, 1);
         }
         this.results.know = [];
         this.results.dontKnow = [];
@@ -217,32 +293,57 @@ export class GamePuzzle extends Component {
             translateSentence,
             audioSentence,
             isNext,
+            isRoundEnd,
+            level,
+            page,
+            isAutoPronunciation,
+            isPicture,
+            image,
+            isClickedDontKnow,
+            wordCount,
+            isContinueBtn,
+            isCheckBtn,
+            isDontKnowBtn,
+            isResultBtn,
+
         } = this.state;
+        const {
+            isGameWithLevels,
+        } = this.props;
         if (haveWords) {
             return (
                 <div className="game-puzzle__container">
-                    {this.state.isRoundEnd && <ModalResult results={this.results} handleByNextRound={this.handleByNextRound} />}
+                    {isRoundEnd && (
+                        <ModalResult
+                            results={this.results}
+                            handleByNextRound={this.handleByNextRound}
+                        />
+                    )}
                     <div className="game-puzzle__header">
-                        <Dropdown
-                            selectLevel={this.selectLevel}
-                            level={this.state.level}
-                            page={this.state.page}
-                        />
-                        <Checkbox
-                            text="Auto pronunciation"
-                            checked={this.state.isAutoPronunciation}
-                            checkBoxHandle={() => this.checkBoxHandle('isAutoPronunciation')}
-                        />
-                        <Checkbox
-                            text="Show Picture"
-                            checked={this.state.isPicture}
-                            checkBoxHandle={() => this.checkBoxHandle('isPicture')}
-                        />
+                        {isGameWithLevels && (
+                            <Dropdown
+                                selectLevel={this.selectLevel}
+                                level={level}
+                                page={page}
+                            />
+                        )}
+                        <div className="checkbox__options_container">
+                            <Checkbox
+                                text="Auto pronunciation"
+                                checked={isAutoPronunciation}
+                                checkBoxHandle={() => this.checkBoxHandle('isAutoPronunciation')}
+                            />
+                            <Checkbox
+                                text="Show Picture"
+                                checked={isPicture}
+                                checkBoxHandle={() => this.checkBoxHandle('isPicture')}
+                            />
+                        </div>
                     </div>
                     <div className="game-board">
-                        {this.state.isPicture && (
+                        {isPicture && (
                             <div className="image-container">
-                                <img src={`https://raw.githubusercontent.com/aidfromdeagland/rslang-data/master/${this.state.image}`} alt="img" />
+                                <img src={`https://raw.githubusercontent.com/aidfromdeagland/rslang-data/master/${image}`} alt="img" />
                             </div>
                         )}
                         <div className="game-board__translation">
@@ -254,31 +355,31 @@ export class GamePuzzle extends Component {
                                 correctSentence={sentence}
                                 showCheck={this.showCheck}
                                 showButton={this.showButton}
-                                isClickedDontKnow={this.state.isClickedDontKnow}
+                                isClickedDontKnow={isClickedDontKnow}
                             />
                         ) : ''}
                         <ButtonsBlock
-                            wordCount={this.state.wordCount}
-                            isCheckBtn={this.state.isCheckBtn}
-                            isContinueBtn={this.state.isContinueBtn}
-                            isDontKnowBtn={this.state.isDontKnowBtn}
-                            isResultBtn={this.state.isResultBtn}
+                            wordCount={wordCount}
+                            isCheckBtn={isCheckBtn}
+                            isContinueBtn={isContinueBtn}
+                            isDontKnowBtn={isDontKnowBtn}
+                            isResultBtn={isResultBtn}
                             correctSentence={sentence}
                             showButton={this.showButton}
                             getNextWord={this.getNextWord}
                             clickDontKnow={this.clickDontKnow}
                             selectLevel={this.selectLevel}
-                            level={this.state.level}
-                            page={this.state.page}
+                            level={level}
+                            page={page}
                             audioSentence={audioSentence}
-                            isAutoPronunciation={this.state.isAutoPronunciation}
+                            isAutoPronunciation={isAutoPronunciation}
                             addToResults={this.addToResults}
                             showResults={this.showResults}
-                            isRoundEnd={this.state.isRoundEnd}
+                            isRoundEnd={isRoundEnd}
                         />
                     </div>
                     <div className="progress-bar-game">
-                        <div className="progress-percent-game" style={{ width: `${(this.state.wordCount + 1) * 10}%` }} />
+                        <div className="progress-percent-game" style={{ width: `${(wordCount + 1) * 10}%` }} />
                     </div>
                 </div>
             );
@@ -286,3 +387,13 @@ export class GamePuzzle extends Component {
         return <Spinner />;
     }
 }
+
+GamePuzzle.defaultProps = {
+    isGameWithLevels: false,
+    isGameWithUserWords: false,
+};
+
+GamePuzzle.propTypes = {
+    isGameWithLevels: PropTypes.bool,
+    isGameWithUserWords: PropTypes.bool,
+};

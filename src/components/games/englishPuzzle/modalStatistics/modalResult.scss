@@ -125,6 +125,9 @@
     .result-title {
         font-size: 25px;
         font-weight: 700;
+        span {
+            margin-left: 10px;
+        }
     }
 
     .result {
@@ -149,6 +152,9 @@
             margin-right: 20px;
             width: 30px;
             height: 30px;
+            &.playing {
+                background-image: url(../../../../assets/icons/dynamicPlaying.svg);
+            }
             &:hover {
                 cursor: pointer;
             }

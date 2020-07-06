@@ -13,6 +13,21 @@
       width: 100%;
       display: flex;
       justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      @media (max-width: 759px) {
+        justify-content: center;
+      }
+      .dropdown__options_container {
+        display: flex;
+        align-items: center;
+        .select-level {
+          width: 100px;
+        }
+      }
+      .checkbox__options_container {
+        display: flex;
+      }
     }
     .progress-bar-game {
       width: 100%;
@@ -61,10 +76,13 @@
     background-size: contain;
     padding: 0;
     border: 0;
-    background-color: #f5f7f8;
+    background-color: #c0c3c5;
     margin-right: 20px;
     width: 30px;
     height: 30px;
+    &.playing {
+      background-image: url(../../../assets/icons/dynamicPlaying.svg);
+    }
     &:hover {
       cursor: pointer;
     }

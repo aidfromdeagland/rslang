@@ -30,8 +30,19 @@ export class StartPage extends Component {
     }
 
     render() {
-        if (this.state.isStart) {
-            return <GamePuzzle isGameWithLevels={this.state.isGameWithLevels} isGameWithUserWords={this.state.isGameWithUserWords} />;
+        const {
+            isGameWithLevels,
+            isGameWithUserWords,
+            haveUserWords,
+            isStart,
+        } = this.state;
+        if (isStart) {
+            return (
+                <GamePuzzle
+                    isGameWithLevels={isGameWithLevels}
+                    isGameWithUserWords={isGameWithUserWords}
+                />
+            );
         }
         return (
             <div id="start-page">
@@ -51,7 +62,7 @@ export class StartPage extends Component {
                         className="button btn-start"
                         onClick={() => this.handleClick('isGameWithUserWords')}
                         title="Play with your words"
-                        isDisabled={!this.state.haveUserWords}
+                        isDisabled={!haveUserWords}
                     />
                 </div>
             </div>

@@ -1,12 +1,18 @@
 import React, { Component } from 'react';
 import './startPage.scss';
-import { Spinner } from '../../shared/spinner';
 import './game-puzzle.scss';
 import { Button } from '../../shared/button';
 
 let audio;
 let audioPlay;
 export class ButtonsBlock extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            isPlayingAudio: false,
+        };
+    }
+
     handleCheck = () => {
         const correctSentence = this.props.correctSentence.split(' ');
         document.querySelectorAll('.completed').forEach((word) => {
@@ -28,9 +34,8 @@ export class ButtonsBlock extends Component {
             this.props.showButton('isContinueBtn', true);
             this.props.showButton('isCheckBtn', false);
             const urlAudio = `https://raw.githubusercontent.com/aidfromdeagland/rslang-data/master/${this.props.audioSentence}`;
-            audio = new Audio(urlAudio);
             if (this.props.isAutoPronunciation) {
-                audioPlay = audio.play();
+                this.handlePlayAudio(urlAudio);
             }
             this.props.addToResults('know', this.props.correctSentence, urlAudio);
             if (this.props.wordCount === 9) {
@@ -43,12 +48,9 @@ export class ButtonsBlock extends Component {
 
     handleContinue = () => {
         if (audioPlay) {
-            // audio.pause();
             audioPlay.then(() => {
-                // Automatic playback started!
-                // Show playing UI.
                 audio.pause();
-            })
+            });
         }
         this.props.showButton('isDontKnowBtn', true);
         this.props.showButton('isContinueBtn', false);
@@ -71,29 +73,57 @@ export class ButtonsBlock extends Component {
         });
         this.props.showButton('isContinueBtn', true);
         const urlAudio = `https://raw.githubusercontent.com/aidfromdeagland/rslang-data/master/${this.props.audioSentence}`;
-        audio = new Audio(urlAudio);
         if (this.props.isAutoPronunciation) {
-            audioPlay = audio.play();
+            this.handlePlayAudio(urlAudio);
         }
         this.props.showButton('isDontKnowBtn', false);
         this.props.showButton('isCheckBtn', false);
         this.props.addToResults('dontKnow', this.props.correctSentence, urlAudio);
     }
 
-    handlePlayAudio = () => {
-        const url = `https://raw.githubusercontent.com/aidfromdeagland/rslang-data/master/${this.props.audioSentence}`;
-        audio = new Audio(url);
-        audioPlay = audio.play();
+    handlePlayAudio = (url) => {
+        if (audioPlay) {
+            audioPlay.then(() => {
+                audio.pause();
+                audio = new Audio(url);
+                audioPlay = audio.play();
+                audio.onplaying = () => {
+                    this.setState({ isPlayingAudio: true });
+                };
+                audio.onended = () => {
+                    this.setState({ isPlayingAudio: false });
+                };
+                audio.onpause = () => {
+                    this.setState({ isPlayingAudio: false });
+                };
+            });
+        } else {
+            audio = new Audio(url);
+            audioPlay = audio.play();
+            audio.onplaying = () => {
+                this.setState({ isPlayingAudio: true });
+            };
+            audio.onended = () => {
+                this.setState({ isPlayingAudio: false });
+            };
+            audio.onpause = () => {
+                this.setState({ isPlayingAudio: false });
+            };
+        }
     }
 
     render() {
+        const { isPlayingAudio } = this.state;
         return (
             <div className="game-board__btn-block">
                 {this.props.isCheckBtn && <Button className="check-sentence puzzle-btn button" title="Check" onClick={this.handleCheck} />}
                 {this.props.isDontKnowBtn && <Button className="dont-know-sentence puzzle-btn button" title="Don\'t know" onClick={this.handleDontKnow} />}
                 {this.props.isContinueBtn && <Button className="continue-sentence puzzle-btn button" title="Continue" onClick={this.handleContinue} />}
                 {this.props.isResultBtn && <Button className="puzzle-result puzzle-btn button" title="Results" />}
-                <button className="dynamic-btn" onClick={this.handlePlayAudio} />
+                <button
+                    className={isPlayingAudio ? "dynamic-btn playing" : "dynamic-btn"}
+                    onClick={() => this.handlePlayAudio(`https://raw.githubusercontent.com/aidfromdeagland/rslang-data/master/${this.props.audioSentence}`)}
+                />
             </div>
         );
     }

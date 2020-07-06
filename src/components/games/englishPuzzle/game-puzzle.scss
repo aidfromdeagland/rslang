@@ -20,7 +20,7 @@
     text-align: center;
   }
   .game-board__btn-block {
-    background-color: #f5f7f8;
+    background-color: #c0c3c5;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
@@ -89,6 +89,7 @@
   outline: none;
   cursor: grab;
   user-select: none;
+  margin: 2px 2px;
   &.completed.un-correct-word {
     background: #eab49f;
   }
