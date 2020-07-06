@@ -10,9 +10,8 @@ export class ModalSettings extends Component {
     constructor(props) {
         super(props);
         const {
-            colorEnd, colorStart, wordCount, // TODO modeGame,
+            colorEnd, colorStart, wordCount, modeGame,
         } = props.currentSettings;
-        const modeGame = 2;
         this.state = {
             colorEnd: rgbToHex(colorEnd),
             colorStart: rgbToHex(colorStart),
@@ -68,6 +67,7 @@ export class ModalSettings extends Component {
                                 Mode game:
                                 <select
                                     value={modeGame}
+                                    name="modeGame"
                                     title={"If the user's words are not enough, the mode with all words is automatically enabled"}
                                     onChange={(e) => this.handlePropertyChange(e.target)}
                                 >

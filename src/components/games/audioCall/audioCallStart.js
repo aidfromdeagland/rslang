@@ -9,6 +9,7 @@ import { Repository } from './repository';
 import { tryExecute } from './utils';
 import { SimpleSelect } from './simpleSelect';
 import { ModalSettings } from './modal';
+import { MODE_GAME } from './constants';
 
 export class AudioCallStart extends Component {
     constructor(props) {
@@ -22,18 +23,22 @@ export class AudioCallStart extends Component {
     }
 
     componentDidMount() {
-        this.repository = new Repository(this.props.repositoryState);
+        this.repository = new Repository(this.props.repositoryState, () => {
+            this.setState({
+                repositoryState: this.repository.state,
+            });
+        });
         tryExecute(async () => {
             if (this.state.repositoryState) {
                 await this.repository.setLevel(this.state.page, this.state.group);
             } else {
                 await this.repository.loadSettings((settings) => {
-                    this.repository.loadData();
                     this.setState({
                         repositoryState: this.repository.state,
                         group: settings.group,
                         page: settings.page,
                     });
+                    this.repository.loadData();
                 });
             }
         }, this.props.errorFunction);
@@ -55,9 +60,11 @@ export class AudioCallStart extends Component {
     }
 
     handleStartGame() {
-        tryExecute(async () => {
-            this.repository.setLevel(this.state.page, this.state.group);
-        }, this.props.errorFunction);
+        if (this.state.repositoryState.currentSettings.modeGame === MODE_GAME['All words']) {
+            tryExecute(async () => {
+                this.repository.setLevel(this.state.page, this.state.group);
+            }, this.props.errorFunction);
+        }
 
         if (!this.repository.checkLoaded(() => {
             this.setState({ isGame: true, isLoading: false });
@@ -71,6 +78,8 @@ export class AudioCallStart extends Component {
         if (this.state.isGame) {
             return null;
         }
+        const isLevelModeGame = this.state.repositoryState
+            && this.state.repositoryState.load.loading.modeGame === MODE_GAME['All words'];
 
         return (
             <div className="audio-call">
@@ -83,7 +92,7 @@ export class AudioCallStart extends Component {
                         />
                     ) : null}
                 <h1 className="audio-call__header">Audio Call</h1>
-                {!this.state.modeIsUserWords && this.state.repositoryState
+                {isLevelModeGame
                     && (
                         <div className="audio-call__levels">
                             <SimpleSelect

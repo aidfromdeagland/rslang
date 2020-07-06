@@ -8,6 +8,7 @@ import { AudioCallResult } from './audioCallResult';
 import { GAME_PROGRESS } from './constants';
 import { Repository } from './repository';
 import { Auth } from '../../pages/auth/auth';
+import { tryExecute } from './utils';
 
 // TODO Не реализовано (этот текст впоследствии обязательно удалю):
 // * переводы слов, из которых выбирается нужный, относятся к одной части речи
@@ -21,8 +22,7 @@ import { Auth } from '../../pages/auth/auth';
 //      проверить это будет невозможно)
 // Доп функционал:
 // * выбор игры с пользовательскими или всеми словами (если слов пользователя хватает)
-// * настройка количества слов в раунде
-// * настройка стартового и финишного цвета фона
+// * сбросить на настройки по умолчанию
 export class AudioCall extends Component {
     constructor() {
         super();
@@ -51,12 +51,14 @@ export class AudioCall extends Component {
     }
 
     endGame(result) {
-        const newRepositoryState = Repository.setNextGame(this.state.repositoryState);
-        this.setState({
-            state: GAME_PROGRESS.result,
-            gameResult: result,
-            repositoryState: newRepositoryState,
-        });
+        tryExecute(async () => {
+            const newRepositoryState = await Repository.setNextGame(this.state.repositoryState);
+            this.setState({
+                state: GAME_PROGRESS.result,
+                gameResult: result,
+                repositoryState: newRepositoryState,
+            });
+        }, this.errorFunction);
     }
 
     nextGame() {
