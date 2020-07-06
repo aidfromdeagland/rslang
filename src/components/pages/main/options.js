@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './main.scss';
-import { BrowserRouter as Router, Route, Link, NavLink } from 'react-router-dom';
+import { BrowserRouter as NavLink } from 'react-router-dom';
 import { Button } from '../../shared/button';
 import { ModalSettings } from './modal';
 
@@ -14,6 +14,7 @@ export class Options extends Component {
             clickSettings,
             checkSettings,
             onchangeCheckbox,
+            isInvalidSettings,
         } = this.props;
         return (
             <div className="main-page_options">
@@ -26,6 +27,7 @@ export class Options extends Component {
                             onchangeCheckbox={onchangeCheckbox}
                             clickSettings={clickSettings}
                             checkSettings={checkSettings}
+                            isInvalidSettings={isInvalidSettings}
                         />
                     ) : null}
                 <div className="options-settings">
