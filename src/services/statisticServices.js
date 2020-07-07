@@ -27,14 +27,7 @@ export class StatisticService {
             throw new ServiceError('Access token is missing or invalid', rawResponse.status);
         }
         if (rawResponse.status === 404) {
-            // throw new ServiceError('Statistics not found', rawResponse.status);
-            return {
-                learnedWords: 0,
-                optional: {
-                    asd: 'asd',
-                    sdf: 'sdf',
-                },
-            };
+            throw new ServiceError('Statistics not found', rawResponse.status);
         }
 
         const errorText = await rawResponse.text();
