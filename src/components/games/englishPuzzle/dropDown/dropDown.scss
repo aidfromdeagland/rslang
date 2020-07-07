@@ -20,6 +20,9 @@
       position: absolute;
       top: 50%;
       right: 14px;
+      @media (max-width: 397px) {
+        right: 50%;
+      }
       content: "";
       background: url(https://image.flaticon.com/icons/svg/271/271210.svg);
       background-size: contain;
@@ -41,12 +44,11 @@
     position: absolute;
     z-index: 100;
     max-height: 220px;
-    opacity: 0.9;
     overflow-y: scroll;
-    // left: 63%;
     right: 0;
     width: 75px;
     border-radius: 5px;
+    border: 1px solid #092c70;
   }
   .dropdown-child div {
     color: white;

@@ -59,7 +59,7 @@ export class StartPage extends Component {
                         title="Play by Levels"
                     />
                     <Button
-                        className="button btn-start"
+                        className={haveUserWords ? 'button btn-start' : 'button btn-start disabled'}
                         onClick={() => this.handleClick('isGameWithUserWords')}
                         title="Play with your words"
                         isDisabled={!haveUserWords}

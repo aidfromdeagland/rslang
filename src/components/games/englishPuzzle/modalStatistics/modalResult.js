@@ -22,7 +22,10 @@ export class ModalResult extends Component {
     handleClickAudio = (result, index) => {
         const { results } = this.props;
         const url = results[result][index].audioUrl;
-        this.setState({ playingIndex: index });
+        this.setState({
+            playingIndex: index,
+            playingResult: result,
+        });
         this.handlePlayAudio(url);
     }
 
@@ -59,7 +62,7 @@ export class ModalResult extends Component {
 
     render() {
         const { results, handleByNextRound } = this.props;
-        const { isPlayingAudio, playingIndex } = this.state;
+        const { isPlayingAudio, playingIndex, playingResult } = this.state;
         return (
             <div id="openModal" className="modal-result">
                 <div className="modal-dialog">
@@ -77,10 +80,10 @@ export class ModalResult extends Component {
                                         {results.dontKnow.map((result, index) => {
                                             return (
                                                 <div key={index}>
-                                                    <button
-                                                        className={isPlayingAudio && playingIndex === index
-                                                            ? "dynamic-btn playing"
-                                                            : "dynamic-btn"}
+                                                    <Button
+                                                        className={isPlayingAudio && playingIndex === index && playingResult === 'dontKnow'
+                                                            ? 'dynamic-btn playing'
+                                                            : 'dynamic-btn'}
                                                         onClick={() => this.handleClickAudio('dontKnow', index)}
                                                     />
                                                     <span>{result.sentence}</span>
@@ -99,8 +102,13 @@ export class ModalResult extends Component {
                                     <div className="result-body">
                                         {results.know.map((result, index) => {
                                             return (
-                                                <div>
-                                                    <button className={isPlayingAudio ? "dynamic-btn playing" : "dynamic-btn"} onClick={() => this.handleClickAudio('know', index)} />
+                                                <div key={index}>
+                                                    <Button
+                                                        className={isPlayingAudio && playingIndex === index && playingResult === 'know'
+                                                            ? 'dynamic-btn playing'
+                                                            : 'dynamic-btn'}
+                                                        onClick={() => this.handleClickAudio('know', index)}
+                                                    />
                                                     <span>{result.sentence}</span>
                                                 </div>
                                             );

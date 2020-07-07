@@ -1,4 +1,16 @@
+@font-face {
+  font-family: "Literata", "Roboto";
+  src: url("../../../assets/fonts/Literata-Bold.ttf") format("ttf"),
+    url("../../../assets/fonts/Literata-Regular.ttf") format("ttf"),
+    url("../../../assets/fonts/Literata-VariableFont.ttf") format("ttf"),
+    url("../../../assets/fonts/RobotoMono-Bold.ttf") format("ttf"),
+    url("../../../assets/fonts/RobotoMono-Regular.ttf") format("ttf");
+  font-weight: normal;
+  font-style: normal;
+}
+
 #start-page {
+  color: rgb(255, 255, 255);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -6,7 +18,9 @@
   max-width: 1020px;
   margin: auto;
   height: 100%;
+  font-family: "Literata-Regular", sans-serif;
   .title {
+    font-family: "Literata-Bold", sans-serif;
     text-transform: uppercase;
     font-size: 6rem;
     margin-bottom: 20px;
@@ -20,5 +34,11 @@
       text-align: center;
       margin: 0;
     }
+  }
+  button:disabled,
+  button[disabled] {
+    border: 1px solid #999999;
+    background-color: #cccccc;
+    color: #666666;
   }
 }

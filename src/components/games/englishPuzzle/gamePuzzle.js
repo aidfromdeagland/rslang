@@ -73,26 +73,28 @@ export class GamePuzzle extends Component {
     }
 
     putSettings = (level, page) => {
+        const { optional } = this.settings;
         const gameSettings = JSON.stringify({
             level,
             page,
         });
-        this.settings.optional.gamePuzzle = gameSettings;
-        const settings = SettingService.createObject(this.settings.wordsPerDay, this.settings.optional);
+        optional.gamePuzzle = gameSettings;
+        const settings = SettingService.createObject(this.settings.wordsPerDay, optional);
         SettingService.put(settings);
     }
 
     loadStatistic = async () => {
         this.statistic = await StatisticService.get();
-        console.log(this.statistic);
-        this.gameStatistic = this.statistic.optional.gamePuzzle ? JSON.parse(this.statistic.optional.gamePuzzle) : [];
+        this.gameStatistic = this.statistic.optional.gamePuzzle
+            ? JSON.parse(this.statistic.optional.gamePuzzle)
+            : [];
     }
 
     putStatistic = () => {
+        const { optional } = this.statistic;
         const gameStatistic = JSON.stringify(this.gameStatistic);
-        this.statistic.optional.gamePuzzle = gameStatistic;
-        const statistic = StatisticService.createObject(0, this.statistic.optional);
-        console.log(statistic);
+        optional.gamePuzzle = gameStatistic;
+        const statistic = StatisticService.createObject(this.statistic.learnedWords, optional);
         StatisticService.put(statistic);
     }
 
@@ -107,14 +109,16 @@ export class GamePuzzle extends Component {
         };
         const date = new Date();
         const dateString = date.toLocaleString('en', options);
-
-        const statisticsField = `${dateString}:  Level: ${level}, Page: ${page} - I don't know: ${this.results.dontKnow.length}; I know: ${this.results.know.length}`;
+        const timeStamp = date.getTime();
+        const statisticsField = {
+            date: timeStamp,
+            group: level,
+            page,
+            incorrect: this.results.dontKnow.length,
+            correct: this.results.know.length,
+        };
         this.gameStatistic.push(statisticsField);
         this.putStatistic();
-        // return statisticsField;
-        // activeUser.complete.push({ level, page });
-        // document.querySelector('.option-container-pages').children[page - 1].classList.add('completed-page');
-        // activeUser.statistics.push(statisticsField);
     }
 
     loadWords = async () => {
@@ -264,7 +268,6 @@ export class GamePuzzle extends Component {
         const { level, page } = this.state;
         this.setState({ isRoundEnd: true });
         this.addStatisticsData(level, page);
-        console.log(this.statistic)
     }
 
     handleByNextRound = () => {
@@ -312,74 +315,76 @@ export class GamePuzzle extends Component {
         } = this.props;
         if (haveWords) {
             return (
-                <div className="game-puzzle__container">
-                    {isRoundEnd && (
-                        <ModalResult
-                            results={this.results}
-                            handleByNextRound={this.handleByNextRound}
-                        />
-                    )}
-                    <div className="game-puzzle__header">
-                        {isGameWithLevels && (
-                            <Dropdown
+                <div className="english-puzzle__wrapper">
+                    <div className="game-puzzle__container">
+                        {isRoundEnd && (
+                            <ModalResult
+                                results={this.results}
+                                handleByNextRound={this.handleByNextRound}
+                            />
+                        )}
+                        <div className="game-puzzle__header">
+                            {isGameWithLevels && (
+                                <Dropdown
+                                    selectLevel={this.selectLevel}
+                                    level={level}
+                                    page={page}
+                                />
+                            )}
+                            <div className="checkbox__options_container">
+                                <Checkbox
+                                    text="Auto pronunciation"
+                                    checked={isAutoPronunciation}
+                                    checkBoxHandle={() => this.checkBoxHandle('isAutoPronunciation')}
+                                />
+                                <Checkbox
+                                    text="Show Picture"
+                                    checked={isPicture}
+                                    checkBoxHandle={() => this.checkBoxHandle('isPicture')}
+                                />
+                            </div>
+                        </div>
+                        <div className="game-board">
+                            {isPicture && (
+                                <div className="image-container">
+                                    <img src={`https://raw.githubusercontent.com/aidfromdeagland/rslang-data/master/${image}`} alt="img" />
+                                </div>
+                            )}
+                            <div className="game-board__translation">
+                                <span>{translateSentence}</span>
+                            </div>
+                            {isNext ? (
+                                <GameBoardAction
+                                    sentenceForPuzzle={sentenceForPuzzle}
+                                    correctSentence={sentence}
+                                    showCheck={this.showCheck}
+                                    showButton={this.showButton}
+                                    isClickedDontKnow={isClickedDontKnow}
+                                />
+                            ) : ''}
+                            <ButtonsBlock
+                                wordCount={wordCount}
+                                isCheckBtn={isCheckBtn}
+                                isContinueBtn={isContinueBtn}
+                                isDontKnowBtn={isDontKnowBtn}
+                                isResultBtn={isResultBtn}
+                                correctSentence={sentence}
+                                showButton={this.showButton}
+                                getNextWord={this.getNextWord}
+                                clickDontKnow={this.clickDontKnow}
                                 selectLevel={this.selectLevel}
                                 level={level}
                                 page={page}
-                            />
-                        )}
-                        <div className="checkbox__options_container">
-                            <Checkbox
-                                text="Auto pronunciation"
-                                checked={isAutoPronunciation}
-                                checkBoxHandle={() => this.checkBoxHandle('isAutoPronunciation')}
-                            />
-                            <Checkbox
-                                text="Show Picture"
-                                checked={isPicture}
-                                checkBoxHandle={() => this.checkBoxHandle('isPicture')}
+                                audioSentence={audioSentence}
+                                isAutoPronunciation={isAutoPronunciation}
+                                addToResults={this.addToResults}
+                                showResults={this.showResults}
+                                isRoundEnd={isRoundEnd}
                             />
                         </div>
-                    </div>
-                    <div className="game-board">
-                        {isPicture && (
-                            <div className="image-container">
-                                <img src={`https://raw.githubusercontent.com/aidfromdeagland/rslang-data/master/${image}`} alt="img" />
-                            </div>
-                        )}
-                        <div className="game-board__translation">
-                            <span>{translateSentence}</span>
+                        <div className="progress-bar-game">
+                            <div className="progress-percent-game" style={{ width: `${(wordCount + 1) * 10}%` }} />
                         </div>
-                        {isNext ? (
-                            <GameBoardAction
-                                sentenceForPuzzle={sentenceForPuzzle}
-                                correctSentence={sentence}
-                                showCheck={this.showCheck}
-                                showButton={this.showButton}
-                                isClickedDontKnow={isClickedDontKnow}
-                            />
-                        ) : ''}
-                        <ButtonsBlock
-                            wordCount={wordCount}
-                            isCheckBtn={isCheckBtn}
-                            isContinueBtn={isContinueBtn}
-                            isDontKnowBtn={isDontKnowBtn}
-                            isResultBtn={isResultBtn}
-                            correctSentence={sentence}
-                            showButton={this.showButton}
-                            getNextWord={this.getNextWord}
-                            clickDontKnow={this.clickDontKnow}
-                            selectLevel={this.selectLevel}
-                            level={level}
-                            page={page}
-                            audioSentence={audioSentence}
-                            isAutoPronunciation={isAutoPronunciation}
-                            addToResults={this.addToResults}
-                            showResults={this.showResults}
-                            isRoundEnd={isRoundEnd}
-                        />
-                    </div>
-                    <div className="progress-bar-game">
-                        <div className="progress-percent-game" style={{ width: `${(wordCount + 1) * 10}%` }} />
                     </div>
                 </div>
             );

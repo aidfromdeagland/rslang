@@ -1,70 +1,78 @@
+@font-face {
+  font-family: "Literata", "Roboto";
+  src: url("../../../assets/fonts/Literata-Bold.ttf") format("ttf"),
+    url("../../../assets/fonts/Literata-Regular.ttf") format("ttf"),
+    url("../../../assets/fonts/Literata-VariableFont.ttf") format("ttf"),
+    url("../../../assets/fonts/RobotoMono-Bold.ttf") format("ttf"),
+    url("../../../assets/fonts/RobotoMono-Regular.ttf") format("ttf");
+  font-weight: normal;
+  font-style: normal;
+}
+
 .english-puzzle {
-  background: #faede7;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.219), rgba(0, 0, 0, 0.226)), url(../../../assets/images/background-puzzle.png);
+  background-repeat: no-repeat;
+  background-size: cover;
   display: flex;
-  max-width: 1020px;
+  width: 100%;
   justify-content: center;
-  margin: auto;
+  align-items: center;
   height: 100vh;
-  padding: 100px 30px;
   user-select: none;
-  .game-puzzle__container {
+  font-family: "RobotoMono", sans-serif;
+  .english-puzzle__wrapper {
     width: 100%;
-    .game-puzzle__header {
-      width: 100%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      @media (max-width: 759px) {
-        justify-content: center;
-      }
-      .dropdown__options_container {
+    padding: 0 20px;
+    .game-puzzle__container {
+      max-width: 1200px;
+      margin: auto;
+      .game-puzzle__header {
+        width: 100%;
         display: flex;
+        justify-content: space-between;
         align-items: center;
-        .select-level {
-          width: 100px;
+        flex-wrap: wrap;
+        @media (max-width: 759px) {
+          justify-content: center;
+        }
+        .dropdown__options_container {
+          display: flex;
+          align-items: center;
+          .select-level {
+            width: 100px;
+          }
+        }
+        .checkbox__options_container {
+          display: flex;
         }
       }
-      .checkbox__options_container {
-        display: flex;
-      }
-    }
-    .progress-bar-game {
-      width: 100%;
-      position: relative;
-      height: 0.25rem;
-      background-color: #dcdcdc;
-      border-radius: 0.125rem;
-      .progress-percent-game {
-        border-radius: 0.125rem;
-        position: absolute;
-        left: 0;
-        top: 0;
+      .progress-bar-game {
+        width: 100%;
+        position: relative;
         height: 0.25rem;
-        width: 0;
-        transition: width 200ms ease;
-        z-index: 10;
-        background-color: #092c70;
+        background-color: #dcdcdc;
+        border-radius: 0.125rem;
+        box-shadow: 0 3px 0.5rem #ffffff;
+        margin-bottom: 20px;
+        .progress-percent-game {
+          border-radius: 0.125rem;
+          position: absolute;
+          left: 0;
+          top: 0;
+          height: 0.25rem;
+          width: 0;
+          transition: width 200ms ease;
+          z-index: 10;
+          background-color: #092c70;
+        }
       }
     }
   }
+
   .button {
-    height: 40px;
-    padding: 12px;
-    outline: 0;
-    border: none;
-    border-radius: 8px;
-    margin-left: 20px;
-    background-color: rgb(187, 67, 59);
-    color: white;
-    cursor: pointer;
-    transition: background 0.3s;
-    &:hover {
-      cursor: pointer;
-      background-color: rgb(255, 252, 241);
-      color: black;
-    }
+    width: auto;
   }
+
   .btn-start {
     width: 300px;
   }
@@ -80,6 +88,7 @@
     margin-right: 20px;
     width: 30px;
     height: 30px;
+    margin-bottom: 10px;
     &.playing {
       background-image: url(../../../assets/icons/dynamicPlaying.svg);
     }

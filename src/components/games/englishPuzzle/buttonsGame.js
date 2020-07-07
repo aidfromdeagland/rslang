@@ -14,71 +14,92 @@ export class ButtonsBlock extends Component {
     }
 
     handleCheck = () => {
-        const correctSentence = this.props.correctSentence.split(' ');
+        const {
+            correctSentence,
+            audioSentence,
+            showButton,
+            isAutoPronunciation,
+            wordCount,
+            addToResults,
+        } = this.props;
+        const newCorrectSentence = correctSentence.split(' ');
         document.querySelectorAll('.completed').forEach((word) => {
             word.classList.remove('correct-word');
             word.classList.remove('un-correct-word');
         });
         document.querySelectorAll('.completed').forEach((word, index) => {
-            if (word.textContent === correctSentence[index]) {
+            if (word.textContent === newCorrectSentence[index]) {
                 word.classList.add('correct-word');
                 return;
             }
             word.classList.add('un-correct-word');
         });
 
-        if (document.querySelectorAll('.correct-word').length === correctSentence.length) {
+        if (document.querySelectorAll('.correct-word').length === newCorrectSentence.length) {
             document.querySelectorAll('.correct-word').forEach((word) => {
                 word.onmousedown = () => false;
             });
-            this.props.showButton('isContinueBtn', true);
-            this.props.showButton('isCheckBtn', false);
-            const urlAudio = `https://raw.githubusercontent.com/aidfromdeagland/rslang-data/master/${this.props.audioSentence}`;
-            if (this.props.isAutoPronunciation) {
+            showButton('isContinueBtn', true);
+            showButton('isCheckBtn', false);
+            const urlAudio = `https://raw.githubusercontent.com/aidfromdeagland/rslang-data/master/${audioSentence}`;
+            if (isAutoPronunciation) {
                 this.handlePlayAudio(urlAudio);
             }
-            this.props.addToResults('know', this.props.correctSentence, urlAudio);
-            if (this.props.wordCount === 9) {
-                this.props.showButton('iResultBtn', true);
+            addToResults('know', correctSentence, urlAudio);
+            if (wordCount === 9) {
+                showButton('iResultBtn', true);
             }
         } else {
-            this.props.showButton('isDontKnowBtn', true);
+            showButton('isDontKnowBtn', true);
         }
     }
 
     handleContinue = () => {
+        const {
+            showButton,
+            wordCount,
+            getNextWord,
+            showResults,
+        } = this.props;
         if (audioPlay) {
             audioPlay.then(() => {
                 audio.pause();
             });
         }
-        this.props.showButton('isDontKnowBtn', true);
-        this.props.showButton('isContinueBtn', false);
-        this.props.showButton('isCheckBtn', false);
-        if (this.props.wordCount < 9) {
-            this.props.getNextWord(this.props.wordCount + 1);
+        showButton('isDontKnowBtn', true);
+        showButton('isContinueBtn', false);
+        showButton('isCheckBtn', false);
+        if (wordCount < 9) {
+            getNextWord(wordCount + 1);
         }
-        if (this.props.wordCount === 9) {
-            this.props.showResults();
+        if (wordCount === 9) {
+            showResults();
         }
     }
 
     handleDontKnow = () => {
+        const {
+            showButton,
+            correctSentence,
+            addToResults,
+            isAutoPronunciation,
+            audioSentence,
+        } = this.props;
         document.querySelector('.puzzle-container-sentence').innerHTML = '';
         document.querySelector('.puzzle-pieces').innerHTML = '';
 
-        this.props.correctSentence.split(' ').map((word) => {
+        correctSentence.split(' ').map((word) => {
             const wordPuzzle = `<div class="drag-word completed"><span class="word-text">${word}</span></div>`;
             document.querySelector('.puzzle-container-sentence').insertAdjacentHTML('beforeend', wordPuzzle);
         });
-        this.props.showButton('isContinueBtn', true);
-        const urlAudio = `https://raw.githubusercontent.com/aidfromdeagland/rslang-data/master/${this.props.audioSentence}`;
-        if (this.props.isAutoPronunciation) {
+        showButton('isContinueBtn', true);
+        const urlAudio = `https://raw.githubusercontent.com/aidfromdeagland/rslang-data/master/${audioSentence}`;
+        if (isAutoPronunciation) {
             this.handlePlayAudio(urlAudio);
         }
-        this.props.showButton('isDontKnowBtn', false);
-        this.props.showButton('isCheckBtn', false);
-        this.props.addToResults('dontKnow', this.props.correctSentence, urlAudio);
+        showButton('isDontKnowBtn', false);
+        showButton('isCheckBtn', false);
+        addToResults('dontKnow', correctSentence, urlAudio);
     }
 
     handlePlayAudio = (url) => {
@@ -114,15 +135,22 @@ export class ButtonsBlock extends Component {
 
     render() {
         const { isPlayingAudio } = this.state;
+        const {
+            isCheckBtn,
+            isDontKnowBtn,
+            isContinueBtn,
+            isResultBtn,
+            audioSentence,
+        } = this.props;
         return (
             <div className="game-board__btn-block">
-                {this.props.isCheckBtn && <Button className="check-sentence puzzle-btn button" title="Check" onClick={this.handleCheck} />}
-                {this.props.isDontKnowBtn && <Button className="dont-know-sentence puzzle-btn button" title="Don\'t know" onClick={this.handleDontKnow} />}
-                {this.props.isContinueBtn && <Button className="continue-sentence puzzle-btn button" title="Continue" onClick={this.handleContinue} />}
-                {this.props.isResultBtn && <Button className="puzzle-result puzzle-btn button" title="Results" />}
-                <button
-                    className={isPlayingAudio ? "dynamic-btn playing" : "dynamic-btn"}
-                    onClick={() => this.handlePlayAudio(`https://raw.githubusercontent.com/aidfromdeagland/rslang-data/master/${this.props.audioSentence}`)}
+                {isCheckBtn && <Button className="check-sentence puzzle-btn button" title="Check" onClick={this.handleCheck} />}
+                {isDontKnowBtn && <Button className="dont-know-sentence puzzle-btn button" title="Don't know" onClick={this.handleDontKnow} />}
+                {isContinueBtn && <Button className="continue-sentence puzzle-btn button" title="Continue" onClick={this.handleContinue} />}
+                {isResultBtn && <Button className="puzzle-result puzzle-btn button" title="Results" />}
+                <Button
+                    className={isPlayingAudio ? 'dynamic-btn playing' : 'dynamic-btn'}
+                    onClick={() => this.handlePlayAudio(`https://raw.githubusercontent.com/aidfromdeagland/rslang-data/master/${audioSentence}`)}
                 />
             </div>
         );

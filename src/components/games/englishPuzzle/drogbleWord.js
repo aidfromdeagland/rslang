@@ -6,17 +6,11 @@ export class DraggableWord extends Component {
     constructor(props) {
         super(props);
         this.dropIndex = 0;
-        this.state = {
-            level: 1,
-            page: 1,
-            word: 1,
-            isChecked: true,
-            haveWords: false,
-        };
     }
 
     componentDidMount() {
-        if (this.props.isClickedDontKnow) {
+        const { isClickedDontKnow } = this.props;
+        if (isClickedDontKnow) {
             return;
         }
         this.handleDrag();
@@ -177,18 +171,20 @@ export class DraggableWord extends Component {
     }
 
     checkSentence = () => {
+        const { showButton } = this.props;
         const puzzleField = document.querySelector('.puzzle-pieces');
         if (!puzzleField.innerHTML) {
-            this.props.showButton('isCheckBtn', true);
-            this.props.showButton('isDontKnowBtn', false);
+            showButton('isCheckBtn', true);
+            showButton('isDontKnowBtn', false);
         } else {
-            this.props.showButton('isCheckBtn', false);
+            showButton('isCheckBtn', false);
         }
     }
 
     render() {
+        const { word } = this.props;
         return (
-            <div className="drag-word"><span className="word-text">{this.props.word}</span></div>
+            <div className="drag-word"><span className="word-text">{word}</span></div>
         );
     }
 }

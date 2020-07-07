@@ -3,12 +3,10 @@ import { User } from '../components/pages/auth/user';
 import { ServiceError } from './serviceError';
 
 export class StatisticService {
-    static createObject(learnedWords, testVal)/*: IStatistic */ {
+    static createObject(learnedWords, value)/*: IStatistic */ {
         return {
             learnedWords,
-            optional: {
-                testVal,
-            },
+            optional: value,
         };
     }
 
@@ -33,9 +31,10 @@ export class StatisticService {
             return {
                 learnedWords: 0,
                 optional: {
-
-                }
-            }
+                    asd: 'asd',
+                    sdf: 'sdf',
+                },
+            };
         }
 
         const errorText = await rawResponse.text();

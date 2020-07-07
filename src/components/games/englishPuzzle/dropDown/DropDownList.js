@@ -3,12 +3,19 @@ import './dropDown.scss';
 
 export class DropdownList extends Component {
     dropdownChildHandle = (index) => {
-        this.props.chooseNumber(index + 1);
-        this.props.closeDropdown();
+        const {
+            chooseNumber,
+            closeDropdown,
+        } = this.props;
+        chooseNumber(index + 1);
+        closeDropdown();
     }
 
     render() {
-        const numbers = Array(parseFloat(this.props.totalNumber)).fill(null);
+        const {
+            totalNumber,
+        } = this.props;
+        const numbers = Array(parseFloat(totalNumber)).fill(null);
         return (
             <div className="dropdown-child">
                 {numbers.map((number, index) => {
@@ -17,7 +24,8 @@ export class DropdownList extends Component {
                             onClick={() => {
                                 this.dropdownChildHandle(index);
                             }}
-                            key={index}>
+                            key={index}
+                        >
                             {index + 1}
                         </div>
                     );

@@ -1,8 +1,9 @@
 .game-board {
+  width: 100%;
   display: flex;
   flex-direction: column;
   background: rgb(255, 255, 255);
-  box-shadow: 0 3px 0.5rem #d9d9d9;
+  box-shadow: 0 3px 0.5rem #3c3c3c;
   border-radius: 0.5rem;
   align-items: center;
   margin: 50px 0;
@@ -15,7 +16,7 @@
     }
   }
   .game-board__translation {
-    padding: 20px 40px;
+    padding: 20px 20px;
     font-size: 30px;
     text-align: center;
   }
@@ -26,17 +27,24 @@
     justify-content: center;
     align-items: center;
     width: 100%;
+    @media (max-width: 430px) {
+      flex-direction: column;
+    }
     .puzzle-btn {
-      width: 150px;
+      width: auto;
     }
     .dynamic-btn {
       margin-left: auto;
+      @media (max-width: 430px) {
+        margin-left: 0;
+      }
     }
   }
 }
 
 .game-board__action {
   margin: 30px 0;
+  padding: 0 20px;
   .puzzle-container-sentence {
     width: 100%;
     padding: 8px 12px;
@@ -47,7 +55,6 @@
     display: flex;
     min-height: 40px;
     flex-wrap: wrap;
-    min-width: 320px;
   }
   .puzzle-pieces {
     padding: 8px 12px;
@@ -55,7 +62,6 @@
     border: 1px solid #e6e9ee;
     min-height: 40px;
     flex-wrap: wrap;
-    min-width: 320px;
     border-radius: 5px;
   }
   .puzzle-container {

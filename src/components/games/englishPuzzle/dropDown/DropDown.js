@@ -12,7 +12,6 @@ export class Dropdown extends Component {
             isDropWordOpen: false,
             numberLevel: this.props.level,
             numberPage: this.props.page,
-            numberWords: 1,
         };
     }
 
@@ -36,10 +35,6 @@ export class Dropdown extends Component {
         }));
     }
 
-    chooseNumberWords = (number) => {
-        this.setState({ numberWords: number });
-    }
-
     handleClickDropdownWords = () => {
         this.setState((prev) => ({
             isDropWordOpen: !prev.isDropWordOpen,
@@ -47,7 +42,14 @@ export class Dropdown extends Component {
     }
 
     handleButtonSelect = () => {
-        this.props.selectLevel(this.state.numberLevel, this.state.numberPage);
+        const {
+            selectLevel
+        } = this.props;
+        const {
+            numberLevel,
+            numberPage,
+        } = this.state;
+        selectLevel(numberLevel, numberPage);
     }
 
     render() {
@@ -56,8 +58,6 @@ export class Dropdown extends Component {
             numberLevel,
             numberPage,
             isDropPageOpen,
-            isDropWordOpen,
-            numberWords,
         } = this.state;
         return (
             <div className="dropdown__options_container">

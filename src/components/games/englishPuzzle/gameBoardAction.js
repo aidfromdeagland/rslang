@@ -4,26 +4,20 @@ import './game-puzzle.scss';
 import { DraggableWord } from './drogbleWord';
 
 export class GameBoardAction extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            level: 1,
-            page: 1,
-            word: 1,
-            isChecked: true,
-            haveWords: false,
-        };
-    }
-
     getWordsOfSentence = (sentence) => {
+        const {
+            showCheck,
+            showButton,
+            isClickedDontKnow,
+        } = this.props;
         const words = sentence.split(' ').map((word, i) => {
             return (
                 <DraggableWord
                     key={i}
                     word={word}
-                    showCheck={this.props.showCheck}
-                    showButton={this.props.showButton}
-                    isClickedDontKnow={this.props.isClickedDontKnow}
+                    showCheck={showCheck}
+                    showButton={showButton}
+                    isClickedDontKnow={isClickedDontKnow}
                 />
             );
         });
@@ -38,11 +32,12 @@ export class GameBoardAction extends Component {
     }
 
     render() {
+        const { sentenceForPuzzle } = this.props;
         return (
             <div className="game-board__action">
                 <div className="puzzle-container-sentence" />
                 <div className="puzzle-pieces">
-                    {this.getWordsOfSentence(this.props.sentenceForPuzzle)}
+                    {this.getWordsOfSentence(sentenceForPuzzle)}
                 </div>
             </div>
         );
