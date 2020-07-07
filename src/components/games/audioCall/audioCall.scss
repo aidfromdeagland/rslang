@@ -25,6 +25,8 @@
         }
     }
     &__button {
+        width: auto;
+        height: auto;
         font-weight: bold;
         padding: 10px 20px;
         font-size: 20px;
@@ -114,7 +116,14 @@
     }
     &__words {
         margin: 40px 0;
-        @media (max-width: 930px) {
+        @media (max-width: 750px) {
+            display: flex;
+            flex-direction: column;
+            .audio-call__word {
+                margin: 5px;
+            }
+        }
+        &_column {
             display: flex;
             flex-direction: column;
             .audio-call__word {
