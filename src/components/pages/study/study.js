@@ -8,12 +8,24 @@ import { WordService } from '../../../services/wordServices';
 import { SettingService } from '../../../services/settingServices';
 import { Spinner } from '../../shared/spinner';
 
+const audioPrefixMap = {
+    showWordTranslate: '',
+    showSentenceMeaning: 'audioMeaning',
+    showSentenceExample: 'audioExample',
+};
+
+const contextMap = {
+    showWordTranslate: 'word',
+    showSentenceMeaning: 'textMeaning',
+    showSentenceExample: 'textExample',
+};
+
 export class Study extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            maxWordsOfTheDay: 0,
-            maxCardsOfTheDay: 0,
+            newWords: 0,
+            totalWords: 0,
             wordCount: 0,
             valueInput: '',
             isCorrectWord: null,
@@ -22,28 +34,31 @@ export class Study extends Component {
         };
     }
 
-    async componentDidMount() {
-        this.loadData();
+    componentDidMount() {
+        this.getSettings();
     }
 
     getSettings = async () => {
         const settings = await SettingService.get();
         this.settings = settings.optional;
-        this.setState({
-            maxWordsOfTheDay: this.settings.numberLearnWord,
-            maxCardsOfTheDay: this.settings.numberLearnCard,
-        });
+        this.words = await WordService.getWords(0, 0);
         this.createCard();
-        this.setState({ isLoadSettings: true });
+        this.setState({
+            newWords: this.settings.newWords,
+            totalWords: this.settings.totalWords,
+            isLoadWords: true,
+            isLoadSettings: true,
+        });
     }
 
     createCard = () => {
         const { wordCount } = this.state;
         this.actualCard = this.words[wordCount];
         this.context = this.chooseLearnMethod();
-        this.audioContext = `audio${this.context.slice(4)}` || 'audio';
+        console.log(this.context);
+        this.audioContext = audioPrefixMap[this.context];
         this.dataForCard = {
-            context: this.actualCard[this.context],
+            context: this.actualCard[contextMap[this.context]],
             word: this.actualCard.word,
             wordTranslate: this.actualCard.wordTranslate,
             audioContext: `https://raw.githubusercontent.com/aidfromdeagland/rslang-data/master/${this.actualCard[this.audioContext]}`,
@@ -55,18 +70,12 @@ export class Study extends Component {
         };
     }
 
-    loadData = async () => {
-        this.words = await WordService.getWords(0, 0);
-        this.setState({ isLoadWords: true });
-        await this.getSettings();
-    }
-
     checkWord = () => {
         const actualValue = this.prevValue.toLocaleLowerCase();
         const studiedWord = this.dataForCard.word;
 
         const word = studiedWord.split('').map((letter, index) => {
-            return <span className={letter === actualValue[index] ? 'correct-letter check-letter' : 'uncorrect-letter check-letter'} key={index}>{letter}</span>;
+            return <span className={letter === actualValue[index] ? 'correct-letter check-letter' : 'incorrect-letter check-letter'} key={index}>{letter}</span>;
         });
         return word;
     }
@@ -121,11 +130,13 @@ export class Study extends Component {
     }
 
     chooseLearnMethod = () => {
-        const selectedSentence = (Object.keys(this.settings).slice(0, 3)).filter((setting) => this.settings[setting] === true);
+        const { showWordTranslate, showSentenceMeaning, showSentenceExample } = this.settings;
+        const cardRenderVarieties = { showWordTranslate, showSentenceMeaning, showSentenceExample };
+        const selectredVariants = Object.keys(cardRenderVarieties).filter((setting) => this.settings[setting] === true);
         const min = 0;
-        const max = selectedSentence.length - 1;
+        const max = selectredVariants.length - 1;
         const randomNumb = this.randomInteger(min, max);
-        return selectedSentence[randomNumb];
+        return selectredVariants[randomNumb];
     }
 
     randomInteger = (min, max) => {

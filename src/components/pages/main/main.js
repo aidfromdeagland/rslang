@@ -17,71 +17,113 @@ export class Main extends Component {
             notWordForLearn: false,
             isInvalidSettings: false,
         };
+        this.settings = settingsDefault;
     }
 
     componentDidMount() {
-        if (!this.settings) {
-            this.getSettings();
-        }
+        this.settings = this.getSettings();
     }
 
     getSettings = async () => {
         const settingsResponse = await SettingService.get();
-        const settings = settingsResponse.optional;
-        this.settings = settings || settingsDefault;
-        this.setState({ settings: this.settings });
+        this.setState({ settings: settingsResponse });
     }
 
     putSettings = () => {
-        const { settings } = this.state;
-        const newSettings = SettingService.createObject(12, settings);
+        const { settings: { optional } } = this.state;
+        const newSettings = SettingService.createObject(20, optional);
         SettingService.put(newSettings);
+    }
+
+    checkSettings = () => {
+        const { settings: { optional } } = this.state;
+        const mainSettingsValues = [
+            optional.showWordTranslate, optional.showSentenceMeaning, optional.showSentenceExample];
+        if (mainSettingsValues.some((settingValue) => settingValue === true)) {
+            this.putSettings();
+            this.handleCloseModal();
+        } else {
+            this.setState({ isInvalidSettings: true });
+        }
     }
 
     checkboxHandle = (property) => {
         this.setState((prev) => (
             {
-                settings: { ...prev.settings, [property]: !prev.settings[property] },
+                ...prev,
+                settings: {
+                    ...prev.settings,
+                    optional: {
+                        ...prev.settings.optional,
+                        [property]: !prev.settings.optional[property],
+                    },
+                },
                 isInvalidSettings: false,
             }
         ));
     }
 
-    checkSettings = () => {
-        const { settings } = this.state;
-        const settingsValues = Object.entries(settings).filter((option) => option[0] === 'textMeaning' || option[0] === 'textExample' || option[0] === 'word').find((setting) => setting[1] === true);
-        if (!settingsValues) {
-            this.setState({ isInvalidSettings: true });
-            return;
-        }
-        this.settings = settings;
-        this.handleCloseModal();
-        this.putSettings();
-    }
-
     handleInput = (property, operation) => {
-        const { settings } = this.state;
-        let wordsQuantity = parseInt(settings[property], 10);
+        const { settings: { optional } } = this.state;
+        let wordsQuantity = parseInt(optional[property], 10);
         if (operation === '+') {
             wordsQuantity += 10;
-            this.setState(() => ({ settings: { ...settings, [property]: wordsQuantity } }));
-            if (property === 'numberLearnWord' && wordsQuantity > settings.numberLearnCard) {
-                this.setState(() => ({
+            this.setState((prev) => (
+                {
+                    ...prev,
                     settings: {
-                        ...settings, numberLearnCard: wordsQuantity, [property]: wordsQuantity,
+                        ...prev.settings,
+                        optional: {
+                            ...prev.settings.optional,
+                            [property]: wordsQuantity,
+                        },
                     },
-                }));
+                }
+            ));
+            if (property === 'newWords' && wordsQuantity > optional.totalWords) {
+                this.setState((prev) => (
+                    {
+                        ...prev,
+                        settings: {
+                            ...prev.settings,
+                            optional: {
+                                ...prev.settings.optional,
+                                [property]: wordsQuantity,
+                                totalWords: wordsQuantity,
+                            },
+                        },
+                    }
+                ));
             }
         }
         if (operation === '-') {
             wordsQuantity = wordsQuantity === 0 ? 0 : wordsQuantity - 10;
-            this.setState({ settings: { ...settings, [property]: wordsQuantity } });
-            if (property === 'numberLearnCard' && wordsQuantity < settings.numberLearnCard) {
-                this.setState(() => ({
+            this.setState((prev) => (
+                {
+                    ...prev,
                     settings: {
-                        ...settings, numberLearnWord: wordsQuantity, [property]: wordsQuantity
+                        ...prev.settings,
+                        optional: {
+                            ...prev.settings.optional,
+                            [property]: wordsQuantity,
+                        },
                     },
-                }));
+                }
+            ));
+            if (property === 'totalWords' && wordsQuantity < optional.newWords) {
+                this.setState((prev) => (
+                    {
+                        ...prev,
+                        settings: {
+                            ...prev.settings,
+                            optional: {
+                                ...prev.settings.optional,
+                                [property]: wordsQuantity,
+                                newWords: wordsQuantity,
+                            },
+                        },
+                    }
+                ));
             }
         }
     }
@@ -89,7 +131,6 @@ export class Main extends Component {
     handleCloseModal = () => {
         this.setState((prev) => ({
             isOpenModal: !prev.isOpenModal,
-            settings: this.settings,
             isInvalidSettings: false,
         }));
     }
@@ -112,7 +153,7 @@ export class Main extends Component {
                 <div className="main-page-container">
                     <Options
                         needLearnWordsToday={needLearnWordsToday}
-                        settings={settings}
+                        settings={settings.optional}
                         onChangeInput={this.handleInput}
                         onchangeCheckbox={this.checkboxHandle}
                         clickSettings={this.handleClickSettings}
