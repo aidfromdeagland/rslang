@@ -10,6 +10,8 @@ import { SavannahStatistics } from './savannah-statistics';
 import { AUDIO_URL } from '../../../constants/globalConstants';
 import soundCorrect from '../../../assets/audio/correct.mp3';
 import soundError from '../../../assets/audio/error.mp3';
+import { SettingService } from '../../../services/settingServices';
+
 import './savannah.scss';
 
 export class SavannahGame extends Component {
@@ -64,14 +66,25 @@ export class SavannahGame extends Component {
         document.removeEventListener('keyup', this.keyup);
     }
 
-    getDataToStatistics = () => {
-        const { allRightWords, allWrongWords } = this.state;
-        const savannahData = {
-            rightWords: allRightWords,
-            wrongWords: allWrongWords,
-        };
-        return savannahData;
+    saveSettingsSavannah = async (savannahSettings) => {
+        const settings = await SettingService.get();
+        settings.optional.savannah = JSON.stringify(savannahSettings);
+        await SettingService.put(settings);
     }
+
+    saveSettings = () => {
+        const { group, page } = this.props;
+        const { allRightWords, allWrongWords } = this.state;
+        const date = Date.now();
+        const settings = {
+            date,
+            group,
+            page,
+            allRightWords,
+            allWrongWords,
+        };
+        this.saveSettingsSavannah(settings);
+    };
 
     handleClickByKeyboard =() => {
         const { translateWords, word, keyPressed } = this.state;
@@ -137,12 +150,13 @@ export class SavannahGame extends Component {
             allRightWords: allRightWords + 1,
         });
         new Audio(soundCorrect).play();
+        this.saveSettings();
     }
 
     getNextPage = () => {
         const { page, getNextPage } = this.props;
         const { wordInx } = this.state;
-        if (wordInx > 19) {
+        if (wordInx > 3) {
             getNextPage(page + 1);
             this.setState({
                 wordInx: 0,
@@ -167,6 +181,7 @@ export class SavannahGame extends Component {
             allWrongWords: allWrongWords + 1,
         });
         new Audio(soundError).play();
+        this.saveSettings();
     }
 
     showRightCard = (card) => {

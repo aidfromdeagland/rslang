@@ -1,14 +1,12 @@
-import { backend } from '../constants/globalConstants';
+import { backend, settingsDefault } from '../constants/globalConstants';
 import { User } from '../components/pages/auth/user';
 import { ServiceError } from './serviceError';
 
 export class SettingService {
-    static createObject(wordsPerDay, testVal)/*: ISettings */ {
+    static createObject(wordsPerDay, value)/*: ISettings */ {
         return {
             wordsPerDay,
-            optional: {
-                testVal,
-            },
+            optional: value,
         };
     }
 
@@ -29,7 +27,7 @@ export class SettingService {
             throw new ServiceError('Access token is missing or invalid', rawResponse.status);
         }
         if (rawResponse.status === 404) {
-            throw new ServiceError('Settings not found', rawResponse.status);
+            return settingsDefault;
         }
 
         const errorText = await rawResponse.text();
@@ -37,6 +35,8 @@ export class SettingService {
     }
 
     static async put(settings /* ISettings */) {
+        const save = settings;
+        delete save.id;
         const rawResponse = await fetch(`${backend}/users/${User.userId}/settings`, {
             method: 'PUT',
             withCredentials: true,
@@ -45,7 +45,7 @@ export class SettingService {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(settings),
+            body: JSON.stringify(save),
         });
         if (rawResponse.ok) {
             const content = await rawResponse.json();
@@ -69,4 +69,11 @@ export class SettingService {
 // }
 
 // interface IOptional {
+//    word: bool,
+//    textMeaning: bool,
+//    textExample: bool,
+//    showPicture: bool,
+//    showTranscription: bool,
+//    numberLearnWord: number,
+//    numberLearnCard: number,
 // }

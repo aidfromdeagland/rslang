@@ -52,5 +52,5 @@ SavannahCards.propTypes = {
     showRightCard: PropTypes.func.isRequired,
     showWrongCard: PropTypes.func.isRequired,
     getClassName: PropTypes.func.isRequired,
-    showRightWordByClick: PropTypes.isRequired,
+    showRightWordByClick: PropTypes.func.isRequired,
 };

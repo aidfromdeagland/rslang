@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 export class SelectLevel extends Component {
     constructor(props) {
         super(props);
-        this.state = { group: 0 };
+        this.state = { group: this.props.group };
     }
 
     handleChange = (e) => {
@@ -16,13 +16,13 @@ export class SelectLevel extends Component {
         return (
             <div
                 className="select"
-                onMouse={() => { this.props.getGroup(this.state.group); }}
+                onMouseUp={() => { this.props.getGroup(this.state.group); }}
                 tabIndex="0"
                 role="button"
             >
 
                 <select
-                    value={this.state.group}
+                    value={this.props.group}
                     onChange={(e) => this.handleChange(e)}
                 >
                     <option value="0">Novice</option>

@@ -9,14 +9,8 @@ import { validateEmail, validatePassword } from './util';
 import { Spinner } from '../../shared/spinner';
 
 export class Auth extends Component {
-    static redirectPage(href) {
-        // TODO не самый удачный вариант редиректа, но лучше реализовать не получилось.
-        // Возможно вообще не потребуется, если это будет модальное окно
-        window.location.href = href;
-    }
-
     constructor(props) {
-        super(props); // указать на какую страницу перемещаться (если это будет отдельной страницей)
+        super(props);
         this.state = {
             isLoading: false,
             isAuthentication: true,
@@ -27,8 +21,9 @@ export class Auth extends Component {
     }
 
     componentDidMount() {
-        // если пользователь авторизован, то уходим с авторизации на страницу 'redirectPage'
-        this.checkAuthorized();
+        if (this.props.isChecking) {
+            this.checkAuthorized();
+        }
     }
 
     checkAuthorized() {
@@ -39,8 +34,7 @@ export class Auth extends Component {
         this.setState({ isLoading: true });
         UserService.getUser(User.userId, User.token).then(() => {
             this.setState({ isLoading: false });
-            const { redirectPage } = this.props;
-            Auth.redirectPage(redirectPage);
+            this.props.logIn();
         }).catch((error) => {
             Storage.clearToken();
             this.setState({
@@ -85,8 +79,7 @@ export class Auth extends Component {
         UserService.logIn(login, password).then((user) => {
             Storage.saveUser(user.userId, user.token, login);
             this.setState({ isLoading: false });
-            const { redirectPage } = this.props;
-            Auth.redirectPage(redirectPage);
+            this.props.logIn();
         }).catch((error) => {
             this.setState({
                 isLoading: false,
@@ -141,6 +134,10 @@ export class Auth extends Component {
 
         const login = this.state.isAuthentication ? Storage.login : undefined;
 
+        if (this.state.isLoading && this.props.isChecking) {
+            return (<Spinner />);
+        }
+
         return (
             <div className="auth">
                 { this.state.isLoading && <Spinner /> }
@@ -161,10 +158,11 @@ export class Auth extends Component {
     }
 }
 
-Auth.propTypes = {
-    redirectPage: PropTypes.string,
+Auth.defaultProps = {
+    isChecking: false,
 };
 
-Auth.defaultProps = {
-    redirectPage: '/main',
+Auth.propTypes = {
+    logIn: PropTypes.func.isRequired,
+    isChecking: PropTypes.bool,
 };

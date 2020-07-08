@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import dataGames from './dataGames';
-import { Game } from './Game';
+import { Game } from './game';
 import './miniGames.scss';
 
 export class GameList extends Component {

@@ -1,0 +1,75 @@
+.word-card {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 5px;
+  border-bottom: 2px solid #092c70;
+
+  &:last-of-type {
+    border-bottom: none;
+  }
+
+
+  &__mainContainer {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-around;
+  }
+
+  &__mainTextContainer {
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    flex-grow: 1;
+  }
+
+  &__image {
+    max-width: 50%;
+    min-width: 100px;
+    height: auto;
+    height: auto;
+    border-radius: 7px;
+    box-shadow: 0 0 3px 1px #111111;
+  }
+
+  &__additionalContainer {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+  }
+
+  &__training-info {
+    margin-top: 5px;
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  &__bottom-left-container {
+    text-align: start;
+  }
+
+  &__bottom-right-container {
+    display: flex;
+    align-items: center;
+  }
+}
+
+@media (max-width: 699px) {
+  .word-card {
+    &__mainContainer {
+      flex-direction: column;
+    }
+
+    &__image {
+      max-width: 100%;
+      min-width: 100px;
+    }
+  }
+}

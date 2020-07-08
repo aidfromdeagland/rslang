@@ -1,10 +1,11 @@
+/* eslint-disable import/no-cycle */
 import React, { Component } from 'react';
 import { Button } from '../../shared/button';
 import { SelectLevel } from './select-level';
 import { SelectRound } from './select-round';
 import { SavannahGame } from './savannah-game';
 import { WordService } from '../../../services/wordServices';
-import { UserService } from '../../../services/userServices';
+import { SettingService } from '../../../services/settingServices';
 
 export class SavannahStart extends Component {
     constructor(props) {
@@ -20,6 +21,7 @@ export class SavannahStart extends Component {
 
     componentDidMount() {
         this.checkAmountOfUserWords();
+        this.loadSettings();
     }
 
     startGame = () => {
@@ -51,79 +53,98 @@ export class SavannahStart extends Component {
          this.setState({ page: value });
      }
 
-     render() {
-         const {
-             isStart, group, page, mode, isAvailableUserWords,
-         } = this.state;
+    loadSettings = async () => {
+        const { group, page } = this.state;
+        const set = await SettingService.get();
+        const settings = (JSON.parse(set.optional.savannah));
+        this.setState({
+            group: settings.group || group,
+            page: settings.page || page,
+        });
+    }
 
-         if (isStart) {
-             return (
-                 <SavannahGame
-                     group={group}
-                     page={page}
-                     mode={mode}
-                     getNextPage={this.getNextPage}
-                 />
-             );
-         }
-         return (
-             <div
-                 className="savannah__start"
-             >
-                 <div className="savannah__start-text">
-                     Welcome to dangerous and exciting world of Savannah!
-                     Catch up words and get rich!
-                     <div>
-                         Use Keybord to be faster!
-                         <span>1</span>
-                         <span>2</span>
-                         <span>3</span>
-                         <span>4</span>
-                     </div>
-                     <form
-                         className="savannah__start-form"
-                     >
-                         <label htmlFor="user-words">
-                             <input
-                                 type="radio"
-                                 value="userWords"
-                                 checked={mode === 'userWords'}
-                                 onChange={this.handleChange}
-                             />
-                             Play with your words
-                         </label>
-                         <label htmlFor="levels">
-                             <input
-                                 type="radio"
-                                 value="levelWords"
-                                 checked={mode === 'levelWords'}
-                                 onChange={this.handleChange}
-                             />
-                             Select level
-                         </label>
-                     </form>
-                     { !isAvailableUserWords && (mode === 'userWords')
+    render() {
+        const {
+            isStart, group, page, mode, isAvailableUserWords,
+        } = this.state;
+
+        if (isStart) {
+            return (
+                <SavannahGame
+                    group={group}
+                    page={page}
+                    mode={mode}
+                    getNextPage={this.getNextPage}
+                    loadSettings={this.loadSettings}
+                    saveSettingsSavannah={this.saveSettingsSavannah}
+                />
+            );
+        }
+        return (
+            <div
+                className="savannah__start"
+            >
+                <div className="savannah__start-text">
+                    Welcome to dangerous and exciting world of Savannah!
+                    Catch up words and get rich!
+                    <div>
+                        Use Keybord to be faster!
+                        <span>1</span>
+                        <span>2</span>
+                        <span>3</span>
+                        <span>4</span>
+                    </div>
+                    <form
+                        className="savannah__start-form"
+                    >
+                        <label htmlFor="user-words">
+                            <input
+                                type="radio"
+                                value="userWords"
+                                checked={mode === 'userWords'}
+                                onChange={this.handleChange}
+                            />
+                            Play with your words
+                        </label>
+                        <label htmlFor="levels">
+                            <input
+                                type="radio"
+                                value="levelWords"
+                                checked={mode === 'levelWords'}
+                                onChange={this.handleChange}
+                            />
+                            Select level
+                        </label>
+                    </form>
+                    { !isAvailableUserWords && (mode === 'userWords')
                       && (
                           <div className="savannah__start-warning">
-                              Oops, you have not learned enough words yet. Select level to start game
+                              Oops, you have not learned enough words yet.
+                              Select level to start game
                           </div>
                       )}
-                     {mode === 'levelWords' && (
-                         <div className="savannah__start-select">
-                             Select level:
-                             <SelectLevel getGroup={this.getGroup} />
-                             Select round:
-                             <SelectRound getPage={this.getPage} />
-                         </div>
-                     )}
+                    {mode === 'levelWords' && (
+                        <div className="savannah__start-select">
+                            Select level:
+                            <SelectLevel
+                                getGroup={this.getGroup}
+                                group={group}
+                            />
+                            Select round:
+                            <SelectRound
+                                getPage={this.getPage}
+                                page={page}
+                            />
+                        </div>
+                    )}
 
-                 </div>
-                 <Button
-                     onClick={this.startGame}
-                     className="savannah__start-btn"
-                     title="Start game"
-                 />
-             </div>
-         );
-     }
+                </div>
+                <Button
+                    onClick={this.startGame}
+                    className="savannah__start-btn"
+                    title="Start game"
+                />
+            </div>
+        );
+    }
 }

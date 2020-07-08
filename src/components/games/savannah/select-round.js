@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 export class SelectRound extends Component {
     constructor(props) {
         super(props);
-        this.state = { page: 0 };
+        this.state = { page: this.props.page };
     }
 
     handleChange = (e) => {
@@ -19,11 +19,11 @@ export class SelectRound extends Component {
                 className="select"
                 tabIndex="0"
                 role="button"
-                onMouseUp={() => { this.props.getPage(this.state.page - 1); }}
+                onMouseUp={() => { this.props.getPage(this.state.page); }}
             >
 
                 <select
-                    value={this.state.page}
+                    value={this.props.page}
                     onChange={(e) => this.handleChange(e)}
 
                 >

@@ -117,13 +117,13 @@ $btn-hover-color: #0f4ab4;
         }
 
         &-btn {
-            height: 3rem;
+            height: 4rem;
             margin: 3rem 0 0 3rem;
             border: 1px solid transparent;
             border-radius: 7px;
             background-color: $btn-color;
             color: #fff;
-            padding: 1rem 2rem;
+            padding: 1rem;
             cursor: pointer;
             font-size: 1.1rem;
             &:hover {
@@ -166,7 +166,6 @@ $btn-hover-color: #0f4ab4;
     }
 
    
-
     &__cards {
         max-width: 1020px;
         height: 100px;
