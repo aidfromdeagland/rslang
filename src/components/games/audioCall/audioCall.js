@@ -5,19 +5,19 @@ import './audioCall.scss';
 import { AudioCallStart } from './audioCallStart';
 import { AudioCallGame } from './audioCallGame';
 import { AudioCallResult } from './audioCallResult';
-import { GAME_PROGRESS } from './constants';
+import { GAME_PROGRESS, MODE_GAME } from './constants';
+import { MAX_SYMBOLS_IN_GAME_STATISTICS } from '../../../constants/globalConstants';
 import { Repository } from './repository';
 import { Auth } from '../../pages/auth/auth';
 import { tryExecute } from './utils';
+import { removeItemOnce } from '../../../utils/utils';
+import { StatisticService } from '../../../services/statisticServices';
+import { Spinner } from '../../shared/spinner';
 
 // TODO Не реализовано (этот текст впоследствии обязательно удалю):
 // * переводы слов, из которых выбирается нужный, относятся к одной части речи
-// * по умолчанию в мини-играх задействованы выученные пользователем слова.
-//      Если таких слов недостаточно, игра запускается с первого раунда первого уровня
-// * игра передаёт статистику в основную часть приложения
-// * ведётся долгосрочная статистика мини-игр, можно посмотреть когда и сколько раз в какую
-//      мини-игру играли и с каким результатом. Для хранения статистики используется бекэнд
 // * Большие фразы не влезают на экран. Надо менять стиль
+// * Отображать ошибку во всплывающем окне
 // * Обновление токена, при приближении времени завершения его действия (не обязательно, т.к.
 //      проверить это будет невозможно)
 // Доп функционал:
@@ -29,11 +29,25 @@ export class AudioCall extends Component {
         this.state = { auth: true, state: GAME_PROGRESS.start };
     }
 
+    static getAudioCallStatisticJson(audioCallStatistic) {
+        const audioCallStatisticJson = JSON.stringify(audioCallStatistic);
+        if (audioCallStatisticJson.length > MAX_SYMBOLS_IN_GAME_STATISTICS) {
+            // remove the worst result
+            const getPrecent = (stat) => stat.Correct / (stat.Correct + stat.Incorrect);
+            const minResult = audioCallStatistic.reduce((prev, current) => (
+                (getPrecent(prev) < getPrecent(current))
+                    ? prev : current));
+            removeItemOnce(audioCallStatistic, minResult);
+            return AudioCall.getAudioCallStatisticJson(audioCallStatistic);
+        }
+        return audioCallStatisticJson;
+    }
+
     errorFunction = (error, failedFunction) => {
         if (error.status === 401) {
             this.setState({ auth: false, failedFunction });
         } else {
-            // отобразить ошибку error.message
+            // TODO отобразить ошибку error.message
         }
     }
 
@@ -51,12 +65,15 @@ export class AudioCall extends Component {
     }
 
     endGame(result) {
+        this.setState({ isLoading: true });
         tryExecute(async () => {
             const newRepositoryState = await Repository.setNextGame(this.state.repositoryState);
+            await this.saveStatistics(result, this.state.repositoryState);
             this.setState({
                 state: GAME_PROGRESS.result,
                 gameResult: result,
                 repositoryState: newRepositoryState,
+                isLoading: false,
             });
         }, this.errorFunction);
     }
@@ -68,11 +85,35 @@ export class AudioCall extends Component {
         });
     }
 
+    // eslint-disable-next-line class-methods-use-this
+    async saveStatistics(result, repositoryState) {
+        const loadStatistic = await StatisticService.get();
+        const audioCallStatistic = JSON.parse(loadStatistic.optional.audioCall || '[]');
+        const isLevelMode = repositoryState.load.loaded.modeGame === MODE_GAME['All words'];
+        const roundStatistic = StatisticService.createGameStat(
+            result.filter((o) => o.isCorrect).length,
+            result.filter((o) => !o.isCorrect).length,
+            isLevelMode ? repositoryState.load.loaded.group : undefined,
+            isLevelMode ? repositoryState.load.loaded.page : undefined,
+        );
+        audioCallStatistic.push(roundStatistic);
+        const audioCallStatisticJson = AudioCall.getAudioCallStatisticJson(audioCallStatistic);
+        loadStatistic.optional.audioCall = audioCallStatisticJson;
+        await StatisticService.put(loadStatistic);
+    }
+
     render() {
         if (!this.state.auth) {
             return (
                 <div className="audio-call">
                     <Auth isChecking={false} logIn={() => { this.afterAuth(); }} />
+                </div>
+            );
+        }
+        if (this.state.isLoading) {
+            return (
+                <div className="audio-call">
+                    <Spinner />
                 </div>
             );
         }
