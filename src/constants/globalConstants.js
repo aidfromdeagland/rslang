@@ -14,5 +14,6 @@ export const settingsDefault = {
         numberLearnWord: 10,
         numberLearnCard: 10,
         audioCall: '{modeGame:1,"wordCount":10,"colorStart":{"r":9,"g":44,"b":112},"colorEnd":{"r":224,"g":141,"b":157},"group":0,"page":0}',
+        speakit: '{"group":1,"page":1}',
     },
 };

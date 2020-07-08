@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import './speakit.scss';
+import { StartPage } from './startPage';
 
 export class SpeakIt extends Component {
-  render() {
-    return (
-      <div className="speak-it">
-        <h1>Speak It</h1>
-      </div>
-    );
-  }
+    render() {
+        return (
+            <div className="speak-it">
+                <StartPage />
+            </div>
+        );
+    }
 }
