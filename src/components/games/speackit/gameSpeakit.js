@@ -22,6 +22,17 @@ import { Spinner } from '../../shared/spinner';
 import { SettingService } from '../../../services/settingServices';
 import { settingsDefault } from '../../../constants/globalConstants';
 // import { StatisticService } from '../../../services/statisticServices';
+import { Button } from '../../shared/button';
+
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+const SpeechGrammarList = window.SpeechGrammarList || window.webkitSpeechGrammarList;
+const recognition = new SpeechRecognition();
+const speechRecognitionList = new SpeechGrammarList();
+recognition.grammars = speechRecognitionList;
+recognition.lang = 'en-US';
+recognition.interimResults = false;
+recognition.continuous = false;
+recognition.maxAlternatives = 3;
 
 export class GameSpeakit extends Component {
     constructor(props) {
@@ -37,9 +48,10 @@ export class GameSpeakit extends Component {
             wordCount: 0,
             haveWords: false,
             dataForGame: [],
-            gameMode: 'train',
+            isGameModeTrain: true,
             isClickedCard: false,
             indexClickedCard: null,
+            listening: false,
 
             //     isCheckBtn: false,
             //     isContinueBtn: false,
@@ -61,19 +73,19 @@ export class GameSpeakit extends Component {
         }
     }
 
-    // componentDidUpdate() {
-    //     const {
-    //         haveWords,
-    //         isNext,
-    //         wordCount,
-    //     } = this.state;
-    //     if (!haveWords) {
-    //         this.loadWords();
-    //     }
-    //     if (!isNext) {
-    //         this.createDataForGame(wordCount);
-    //     }
-    // }
+    componentDidUpdate() {
+        const {
+            haveWords,
+            isNext,
+            wordCount,
+        } = this.state;
+        if (!haveWords) {
+            this.loadWords();
+        }
+        // if (!isNext) {
+        //     this.createDataForGame(wordCount);
+        // }
+    }
 
     loadSettings = async () => {
         this.settings = await SettingService.get();
@@ -87,16 +99,16 @@ export class GameSpeakit extends Component {
         this.loadWords();
     }
 
-    // putSettings = (level, page) => {
-    //     const { optional } = this.settings;
-    //     const gameSettings = JSON.stringify({
-    //         level,
-    //         page,
-    //     });
-    //     optional.gamePuzzle = gameSettings;
-    //     const settings = SettingService.createObject(this.settings.wordsPerDay, optional);
-    //     SettingService.put(settings);
-    // }
+    putSettings = (level, page) => {
+        const { optional } = this.settings;
+        const gameSettings = JSON.stringify({
+            group: level,
+            page,
+        });
+        optional.speakit = gameSettings;
+        const settings = SettingService.createObject(this.settings.wordsPerDay, optional);
+        SettingService.put(settings);
+    }
 
     // loadStatistic = async () => {
     //     this.statistic = await StatisticService.get();
@@ -252,37 +264,29 @@ export class GameSpeakit extends Component {
     //     });
     // }
 
-    // selectLevel = (level, page) => {
-    //     const {
-    //         isGameWithUserWords,
-    //         isGameWithLevels,
-    //     } = this.props;
-    //     if (isGameWithLevels) {
-    //         this.setState({
-    //             level,
-    //             page,
-    //             haveWords: false,
-    //             wordCount: 0,
-    //             isCheckBtn: false,
-    //             isContinueBtn: false,
-    //             isDontKnowBtn: true,
-    //             isResultBtn: false,
-    //         });
-    //     }
-    //     if (isGameWithUserWords) {
-    //         this.setState(() => ({
-    //             wordCount: 0,
-    //             isCheckBtn: false,
-    //             isContinueBtn: false,
-    //             isDontKnowBtn: true,
-    //             isResultBtn: false,
-    //             haveWords: false,
-    //         }));
-    //     }
-    //     this.results.know = [];
-    //     this.results.dontKnow = [];
-    //     this.putSettings(level, page);
-    // }
+    selectLevel = (level, page) => {
+        const {
+            isGameWithUserWords,
+            isGameWithLevels,
+        } = this.props;
+        if (isGameWithLevels) {
+            this.setState({
+                level,
+                page,
+                haveWords: false,
+                // wordCount: 0,
+            });
+        }
+        if (isGameWithUserWords) {
+            this.setState(() => ({
+                // wordCount: 0,
+                haveWords: false,
+            }));
+        }
+        // this.results.know = [];
+        // this.results.dontKnow = [];
+        this.putSettings(level, page);
+    }
 
     // checkBoxHandle = (prop) => {
     //     this.setState((prev) => ({
@@ -329,6 +333,20 @@ export class GameSpeakit extends Component {
         });
     }
 
+    changeGameMode = () => {
+        this.setState((prev) => ({
+            isGameModeTrain: !prev.isGameModeTrain,
+            listening: !prev.listening,
+        }), this.handleListening);
+        // this.handleListening();
+    }
+
+    handleListening = () => {
+        if (this.state.listening) {
+            recognition.start();
+        }
+    }
+
     render() {
         const {
             haveWords,
@@ -346,6 +364,7 @@ export class GameSpeakit extends Component {
             //     isRoundEnd,
             level,
             page,
+            isGameModeTrain,
             //     isAutoPronunciation,
             //     isPicture,
             //     image,
@@ -386,14 +405,19 @@ export class GameSpeakit extends Component {
                                     // onClick={() => this.handleClickCard(index)}
                                     cardIndex={index}
                                     indexClickedCard={indexClickedCard}
-                                    isClickedCard={isClickedCard}
+                                    isClickedCard={isGameModeTrain ? isClickedCard : null}
                                     handleClickCard={this.handleClickCard}
                                     activeAudioUrl={activeAudioUrl}
                                     activeImageUrl={activeImageUrl}
+                                    isGameModeTrain={isGameModeTrain}
                                 />
                             ))}
                         </ul>
-                        <button className="button content__button content__button_speak">speak</button>
+                        <Button
+                            className="button content__button content__button_speak"
+                            title={isGameModeTrain ? 'speak' : 'on air'}
+                            onClick={this.changeGameMode}
+                        />
                     </div>
                 </div>
             );

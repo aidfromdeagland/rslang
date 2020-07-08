@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import './dropdown.scss';
 import { Button } from '../../../shared/button';
 import { DropdownList } from './dropdownList';
+import './dropdown.scss';
 
 export class Dropdown extends Component {
     constructor(props) {
@@ -35,12 +35,6 @@ export class Dropdown extends Component {
         }));
     }
 
-    handleClickDropdownWords = () => {
-        this.setState((prev) => ({
-            isDropWordOpen: !prev.isDropWordOpen,
-        }));
-    }
-
     handleButtonSelect = () => {
         const {
             selectLevel
@@ -71,7 +65,7 @@ export class Dropdown extends Component {
                     <Button className="mainmenubtn button" title={`${numberPage}`} onClick={this.handleClickDropdownPages} />
                     {isDropPageOpen ? <DropdownList chooseNumber={this.chooseNumberPages} closeDropdown={this.handleClickDropdownPages} totalNumber="60" /> : null}
                 </div>
-                {/* <Button className="button select-level" title="Select" onClick={this.handleButtonSelect} /> */}
+                <Button className="button select-level" title="Select" onClick={this.handleButtonSelect} />
             </div>
         );
     }
