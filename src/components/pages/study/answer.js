@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { InputContainer } from './inputContainer';
+import { DifficultyEvaluation } from './difficulty-evaluation';
 
 export class Answer extends Component {
     createContext = () => {
         const {
             isCorrectWord, valueInput, checkWord, handleSubmit, handleChange, contextAudio, wordAudio,
         } = this.props;
-        console.log(this.props);
         const context = this.props.context.split(/(\s+)/);
         const total = context.map((word, index) => {
             if (/<i>(.*?)<\/i>/.test(word) || /<b>(.*?)<\/b>/.test(word) || context.length === 1) {
@@ -35,9 +35,13 @@ export class Answer extends Component {
     }
 
     render() {
+        const {
+            wordId, userWords, showEvaluation, handleEvaluate
+        } = this.props;
         return (
             <div className="answer-container">
                 {this.createContext()}
+                {showEvaluation ? <DifficultyEvaluation wordId={wordId} userWords={userWords} handleEvaluate={handleEvaluate} /> : null}
             </div>
         );
     }

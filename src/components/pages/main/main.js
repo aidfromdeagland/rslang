@@ -41,7 +41,10 @@ export class Main extends Component {
             optional.showWordTranslate, optional.showSentenceMeaning, optional.showSentenceExample];
         if (mainSettingsValues.some((settingValue) => settingValue === true)) {
             this.putSettings();
-            this.handleCloseModal();
+            this.setState((prev) => ({
+                isOpenModal: !prev.isOpenModal,
+                isInvalidSettings: false,
+            }));
         } else {
             this.setState({ isInvalidSettings: true });
         }
@@ -157,12 +160,11 @@ export class Main extends Component {
                         onChangeInput={this.handleInput}
                         onchangeCheckbox={this.checkboxHandle}
                         clickSettings={this.handleClickSettings}
-                        closeModal={this.handleCloseModal}
+                        closeModal={this.checkSettings}
                         isOpenModal={isOpenModal}
                         checkSettings={this.checkSettings}
                         isInvalidSettings={isInvalidSettings}
                     />
-                    {/* <Start /> */}
                     <Progress />
                 </div>
             </div>

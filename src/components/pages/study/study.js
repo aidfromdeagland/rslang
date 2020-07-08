@@ -31,7 +31,13 @@ export class Study extends Component {
             isCorrectWord: null,
             isLoadSettings: false,
             isLoadWords: false,
+            isFirstTry: true,
+            showEvaluation: false,
+            isSubmitable: true,
+            isAudioFinished: false,
         };
+
+        this.audioPlayer = new Audio();
     }
 
     componentDidMount() {
@@ -42,6 +48,8 @@ export class Study extends Component {
         const settings = await SettingService.get();
         this.settings = settings.optional;
         this.words = await WordService.getWords(0, 0);
+        console.log(this.words);
+        this.userWords = await WordService.getUserWords();
         this.createCard();
         this.setState({
             newWords: this.settings.newWords,
@@ -55,7 +63,6 @@ export class Study extends Component {
         const { wordCount } = this.state;
         this.actualCard = this.words[wordCount];
         this.context = this.chooseLearnMethod();
-        console.log(this.context);
         this.audioContext = audioPrefixMap[this.context];
         this.dataForCard = {
             context: this.actualCard[contextMap[this.context]],
@@ -74,44 +81,85 @@ export class Study extends Component {
         const actualValue = this.prevValue.toLocaleLowerCase();
         const studiedWord = this.dataForCard.word;
 
-        const word = studiedWord.split('').map((letter, index) => {
-            return <span className={letter === actualValue[index] ? 'correct-letter check-letter' : 'incorrect-letter check-letter'} key={index}>{letter}</span>;
-        });
+        const word = studiedWord.split('').map((letter, index) => (
+            <span
+                className={letter === actualValue[index]
+                    ? 'correct-letter check-letter'
+                    : 'incorrect-letter check-letter'}
+                key={index}
+            >
+                {letter}
+            </span>
+        ));
         return word;
     }
 
     handleSubmit = (event) => {
-        const { valueInput } = this.state;
         if (event) {
             event.preventDefault();
         }
+        const { valueInput } = this.state;
         const actualValue = valueInput.toLocaleLowerCase();
 
-        if (actualValue === this.dataForCard.word.toLocaleLowerCase()) {
-            this.setState({
-                isCorrectWord: true,
-            });
-            const audio = new Audio(this.dataForCard.audioContext);
-            audio.play();
-            audio.addEventListener('ended', () => {
-                this.setState((prev) => ({
-                    wordCount: prev.wordCount + 1,
-                }));
-                this.createCard();
+        if (this.state.isSubmitable) {
+            if (actualValue === this.dataForCard.word.toLocaleLowerCase()) {
+                if (this.state.isFirstTry) {
+                    this.setState({ showEvaluation: true });
+                    console.log('GOOD TRY');
+                } else {
+                    this.words.push(this.words[this.state.wordCount]);
+                    console.log(this.words);
+                }
+                this.audioPlayer.src = this.dataForCard.audioContext;
+                this.audioPlayer.play();
                 this.setState({
-                    isCorrectWord: null,
-                    valueInput: '',
+                    isCorrectWord: true,
+                    isSubmitable: false,
+                    isAudioFinished: false,
                 });
-            });
-        } else {
-            const audio = new Audio(this.dataForCard.audioWord);
-            audio.play();
-            this.prevValue = valueInput;
+
+                this.audioPlayer.addEventListener('ended', () => {
+                    if (this.state.showEvaluation === false) {
+                        this.setState((prev) => ({
+                            wordCount: prev.wordCount + 1,
+                        }));
+                        this.createCard();
+                        this.setState({
+                            isCorrectWord: null,
+                            valueInput: '',
+                            isFirstTry: true,
+                            isSubmitable: true,
+                        });
+                    }
+                    this.setState({ isAudioFinished: true });
+                }, { once: true });
+            } else {
+                this.audioPlayer.src = this.dataForCard.audioWord;
+                this.audioPlayer.play();
+                this.prevValue = valueInput;
+                this.setState({
+                    isCorrectWord: false,
+                    valueInput: '',
+                    isFirstTry: false,
+                });
+            }
+        }
+    }
+
+    handleEvaluate = () => {
+        if (this.state.isAudioFinished) {
+            this.setState((prev) => ({
+                wordCount: prev.wordCount + 1,
+            }));
+            this.createCard();
             this.setState({
-                isCorrectWord: false,
+                isCorrectWord: null,
                 valueInput: '',
+                isFirstTry: true,
+                isSubmitable: true,
             });
         }
+        this.setState({ showEvaluation: false });
     }
 
     handleChange = (event) => {
@@ -124,9 +172,8 @@ export class Study extends Component {
     handleClickShowAnswer = () => {
         this.setState({
             valueInput: this.dataForCard.word,
+            isFirstTry: false,
         });
-        const audio = new Audio(this.dataForCard.audioContext);
-        audio.play();
     }
 
     chooseLearnMethod = () => {
@@ -153,7 +200,7 @@ export class Study extends Component {
 
     render() {
         const {
-            isLoadSettings, isLoadWords, valueInput, isCorrectWord,
+            isLoadSettings, isLoadWords, valueInput, isCorrectWord, showEvaluation,
         } = this.state;
         if (isLoadSettings && isLoadWords) {
             return (
@@ -177,7 +224,9 @@ export class Study extends Component {
                                 <div className="card-input">
                                     <Answer
                                         context={this.dataForCard.context}
+                                        userWords={this.userWords}
                                         word={this.dataForCard.word}
+                                        wordId={this.dataForCard.idWord}
                                         wordAudio={this.dataForCard.audioWord}
                                         contextAudio={this.dataForCard.audioContext}
                                         checkWord={this.checkWord}
@@ -185,6 +234,8 @@ export class Study extends Component {
                                         handleSubmit={this.handleSubmit}
                                         valueInput={valueInput}
                                         isCorrectWord={isCorrectWord}
+                                        showEvaluation={showEvaluation}
+                                        handleEvaluate={this.handleEvaluate}
                                     />
                                 </div>
                                 <div className="translation-container">
