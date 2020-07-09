@@ -267,9 +267,9 @@ export class SavannahGame extends Component {
     }
 
     startTimer = () => {
-        this.timer = setInterval(() => {
-            this.getWrongAnswer();
-        }, 7000);
+        // this.timer = setInterval(() => {
+        //     this.getWrongAnswer();
+        // }, 7000);
     }
 
     stopTimer= () => {
