@@ -6,11 +6,10 @@ import { AudioCallStart } from './audioCallStart';
 import { AudioCallGame } from './audioCallGame';
 import { AudioCallResult } from './audioCallResult';
 import { GAME_PROGRESS, MODE_GAME } from './constants';
-import { MAX_SYMBOLS_IN_GAME_STATISTICS } from '../../../constants/globalConstants';
 import { Repository } from './repository';
 import { Auth } from '../../pages/auth/auth';
 import { tryExecute } from './utils';
-import { removeItemOnce } from '../../../utils/utils';
+import { convertStatisticJson } from '../../../utils/utils';
 import { StatisticService } from '../../../services/statisticServices';
 import { Spinner } from '../../shared/spinner';
 
@@ -27,20 +26,6 @@ export class AudioCall extends Component {
     constructor() {
         super();
         this.state = { auth: true, state: GAME_PROGRESS.start };
-    }
-
-    static getAudioCallStatisticJson(audioCallStatistic) {
-        const audioCallStatisticJson = JSON.stringify(audioCallStatistic);
-        if (audioCallStatisticJson.length > MAX_SYMBOLS_IN_GAME_STATISTICS) {
-            // remove the worst result
-            const getPrecent = (stat) => stat.Correct / (stat.Correct + stat.Incorrect);
-            const minResult = audioCallStatistic.reduce((prev, current) => (
-                (getPrecent(prev) < getPrecent(current))
-                    ? prev : current));
-            removeItemOnce(audioCallStatistic, minResult);
-            return AudioCall.getAudioCallStatisticJson(audioCallStatistic);
-        }
-        return audioCallStatisticJson;
     }
 
     errorFunction = (error, failedFunction) => {
@@ -97,7 +82,7 @@ export class AudioCall extends Component {
             isLevelMode ? repositoryState.load.loaded.page : undefined,
         );
         audioCallStatistic.push(roundStatistic);
-        const audioCallStatisticJson = AudioCall.getAudioCallStatisticJson(audioCallStatistic);
+        const audioCallStatisticJson = convertStatisticJson(audioCallStatistic);
         loadStatistic.optional.audioCall = audioCallStatisticJson;
         await StatisticService.put(loadStatistic);
     }

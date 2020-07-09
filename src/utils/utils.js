@@ -1,3 +1,5 @@
+import { MAX_SYMBOLS_IN_GAME_STATISTICS } from '../constants/globalConstants';
+
 export const randomInteger = function randomInteger(max) {
     const random = Math.random() * (max + 1);
     return Math.floor(random);
@@ -26,10 +28,26 @@ export const createIncArray = function createIncArray(count) {
 export const getUniqueByKey = (array, key) => array
     .filter((v, i, a) => a.findIndex((t) => (t[key] === v[key])) === i);
 
-export const removeItemOnce = (arr, value) => {
+const removeItemOnce = (arr, value) => {
     const index = arr.indexOf(value);
     if (index > -1) {
         arr.splice(index, 1);
     }
     return arr;
+};
+
+export const convertStatisticJson = (statistic) => {
+    const statisticJson = JSON.stringify(statistic);
+    if (statisticJson.length > 500) {
+        // remove the worst result
+        const getPrecent = statistic[0].Score
+            ? (stat) => stat.Score
+            : (stat) => stat.Correct / (stat.Correct + stat.Incorrect);
+        const minResult = statistic.reduce((prev, current) => (
+            (getPrecent(prev) < getPrecent(current))
+                ? prev : current));
+        removeItemOnce(statistic, minResult);
+        return convertStatisticJson(statistic);
+    }
+    return statisticJson;
 };
