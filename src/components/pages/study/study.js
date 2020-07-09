@@ -9,7 +9,7 @@ import { SettingService } from '../../../services/settingServices';
 import { Spinner } from '../../shared/spinner';
 
 const audioPrefixMap = {
-    showWordTranslate: '',
+    showWordTranslate: 'audio',
     showSentenceMeaning: 'audioMeaning',
     showSentenceExample: 'audioExample',
 };
@@ -47,9 +47,10 @@ export class Study extends Component {
     getSettings = async () => {
         const settings = await SettingService.get();
         this.settings = settings.optional;
-        this.words = await WordService.getWords(0, 0);
-        console.log(this.words);
+        const wordsAggResponse = await WordService.getUserAggWords(undefined, '', 5);
+        this.words = wordsAggResponse[0].paginatedResults;
         this.userWords = await WordService.getUserWords();
+        console.log(this.words, this.userWords);
         this.createCard();
         this.setState({
             newWords: this.settings.newWords,
@@ -70,7 +71,7 @@ export class Study extends Component {
             wordTranslate: this.actualCard.wordTranslate,
             audioContext: `https://raw.githubusercontent.com/aidfromdeagland/rslang-data/master/${this.actualCard[this.audioContext]}`,
             audioWord: `https://raw.githubusercontent.com/aidfromdeagland/rslang-data/master/${this.actualCard.audio}`,
-            translationContext: this.actualCard[`${this.context}Translate`],
+            translationContext: this.actualCard[`${contextMap[this.context]}Translate`],
             idWord: this.actualCard.id,
             wordImage: `https://raw.githubusercontent.com/aidfromdeagland/rslang-data/master/${this.actualCard.image}`,
             transcription: this.actualCard.transcription,
@@ -120,16 +121,20 @@ export class Study extends Component {
 
                 this.audioPlayer.addEventListener('ended', () => {
                     if (this.state.showEvaluation === false) {
-                        this.setState((prev) => ({
-                            wordCount: prev.wordCount + 1,
-                        }));
-                        this.createCard();
-                        this.setState({
-                            isCorrectWord: null,
-                            valueInput: '',
-                            isFirstTry: true,
-                            isSubmitable: true,
-                        });
+                        if (this.state.wordCount < this.words.length - 1) {
+                            this.setState((prev) => ({
+                                wordCount: prev.wordCount + 1,
+                            }));
+                            this.createCard();
+                            this.setState({
+                                isCorrectWord: null,
+                                valueInput: '',
+                                isFirstTry: true,
+                                isSubmitable: true,
+                            });
+                        } else {
+                            alert('FINISH!');
+                        }
                     }
                     this.setState({ isAudioFinished: true });
                 }, { once: true });
@@ -148,16 +153,20 @@ export class Study extends Component {
 
     handleEvaluate = () => {
         if (this.state.isAudioFinished) {
-            this.setState((prev) => ({
-                wordCount: prev.wordCount + 1,
-            }));
-            this.createCard();
-            this.setState({
-                isCorrectWord: null,
-                valueInput: '',
-                isFirstTry: true,
-                isSubmitable: true,
-            });
+            if (this.state.wordCount < this.words.length - 1) {
+                this.setState((prev) => ({
+                    wordCount: prev.wordCount + 1,
+                }));
+                this.createCard();
+                this.setState({
+                    isCorrectWord: null,
+                    valueInput: '',
+                    isFirstTry: true,
+                    isSubmitable: true,
+                });
+            } else {
+                alert('FINISH');
+            }
         }
         this.setState({ showEvaluation: false });
     }
@@ -236,6 +245,7 @@ export class Study extends Component {
                                         isCorrectWord={isCorrectWord}
                                         showEvaluation={showEvaluation}
                                         handleEvaluate={this.handleEvaluate}
+                                        currentWord={this.words[this.state.wordCount]}
                                     />
                                 </div>
                                 <div className="translation-container">

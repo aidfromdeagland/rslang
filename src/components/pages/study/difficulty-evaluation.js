@@ -5,14 +5,24 @@ import { WordService } from '../../../services/wordServices';
 import { getMemoInfo } from '../../../services/spacedRepetition';
 import './difficulty-evaluation.scss';
 
+const defaultWordTemplate = {
+    optional: {
+        isDeleted: false,
+        isDifficult: false,
+        prevDate: Date.now(),
+        nextDate: Date.now(),
+        repeats: 1,
+    },
+};
+
 export class DifficultyEvaluation extends Component {
     constructor(props) {
         super(props);
     }
 
     handleCLick = (difficultyLevel) => {
-        const { userWords, wordId, handleEvaluate} = this.props;
-        let wordIndexInUserWords = -1;
+        const { userWords, wordId, handleEvaluate, currentWord} = this.props;
+        /* let wordIndexInUserWords = -1;
         userWords.some((word, index) => {
             if (word.wordId === wordId) {
                 wordIndexInUserWords = index;
@@ -24,6 +34,37 @@ export class DifficultyEvaluation extends Component {
             console.log('have this word', userWords[wordIndexInUserWords]);
         } else {
             console.log('it is new word');
+        } */
+
+        if (currentWord.userWord) {
+            const { isDeleted, isDifficult, repeats } = currentWord.userWord.optional;
+            const result = getMemoInfo(difficultyLevel, repeats);
+
+            const defaultWordPutTemplate = {
+                optional: {
+                    isDeleted,
+                    isDifficult,
+                    prevDate: result.prevRepetitionDate,
+                    nextDate: result.nextRepetitionDate,
+                    repeats: result.repetitions,
+                },
+            };
+
+            WordService.putWord(currentWord.id, defaultWordPutTemplate);
+        } else {
+            const result = getMemoInfo(difficultyLevel);
+
+            const defaultWordPostTemplate = {
+                optional: {
+                    isDeleted: false,
+                    isDifficult: false,
+                    prevDate: result.prevRepetitionDate,
+                    nextDate: result.nextRepetitionDate,
+                    repeats: result.repetitions,
+                },
+            };
+
+            WordService.postWord(currentWord.id, defaultWordPostTemplate);
         }
         setTimeout(handleEvaluate, 0);
     }

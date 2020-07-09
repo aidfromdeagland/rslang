@@ -36,12 +36,12 @@ export class Answer extends Component {
 
     render() {
         const {
-            wordId, userWords, showEvaluation, handleEvaluate
+            wordId, userWords, showEvaluation, handleEvaluate, currentWord,
         } = this.props;
         return (
             <div className="answer-container">
                 {this.createContext()}
-                {showEvaluation ? <DifficultyEvaluation wordId={wordId} userWords={userWords} handleEvaluate={handleEvaluate} /> : null}
+                {showEvaluation ? <DifficultyEvaluation wordId={wordId} userWords={userWords} handleEvaluate={handleEvaluate} currentWord={currentWord}/> : null}
             </div>
         );
     }
