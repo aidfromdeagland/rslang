@@ -34,6 +34,13 @@ recognition.interimResults = false;
 recognition.continuous = false;
 recognition.maxAlternatives = 3;
 
+// const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+// const recognition = new SpeechRecognition()
+
+// recognition.continous = true
+// recognition.interimResults = true
+// recognition.lang = 'en-US'
+
 export class GameSpeakit extends Component {
     constructor(props) {
         super(props);
@@ -52,6 +59,7 @@ export class GameSpeakit extends Component {
             isClickedCard: false,
             indexClickedCard: null,
             listening: false,
+            correctWords: [],
 
             //     isCheckBtn: false,
             //     isContinueBtn: false,
@@ -274,14 +282,22 @@ export class GameSpeakit extends Component {
                 level,
                 page,
                 haveWords: false,
+                correctWords: [],
+                isGameModeTrain: true,
+                listening: false,
+                isClickedCard: false,
                 // wordCount: 0,
-            });
+            }, this.handleListening);
         }
         if (isGameWithUserWords) {
             this.setState(() => ({
                 // wordCount: 0,
                 haveWords: false,
-            }));
+                correctWords: [],
+                isGameModeTrain: true,
+                listening: false,
+                isClickedCard: false,
+            }), this.handleListening);
         }
         // this.results.know = [];
         // this.results.dontKnow = [];
@@ -337,14 +353,87 @@ export class GameSpeakit extends Component {
         this.setState((prev) => ({
             isGameModeTrain: !prev.isGameModeTrain,
             listening: !prev.listening,
+            correctWords: [],
+            isClickedCard: false,
         }), this.handleListening);
         // this.handleListening();
     }
 
     handleListening = () => {
+        this.setState({
+            isClickedCard: false,
+            indexClickedCard: null,
+            activeAudioUrl: null,
+            activeImageUrl: null,
+            activeTranslate: null,
+        });
+
+        // console.log('listening?', this.state.listening)
+
         if (this.state.listening) {
-            recognition.start();
+            recognition.start()
+            recognition.onend = () => {
+                // console.log("...continue listening...")
+                recognition.start()
+            }
+        } else {
+            recognition.stop()
+            recognition.onend = () => {
+                // console.log("Stopped listening per click")
+            }
         }
+
+        // recognition.onstart = () => {
+        // console.log("Listening!")
+        // }
+
+        let finalTranscript = ''
+        recognition.onresult = event => {
+            let interimTranscript = ''
+
+            for (let i = event.resultIndex; i < event.results.length; i++) {
+                const transcript = event.results[i][0].transcript;
+                console.log(transcript)
+                this.setState({ speakWord: transcript });
+                this.checkWords(transcript);
+
+
+                if (event.results[i].isFinal) finalTranscript += transcript + ' ';
+                else interimTranscript += transcript;
+            }
+
+
+            const transcriptArr = finalTranscript.split(' ')
+            const stopCmd = transcriptArr.slice(-3, -1)
+
+            if (stopCmd[0] === 'stop' && stopCmd[1] === 'listening') {
+                recognition.stop()
+                recognition.onend = () => {
+                    const finalText = transcriptArr.slice(0, -3).join(' ')
+                }
+            }
+        }
+
+
+        recognition.onerror = event => {
+            console.log("Error occurred in recognition: " + event.error)
+        };
+    }
+
+    checkWords = (word) => {
+        // const wordsData = this.state.dataForGame.map((data) => data.word);
+        const correctWords = this.state.correctWords.slice();
+        this.state.dataForGame.forEach((wordData) => {
+            if (wordData.word.toLowerCase() === word.toLowerCase()) {
+                correctWords.push(word.toLowerCase());
+                this.setState({
+                    correctWords,
+                    activeImageUrl: `https://raw.githubusercontent.com/aidfromdeagland/rslang-data/master/${wordData.wordImage}`,
+                    isClickedCard: true,
+                    activeTranslate: wordData.wordTranslate,
+                });
+            }
+        });
     }
 
     render() {
@@ -356,6 +445,7 @@ export class GameSpeakit extends Component {
             activeAudioUrl,
             activeImageUrl,
             activeTranslate,
+            correctWords,
             //     sentence,
             //     sentenceForPuzzle,
             //     translateSentence,
@@ -365,6 +455,7 @@ export class GameSpeakit extends Component {
             level,
             page,
             isGameModeTrain,
+            speakWord,
             //     isAutoPronunciation,
             //     isPicture,
             //     image,
@@ -396,7 +487,7 @@ export class GameSpeakit extends Component {
                         <ul className="cards-container">
                             <li className="scene">
                                 <img className="scene__image" alt="image" src={isClickedCard ? activeImageUrl : question} />
-                                <p className="scene__translation">{activeTranslate}</p>
+                                <p className={isGameModeTrain ? 'scene__translation' : 'scene__translation scene__translation_game'}>{activeTranslate}</p>
                             </li>
                             {dataForGame.map((wordData, index) => (
                                 <ItemWord
@@ -410,6 +501,8 @@ export class GameSpeakit extends Component {
                                     activeAudioUrl={activeAudioUrl}
                                     activeImageUrl={activeImageUrl}
                                     isGameModeTrain={isGameModeTrain}
+                                    speakWord={speakWord}
+                                    correctWords={correctWords}
                                 />
                             ))}
                         </ul>
