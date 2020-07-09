@@ -97,7 +97,12 @@ export class ItemWord extends Component {
                 //     : speakWord && speakWord.toLowerCase() === wordData.word
                 //         ? 'card card_match'
                 //         : 'card'}
-                onClick={() => this.handleClickCard(cardIndex, wordData.wordAudio, wordData.wordImage, wordData.wordTranslate)}
+                onClick={() => {
+                    if (!isGameModeTrain) {
+                        return null;
+                    }
+                    return this.handleClickCard(cardIndex, wordData.wordAudio, wordData.wordImage, wordData.wordTranslate)
+                }}
             >
                 <p className="card__word">{wordData.word}</p>
                 <p className="card__transcription">{wordData.wordTranscription}</p>

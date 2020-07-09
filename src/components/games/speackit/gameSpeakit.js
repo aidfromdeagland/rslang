@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './startPage.scss';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import { ItemWord } from './itemWord';
 import './sass/blocks/card.scss';
 import './sass/scaffolding.scss';
@@ -10,18 +10,12 @@ import './sass/blocks/main.scss';
 import './sass/blocks/scene.scss';
 import question from '../../../assets/images/speakit/question-mark.png';
 import { Dropdown } from './dropdown/dropDown';
-
-// import { Dropdown } from './dropDown/DropDown';
-// import { Checkbox } from './checkBox/checkBox';
 import { WordService } from '../../../services/wordServices';
 import { Spinner } from '../../shared/spinner';
-// import './game-puzzle.scss';
-// import { GameBoardAction } from './gameBoardAction';
-// import { ButtonsBlock } from './buttonsGame';
-// import { ModalResult } from './modalStatistics/modalResult';
+import { ModalResult } from './modalResalt/modalResult';
 import { SettingService } from '../../../services/settingServices';
 import { settingsDefault } from '../../../constants/globalConstants';
-// import { StatisticService } from '../../../services/statisticServices';
+import { StatisticService } from '../../../services/statisticServices';
 import { Button } from '../../shared/button';
 
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -34,42 +28,21 @@ recognition.interimResults = false;
 recognition.continuous = false;
 recognition.maxAlternatives = 3;
 
-// const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-// const recognition = new SpeechRecognition()
-
-// recognition.continous = true
-// recognition.interimResults = true
-// recognition.lang = 'en-US'
-
 export class GameSpeakit extends Component {
     constructor(props) {
         super(props);
-        // this.statistic = [];
-        // this.results = {
-        //     know: [],
-        //     dontKnow: [],
-        // };
         this.state = {
             level: 1,
             page: 1,
-            wordCount: 0,
             haveWords: false,
             dataForGame: [],
             isGameModeTrain: true,
             isClickedCard: false,
             indexClickedCard: null,
             listening: false,
+            totalSpokenWords: 0,
             correctWords: [],
-
-            //     isCheckBtn: false,
-            //     isContinueBtn: false,
-            //     isDontKnowBtn: true,
-            //     isResultBtn: false,
-            //     isClickedDontKnow: false,
-            //     isAutoPronunciation: true,
-            //     isPicture: true,
-            //     isRoundEnd: false,
-            //     isNext: true,
+            isRoundEnd: false,
         };
     }
 
@@ -77,22 +50,17 @@ export class GameSpeakit extends Component {
         const { haveWords } = this.state;
         if (!haveWords) {
             this.loadSettings();
-            // this.loadStatistic();
+            this.loadStatistic();
         }
     }
 
     componentDidUpdate() {
         const {
             haveWords,
-            isNext,
-            wordCount,
         } = this.state;
         if (!haveWords) {
             this.loadWords();
         }
-        // if (!isNext) {
-        //     this.createDataForGame(wordCount);
-        // }
     }
 
     loadSettings = async () => {
@@ -118,43 +86,36 @@ export class GameSpeakit extends Component {
         SettingService.put(settings);
     }
 
-    // loadStatistic = async () => {
-    //     this.statistic = await StatisticService.get();
-    //     this.gameStatistic = this.statistic.optional.gamePuzzle
-    //         ? JSON.parse(this.statistic.optional.gamePuzzle)
-    //         : [];
-    // }
+    loadStatistic = async () => {
+        this.statistic = await StatisticService.get();
+        this.gameStatistic = this.statistic.optional.speakit
+            ? JSON.parse(this.statistic.optional.speakit)
+            : [];
+    }
 
-    // putStatistic = () => {
-    //     const { optional } = this.statistic;
-    //     const gameStatistic = JSON.stringify(this.gameStatistic);
-    //     optional.gamePuzzle = gameStatistic;
-    //     const statistic = StatisticService.createObject(this.statistic.learnedWords, optional);
-    //     StatisticService.put(statistic);
-    // }
+    putStatistic = () => {
+        const gameStatistic = JSON.stringify(this.gameStatistic);
+        this.statistic.optional.speakit = gameStatistic;
+        StatisticService.put(this.statistic);
+    }
 
-    // addStatisticsData = (level, page) => {
-    //     const options = {
-    //         day: 'numeric',
-    //         month: 'long',
-    //         hour: 'numeric',
-    //         minute: 'numeric',
-    //         second: 'numeric',
-    //         hour12: false,
-    //     };
-    //     const date = new Date();
-    //     const dateString = date.toLocaleString('en', options);
-    //     const timeStamp = date.getTime();
-    //     const statisticsField = {
-    //         date: timeStamp,
-    //         group: level,
-    //         page,
-    //         incorrect: this.results.dontKnow.length,
-    //         correct: this.results.know.length,
-    //     };
-    //     this.gameStatistic.push(statisticsField);
-    //     this.putStatistic();
-    // }
+    addStatisticsData = (level, page) => {
+        const {
+            totalSpokenWords,
+            correctWords,
+        } = this.state;
+        const date = new Date();
+        const timeStamp = date.getTime();
+        const statisticsField = {
+            date: timeStamp,
+            group: level,
+            page,
+            incorrect: totalSpokenWords - correctWords.length,
+            correct: correctWords.length,
+        };
+        this.gameStatistic.push(statisticsField);
+        this.putStatistic();
+    }
 
     loadWords = async () => {
         const {
@@ -164,7 +125,6 @@ export class GameSpeakit extends Component {
         const {
             level,
             page,
-            wordCount,
         } = this.state;
         if (isGameWithLevels) {
             const calculatingPage = Math.floor((page - 1) / 2);
@@ -172,14 +132,15 @@ export class GameSpeakit extends Component {
             this.allWords = await WordService.getWords(calculatingLevel, calculatingPage);
         }
         if (isGameWithUserWords) {
-            const data = await WordService.getUserWords();
-            this.allWords = this.getRandomData(data);
+            const totalLearnedWordsQuery = { 'userWord.optional.isDeleted': false };
+            const userWords = WordService.getUserAggWords('', totalLearnedWordsQuery, 3600);
+            this.allWords = this.getRandomData(userWords);
         }
-        this.createDataForGame(wordCount);
+        this.createDataForGame();
         this.setState({ haveWords: true });
     }
 
-    createDataForGame = (wordCount) => {
+    createDataForGame = () => {
         const {
             isGameWithUserWords,
             isGameWithLevels,
@@ -197,7 +158,6 @@ export class GameSpeakit extends Component {
             dataForGameRound = this.allWords.slice();
         }
 
-        console.log(dataForGameRound)
         this.filterData = dataForGameRound.map((data) => ({
             word: data.word,
             wordTranslate: data.wordTranslate,
@@ -206,71 +166,26 @@ export class GameSpeakit extends Component {
             wordId: data.id,
             wordImage: data.image,
         }));
-        console.log(this.filterData)
-        // this.wordsTranslate = dataForGameRound.map((data) => data.wordTranslate);
-        // this.wordsAudio = dataForGameRound.map((data) => data.audio);
-        // this.wordsTranscription = dataForGameRound.map((data) => data.transcription);
-        // this.sentence = wordsForGameRound[wordCount].textExample.replace(/(<([^>]+)>)/g, '');
-        // this.sentenceForPuzzle = this.mixWords(this.sentence);
-        // this.translateSentence = wordsForGameRound[wordCount].textExampleTranslate;
-        // this.audioSentence = wordsForGameRound[wordCount].audioExample;
-        // this.image = wordsForGameRound[wordCount].image;
         this.setState({
             dataForGame: this.filterData,
-            // sentence: this.sentence,
-            // sentenceForPuzzle: this.sentenceForPuzzle,
-            // translateSentence: this.translateSentence,
-            // audioSentence: this.audioSentence,
-            // image: this.image,
-            // isNext: true,
         });
     }
 
-    // mixWords = (sentence) => {
-    //     const newSentence = sentence.split(' ');
-    //     const randomSentence = [];
-    //     for (let i = newSentence.length - 1; i >= 0; i -= 1) {
-    //         const randomIndex = this.randomInteger(0, i);
-    //         randomSentence.push(newSentence[randomIndex]);
-    //         newSentence.splice(randomIndex, 1);
-    //     }
-    //     return randomSentence.join(' ');
-    // }
+    getRandomData = (data) => {
+        const newData = data.slice();
+        const randomData = [];
+        for (let i = 9; i >= 0; i -= 1) {
+            const randomIndex = this.randomInteger(0, newData.length - 1);
+            randomData.push(newData[randomIndex]);
+            newData.splice(randomIndex, 1);
+        }
+        return randomData;
+    }
 
-    // getRandomData = (data) => {
-    //     const newData = data.slice();
-    //     const randomData = [];
-    //     for (let i = 9; i >= 0; i -= 1) {
-    //         const randomIndex = this.randomInteger(0, newData.length - 1);
-    //         randomData.push(newData[randomIndex]);
-    //         newData.splice(randomIndex, 1);
-    //     }
-    //     return randomData;
-    // }
-
-    // randomInteger = (min, max) => {
-    //     const rand = min - 0.5 + Math.random() * (max - min + 1);
-    //     return Math.round(rand);
-    // }
-
-    // showButton = (name, boolean) => {
-    //     this.setState({ [name]: boolean });
-    // }
-
-    // clickDontKnow = () => {
-    //     this.setState({ isClickedDontKnow: true });
-    // }
-
-    // getNextWord = (count) => {
-    //     this.setState({
-    //         wordCount: count,
-    //         isCheckBtn: false,
-    //         isContinueBtn: false,
-    //         isDontKnowBtn: true,
-    //         isResultBtn: false,
-    //         isNext: false,
-    //     });
-    // }
+    randomInteger = (min, max) => {
+        const rand = min - 0.5 + Math.random() * (max - min + 1);
+        return Math.round(rand);
+    }
 
     selectLevel = (level, page) => {
         const {
@@ -286,60 +201,23 @@ export class GameSpeakit extends Component {
                 isGameModeTrain: true,
                 listening: false,
                 isClickedCard: false,
-                // wordCount: 0,
+                totalSpokenWords: 0,
             }, this.handleListening);
         }
         if (isGameWithUserWords) {
             this.setState(() => ({
-                // wordCount: 0,
                 haveWords: false,
                 correctWords: [],
                 isGameModeTrain: true,
                 listening: false,
                 isClickedCard: false,
+                totalSpokenWords: 0,
             }), this.handleListening);
         }
-        // this.results.know = [];
-        // this.results.dontKnow = [];
         this.putSettings(level, page);
     }
 
-    // checkBoxHandle = (prop) => {
-    //     this.setState((prev) => ({
-    //         [prop]: !prev[prop],
-    //     }));
-    // }
-
-    // addToResults = (result, sentence, audioUrl) => {
-    //     this.results[result].push({ sentence, audioUrl });
-    // }
-
-    // showResults = () => {
-    //     const { level, page } = this.state;
-    //     this.setState({ isRoundEnd: true });
-    //     this.addStatisticsData(level, page);
-    // }
-
-    // handleByNextRound = () => {
-    //     const {
-    //         level,
-    //         page,
-    //     } = this.state;
-    //     this.setState({ isRoundEnd: false });
-    //     if (level === 6 && page === 60) {
-    //         this.selectLevel(1, 1);
-    //     }
-    //     if (page < 60) {
-    //         this.selectLevel(level, parseFloat(page) + 1);
-    //     } else {
-    //         this.selectLevel(level + 1, 1);
-    //     }
-    //     this.results.know = [];
-    //     this.results.dontKnow = [];
-    // }
-
     handleClickCard = (index, audioUrl, imageUrl, translate) => {
-        console.log('asd')
         this.setState({
             isClickedCard: true,
             indexClickedCard: index,
@@ -355,11 +233,14 @@ export class GameSpeakit extends Component {
             listening: !prev.listening,
             correctWords: [],
             isClickedCard: false,
+            totalSpokenWords: 0,
         }), this.handleListening);
-        // this.handleListening();
     }
 
     handleListening = () => {
+        const {
+            listening,
+        } = this.state;
         this.setState({
             isClickedCard: false,
             indexClickedCard: null,
@@ -368,61 +249,30 @@ export class GameSpeakit extends Component {
             activeTranslate: null,
         });
 
-        // console.log('listening?', this.state.listening)
-
-        if (this.state.listening) {
-            recognition.start()
+        if (listening) {
+            recognition.start();
             recognition.onend = () => {
-                // console.log("...continue listening...")
-                recognition.start()
-            }
+                recognition.start();
+            };
         } else {
-            recognition.stop()
+            recognition.stop();
             recognition.onend = () => {
-                // console.log("Stopped listening per click")
-            }
+                recognition.stop();
+            };
         }
 
-        // recognition.onstart = () => {
-        // console.log("Listening!")
-        // }
-
-        let finalTranscript = ''
-        recognition.onresult = event => {
-            let interimTranscript = ''
-
-            for (let i = event.resultIndex; i < event.results.length; i++) {
-                const transcript = event.results[i][0].transcript;
-                console.log(transcript)
+        recognition.onresult = (event) => {
+            for (let i = event.resultIndex; i < event.results.length; i += 1) {
+                const { transcript } = event.results[i][0];
                 this.setState({ speakWord: transcript });
                 this.checkWords(transcript);
-
-
-                if (event.results[i].isFinal) finalTranscript += transcript + ' ';
-                else interimTranscript += transcript;
             }
-
-
-            const transcriptArr = finalTranscript.split(' ')
-            const stopCmd = transcriptArr.slice(-3, -1)
-
-            if (stopCmd[0] === 'stop' && stopCmd[1] === 'listening') {
-                recognition.stop()
-                recognition.onend = () => {
-                    const finalText = transcriptArr.slice(0, -3).join(' ')
-                }
-            }
-        }
-
-
-        recognition.onerror = event => {
-            console.log("Error occurred in recognition: " + event.error)
         };
     }
 
     checkWords = (word) => {
-        // const wordsData = this.state.dataForGame.map((data) => data.word);
         const correctWords = this.state.correctWords.slice();
+        let totalSpokenWords = this.state.totalSpokenWords;
         this.state.dataForGame.forEach((wordData) => {
             if (wordData.word.toLowerCase() === word.toLowerCase()) {
                 correctWords.push(word.toLowerCase());
@@ -430,9 +280,42 @@ export class GameSpeakit extends Component {
                     correctWords,
                     activeImageUrl: `https://raw.githubusercontent.com/aidfromdeagland/rslang-data/master/${wordData.wordImage}`,
                     isClickedCard: true,
-                    activeTranslate: wordData.wordTranslate,
                 });
+                if (correctWords.length === 10) {
+                    this.handleRoundEnd();
+                }
             }
+        });
+        totalSpokenWords += 1;
+        this.setState({
+            totalSpokenWords,
+            activeTranslate: word.toLowerCase(),
+        });
+    }
+
+    handleRoundEnd = () => {
+        const { level, page } = this.state;
+        this.setState({ isRoundEnd: true });
+        this.addStatisticsData(level, page);
+    }
+
+    handleByNextRound = () => {
+        const {
+            level,
+            page,
+        } = this.state;
+        if (level === 6 && page === 60) {
+            this.selectLevel(1, 1);
+        }
+        if (page < 60) {
+            this.selectLevel(level, parseFloat(page) + 1);
+        } else {
+            this.selectLevel(level + 1, 1);
+        }
+        this.setState({
+            isRoundEnd: false,
+            correctWords: [],
+            totalSpokenWords: 0,
         });
     }
 
@@ -446,26 +329,12 @@ export class GameSpeakit extends Component {
             activeImageUrl,
             activeTranslate,
             correctWords,
-            //     sentence,
-            //     sentenceForPuzzle,
-            //     translateSentence,
-            //     audioSentence,
-            //     isNext,
-            //     isRoundEnd,
+            totalSpokenWords,
+            isRoundEnd,
             level,
             page,
             isGameModeTrain,
             speakWord,
-            //     isAutoPronunciation,
-            //     isPicture,
-            //     image,
-            //     isClickedDontKnow,
-            //     wordCount,
-            //     isContinueBtn,
-            //     isCheckBtn,
-            //     isDontKnowBtn,
-            //     isResultBtn,
-
         } = this.state;
         const {
             isGameWithLevels,
@@ -473,6 +342,13 @@ export class GameSpeakit extends Component {
         if (haveWords) {
             return (
                 <div>
+                    {isRoundEnd && (
+                        <ModalResult
+                            totalSpokenWords={totalSpokenWords}
+                            correctWords={correctWords.length}
+                            handleByNextRound={this.handleByNextRound}
+                        />
+                    )}
                     <div className="game-speakit__header">
                         {isGameWithLevels && (
                             <Dropdown
@@ -483,17 +359,16 @@ export class GameSpeakit extends Component {
                         )}
                     </div>
                     <div className="content">
-                        <span className="content__points"> </span>
+                        <span className="content__points">{'⭐'.repeat(correctWords.length)}</span>
                         <ul className="cards-container">
                             <li className="scene">
-                                <img className="scene__image" alt="image" src={isClickedCard ? activeImageUrl : question} />
+                                <img className="scene__image" alt="word" src={isClickedCard ? activeImageUrl : question} />
                                 <p className={isGameModeTrain ? 'scene__translation' : 'scene__translation scene__translation_game'}>{activeTranslate}</p>
                             </li>
                             {dataForGame.map((wordData, index) => (
                                 <ItemWord
                                     key={wordData.wordId}
                                     wordData={wordData}
-                                    // onClick={() => this.handleClickCard(index)}
                                     cardIndex={index}
                                     indexClickedCard={indexClickedCard}
                                     isClickedCard={isGameModeTrain ? isClickedCard : null}

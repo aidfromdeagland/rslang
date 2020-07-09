@@ -16,7 +16,8 @@ export class StartPage extends Component {
     }
 
     componentDidMount() {
-        const userWords = WordService.getUserWords();
+        const totalLearnedWordsQuery = { 'userWord.optional.isDeleted': false };
+        const userWords = WordService.getUserAggWords('', totalLearnedWordsQuery, 3600);
         if (userWords && userWords.length >= 9) {
             this.setState(() => ({ haveUserWords: true }));
         }

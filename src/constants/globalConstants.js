@@ -25,3 +25,9 @@ export const settingsDefault = {
         speakit: '{"group":1,"page":1}',
     },
 };
+
+export const statisticsDefault = {
+    learnedWords: 0,
+    optional: {
+    },
+};
