@@ -23,27 +23,27 @@ export class ModalSettings extends Component {
                         <div className="modal-body">
                             <div className="main-settings">
                                 <h3>Main settings</h3>
-                                <Checkbox text="learn by word" onChange={() => onchangeCheckbox('word')} isChecked={settings.word} isInvalidSettings={isInvalidSettings} />
-                                <Checkbox text="learn on offer" onChange={() => onchangeCheckbox('textExample')} isChecked={settings.textExample} isInvalidSettings={isInvalidSettings} />
-                                <Checkbox text="learn by the meaning" onChange={() => onchangeCheckbox('textMeaning')} isChecked={settings.textMeaning} isInvalidSettings={isInvalidSettings} />
+                                <Checkbox text="word translation" onChange={() => onchangeCheckbox('showWordTranslate')} isChecked={settings.showWordTranslate} isInvalidSettings={isInvalidSettings} />
+                                <Checkbox text="word example of usage" onChange={() => onchangeCheckbox('showSentenceExample')} isChecked={settings.showSentenceExample} isInvalidSettings={isInvalidSettings} />
+                                <Checkbox text="word meaning" onChange={() => onchangeCheckbox('showSentenceMeaning')} isChecked={settings.showSentenceMeaning} isInvalidSettings={isInvalidSettings} />
                             </div>
                             <div className="additional-settings">
                                 <h3>Additional settings</h3>
-                                <Checkbox text="Show transcription" onChange={() => onchangeCheckbox('showTranscription')} isChecked={settings.showTranscription} />
-                                <Checkbox text="Show picture" onChange={() => onchangeCheckbox('showPicture')} isChecked={settings.showPicture} />
+                                <Checkbox text="word transcription" onChange={() => onchangeCheckbox('showWordTranscription')} isChecked={settings.showWordTranscription} />
+                                <Checkbox text="word illustration" onChange={() => onchangeCheckbox('showWordImage')} isChecked={settings.showWordImage} />
                             </div>
                             <div className="number-words-cards">
                                 <div className="number-words">
-                                    <span>Learn words a day:  </span>
-                                    <Button title="-" onClick={() => onChangeInput('numberLearnWord', '-')} />
-                                    <input type="number" min="1" max="50" name="numberLearnWord" value={settings.numberLearnWord} readOnly />
-                                    <Button title="+" onClick={() => onChangeInput('numberLearnWord', '+')} />
+                                    <span>new words: </span>
+                                    <Button title="-" onClick={() => onChangeInput('newWords', '-')} />
+                                    <input type="number" min="1" max="50" name="numberLearnWord" value={settings.newWords} readOnly />
+                                    <Button title="+" onClick={() => onChangeInput('newWords', '+')} />
                                 </div>
                                 <div className="number-cards">
-                                    <span>Number of cards a day:  </span>
-                                    <Button title="-" onClick={() => onChangeInput('numberLearnCard', '-')} />
-                                    <input type="number" min="1" max="50" name="numberLearnCards" value={settings.numberLearnCard} readOnly />
-                                    <Button title="+" onClick={() => onChangeInput('numberLearnCard', '+')} />
+                                    <span>total words:  </span>
+                                    <Button title="-" onClick={() => onChangeInput('totalWords', '-')} />
+                                    <input type="number" min="1" max="50" name="numberLearnCards" value={settings.totalWords} readOnly />
+                                    <Button title="+" onClick={() => onChangeInput('totalWords', '+')} />
                                 </div>
                             </div>
                         </div>

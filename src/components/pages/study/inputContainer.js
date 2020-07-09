@@ -23,7 +23,6 @@ export class InputContainer extends Component {
                         onChange={(e) => handleChange(e)}
                     />
                 </form>
-
             </span>
         );
     }
