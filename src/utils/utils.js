@@ -38,7 +38,7 @@ const removeItemOnce = (arr, value) => {
 
 export const convertStatisticJson = (statistic) => {
     const statisticJson = JSON.stringify(statistic);
-    if (statisticJson.length > 500) {
+    if (statisticJson.length > MAX_SYMBOLS_IN_GAME_STATISTICS) {
         // remove the worst result
         const getPrecent = statistic[0].Score
             ? (stat) => stat.Score
