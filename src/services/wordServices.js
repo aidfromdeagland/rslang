@@ -178,11 +178,9 @@ export class WordService {
         throw new ServiceError(errorText, rawResponse.status);
     }
 
-    static async getUserAggWords(group = undefined, filter = '', wordsPerPage = 20) {
-        const groupQuery = group === undefined ? '' : `group=${group}&`;
-
-        const url = `${backend}/users/${User.userId}/aggregatedWords?`
-            + `${groupQuery}filter=${JSON.stringify(filter)}&wordsPerPage=${wordsPerPage}`;
+    static async getUserAggWords(group, filter = '', wordsPerPage = 20) {
+        const url = `${backend}/users/${User.userId}/aggregatedWords`
+            + `?group=${group}&filter=${JSON.stringify(filter)}&wordsPerPage=${wordsPerPage}`;
         const rawResponse = await fetch(url, {
             method: 'GET',
             withCredentials: true,
