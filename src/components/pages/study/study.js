@@ -7,6 +7,7 @@ import { Answer } from './answer';
 import { WordService } from '../../../services/wordServices';
 import { SettingService } from '../../../services/settingServices';
 import { Spinner } from '../../shared/spinner';
+import { Progress } from './progress';
 
 const audioPrefixMap = {
     showWordTranslate: 'audio',
@@ -24,8 +25,9 @@ export class Study extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            newWords: 0,
-            totalWords: 0,
+            learnedWordsQuantity: 0,
+            needToLearnWordsQuantity: 0,
+            totalLearnedWordsQuantity: 0,
             wordCount: 0,
             valueInput: '',
             isCorrectWord: null,
@@ -47,16 +49,14 @@ export class Study extends Component {
     getSettings = async () => {
         const settings = await SettingService.get();
         this.settings = settings.optional;
+        console.log(this.settings);
         const wordsAggResponse = await WordService.getUserAggWords(undefined, '', 5);
         this.words = wordsAggResponse[0].paginatedResults;
-        this.userWords = await WordService.getUserWords();
-        console.log(this.words, this.userWords);
         this.createCard();
         this.setState({
-            newWords: this.settings.newWords,
-            totalWords: this.settings.totalWords,
             isLoadWords: true,
             isLoadSettings: true,
+            needToLearnWordsQuantity: this.settings.totalWords,
         });
     }
 
@@ -209,7 +209,7 @@ export class Study extends Component {
 
     render() {
         const {
-            isLoadSettings, isLoadWords, valueInput, isCorrectWord, showEvaluation,
+            isLoadSettings, isLoadWords, valueInput, isCorrectWord, showEvaluation, learnedWordsQuantity, needToLearnWordsQuantity, totalLearnedWordsQuantity,
         } = this.state;
         if (isLoadSettings && isLoadWords) {
             return (
@@ -233,9 +233,7 @@ export class Study extends Component {
                                 <div className="card-input">
                                     <Answer
                                         context={this.dataForCard.context}
-                                        userWords={this.userWords}
                                         word={this.dataForCard.word}
-                                        wordId={this.dataForCard.idWord}
                                         wordAudio={this.dataForCard.audioWord}
                                         contextAudio={this.dataForCard.audioContext}
                                         checkWord={this.checkWord}
@@ -248,10 +246,12 @@ export class Study extends Component {
                                         currentWord={this.words[this.state.wordCount]}
                                     />
                                 </div>
-                                <div className="translation-container">
+                                {
+                                    /* <div className="translation-container">
                                     <div className="translation">{this.dataForCard.wordTranslate}</div>
                                     <img className="dynamic-icon" src={dynamic} alt="dynamic" />
-                                </div>
+                                </div> */
+                                }
                             </div>
                             <div className="buttons-block">
                                 <Button className="button delete-btn learn-btn" title="Delete" />
@@ -265,6 +265,7 @@ export class Study extends Component {
                             </Button>
                         </div>
                     </div>
+                    <Progress learnedWordsQuantity={learnedWordsQuantity} needToLearnWordsQuantity={needToLearnWordsQuantity} totalLearned={totalLearnedWordsQuantity} />
                 </div>
             );
         }

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './main.scss';
 import { Options } from './options';
-import { Progress } from './progress';
+import { Progress } from '../study/progress';
 import { SettingService } from '../../../services/settingServices';
 import { settingsDefault } from '../../../constants/globalConstants';
 
@@ -165,7 +165,6 @@ export class Main extends Component {
                         checkSettings={this.checkSettings}
                         isInvalidSettings={isInvalidSettings}
                     />
-                    <Progress />
                 </div>
             </div>
         );
