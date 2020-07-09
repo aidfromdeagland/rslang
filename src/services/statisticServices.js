@@ -12,6 +12,21 @@ export class StatisticService {
         };
     }
 
+    static createGameStat(correct, incorrect, group, page, score)/*: IStatisticGame */ {
+        const result = { Date: Date.now(), Correct: correct, Incorrect: incorrect };
+        if (group !== undefined) {
+            result.Group = group;
+        }
+        if (page !== undefined) {
+            result.Page = page;
+        }
+        if (score !== undefined) {
+            result.Score = score;
+        }
+
+        return result;
+    }
+
     static async get() {
         const rawResponse = await fetch(`${backend}/users/${User.userId}/statistics`, {
             method: 'GET',
@@ -29,7 +44,11 @@ export class StatisticService {
             throw new ServiceError('Access token is missing or invalid', rawResponse.status);
         }
         if (rawResponse.status === 404) {
-            throw new ServiceError('Statistics not found', rawResponse.status);
+            return {
+                learnedWords: 0,
+                optional: {
+                },
+            };
         }
 
         const errorText = await rawResponse.text();
@@ -37,6 +56,8 @@ export class StatisticService {
     }
 
     static async put(statistic /* IStatistic */) {
+        const save = statistic;
+        delete save.id;
         const rawResponse = await fetch(`${backend}/users/${User.userId}/statistics`, {
             method: 'PUT',
             withCredentials: true,
@@ -45,7 +66,7 @@ export class StatisticService {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(statistic),
+            body: JSON.stringify(save),
         });
         if (rawResponse.ok) {
             const content = await rawResponse.json();
@@ -70,4 +91,16 @@ export class StatisticService {
 // }
 
 // interface IOptional {
+//    AudioCall: JSON(IStatisticGame[]),
+//    Savanna: JSON(IStatisticGame[]),
+//    Puzzle: JSON(IStatisticGame[]),
+// }
+
+// interface IStatisticGame {
+//    Date:number,
+//    Group: number,
+//    Page: number?,
+//    Correct: number,
+//    Incorrect: number,
+//    Score: number?,
 // }

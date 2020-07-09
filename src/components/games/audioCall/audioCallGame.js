@@ -17,6 +17,7 @@ export class AudioCallGame extends Component {
 
     componentDidMount() {
         this.handleSpeak();
+        this.setDirectionWords();
         let isPressed = false;
 
         this.keydown = (e) => {
@@ -36,11 +37,23 @@ export class AudioCallGame extends Component {
             return;
         }
         this.handleSpeak();
+        this.setDirectionWords();
     }
 
     componentWillUnmount() {
         document.removeEventListener('keydown', this.keydown);
         document.removeEventListener('keyup', this.keyup);
+    }
+
+    setDirectionWords() {
+        if (this.state.isDirectionColumn) {
+            return;
+        }
+        const isDirectionColumn = this.audioCallContainer.offsetWidth
+            === this.wordListComponent.container.offsetWidth;
+        if (isDirectionColumn !== this.state.isDirectionColumn) {
+            this.setState({ isDirectionColumn });
+        }
     }
 
     getRound() {
@@ -87,14 +100,21 @@ export class AudioCallGame extends Component {
         }
 
         tryExecute(async () => {
-            this.setState({ selectedWord: false, pressNumber: undefined, round: this.getRound() });
+            this.setState({
+                selectedWord: false,
+                pressNumber: undefined,
+                round: this.getRound(),
+                isDirectionColumn: false,
+            });
         }, this.props.errorFunction);
     }
 
     render() {
-        const { round, selectedWord, pressNumber } = this.state;
+        const {
+            round, selectedWord, pressNumber, isDirectionColumn,
+        } = this.state;
         return (
-            <div className="audio-call" style={{ background: round.background }}>
+            <div className="audio-call" style={{ background: round.background }} ref={(el) => { this.audioCallContainer = el; }}>
                 <span
                     className={`audio-call__word-image ${selectedWord ? 'audio-call__word-image_show' : ''}`}
                     style={{ backgroundImage: `url("${MEDIA_PREFIX_URL + this.state.round.word.image}")` }}
@@ -104,11 +124,13 @@ export class AudioCallGame extends Component {
                     <span className="audio-call__quest-word">{this.state.round.word.word}</span>
                 </div>
                 <WordList
+                    ref={(el) => { this.wordListComponent = el; }}
                     words={round.gameWords}
                     wordId={round.word.id}
                     selected={(isCorrect) => this.handleSelectWord(round.word, isCorrect)}
                     selectCorrect={selectedWord}
                     pressNumber={pressNumber}
+                    isDirectionColumn={isDirectionColumn}
                 />
                 {this.state.selectedWord
                     ? <button className="audio-call__button" type="button" onClick={() => this.handleNextWord()}>→→→</button>

@@ -6,7 +6,7 @@ import { Word } from './word';
 export class WordList extends Component {
     render() {
         const {
-            words, wordId, selected, selectCorrect, pressNumber,
+            words, wordId, selected, selectCorrect, pressNumber, isDirectionColumn,
         } = this.props;
 
         const wordsRender = words.map((w, i) => (
@@ -21,13 +21,21 @@ export class WordList extends Component {
                 pressNumber={pressNumber}
             />
         ));
-        return (<div className="audio-call__words">{wordsRender}</div>);
+        return (
+            <div
+                className={`audio-call__words ${isDirectionColumn ? 'audio-call__words_column' : ''}`}
+                ref={(el) => { this.container = el; }}
+            >
+                {wordsRender}
+            </div>
+        );
     }
 }
 
 WordList.defaultProps = {
     selectCorrect: false,
-    pressNumber: undefined,
+    pressNumber: null,
+    isDirectionColumn: false,
 };
 
 WordList.propTypes = {
@@ -39,4 +47,5 @@ WordList.propTypes = {
     selected: PropTypes.func.isRequired,
     selectCorrect: PropTypes.bool,
     pressNumber: PropTypes.number,
+    isDirectionColumn: PropTypes.bool,
 };
