@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { InputContainer } from './inputContainer';
+import { DifficultyEvaluation } from './difficulty-evaluation';
 
 export class Answer extends Component {
     createContext = () => {
@@ -34,9 +35,11 @@ export class Answer extends Component {
     }
 
     render() {
+        const { showEvaluation, handleEvaluate, currentWord } = this.props;
         return (
             <div className="answer-container">
                 {this.createContext()}
+                {showEvaluation ? <DifficultyEvaluation handleEvaluate={handleEvaluate} currentWord={currentWord} /> : null}
             </div>
         );
     }
