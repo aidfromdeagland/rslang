@@ -1,0 +1,26 @@
+.difficulty-evaluation {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: 80vw;
+  display: flex;
+
+  .difficulty-button {
+    width: 130px;
+    height: 30px;
+    background-color: #092c70;
+
+    &_easy {
+      background-color: #00f102;
+    }
+    &_normal {
+      background-color: #092c70;
+    }
+    &_difficult {
+      background-color: #e08d9d;
+    }
+    &_again {
+      background-color: #d35e27;
+    }
+  }
+}

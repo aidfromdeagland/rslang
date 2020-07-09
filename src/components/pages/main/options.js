@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './main.scss';
-import { BrowserRouter as NavLink } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { Button } from '../../shared/button';
 import { ModalSettings } from './modal';
 
