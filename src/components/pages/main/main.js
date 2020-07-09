@@ -4,6 +4,7 @@ import { Options } from './options';
 import { Progress } from '../study/progress';
 import { SettingService } from '../../../services/settingServices';
 import { settingsDefault } from '../../../constants/globalConstants';
+import { Spinner } from '../../shared/spinner';
 
 export class Main extends Component {
     constructor(props) {
@@ -17,11 +18,10 @@ export class Main extends Component {
             notWordForLearn: false,
             isInvalidSettings: false,
         };
-        this.settings = settingsDefault;
     }
 
     componentDidMount() {
-        this.settings = this.getSettings();
+        this.getSettings();
     }
 
     getSettings = async () => {
@@ -151,6 +151,7 @@ export class Main extends Component {
             isOpenModal,
             isInvalidSettings,
         } = this.state;
+
         return (
             <div className="main-page">
                 <div className="main-page-container">

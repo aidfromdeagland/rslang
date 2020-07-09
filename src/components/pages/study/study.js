@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import './study.scss';
-import dynamic from '../../../assets/icons/dynamic.svg';
 import next from '../../../assets/images/next-arrow.png';
 import { Button } from '../../shared/button';
 import { Answer } from './answer';
@@ -43,20 +42,54 @@ export class Study extends Component {
     }
 
     componentDidMount() {
-        this.getSettings();
+        this.startTraining();
     }
 
     getSettings = async () => {
         const settings = await SettingService.get();
         this.settings = settings.optional;
         console.log(this.settings);
-        const wordsAggResponse = await WordService.getUserAggWords(undefined, '', 5);
-        this.words = wordsAggResponse[0].paginatedResults;
+    }
+
+    getWords = async () => {
+        const newWordsQuery = { userWord: null };
+        const totalLearnedWordsQuery = { 'userWord.optional.isDeleted': false };
+        const todayMidnightDate = new Date(Date.now()).setHours(23, 59, 59, 999);
+        const learnedWordsDateLimitedQuery = { $and: [{ 'userWord.optional.isDeleted': false, 'userWord.optional.nextDate': { $lt: todayMidnightDate } }] };
+
+        this.newWordsforTraining = [];
+        if (this.settings.newWords) {
+            const newWordsQuantity = this.settings.newWords;
+            const newWordsAggResponse = await WordService.getUserAggWords(
+                '', newWordsQuery, newWordsQuantity,
+            );
+            this.newWordsforTraining = newWordsAggResponse[0].paginatedResults;
+        }
+        this.learnedWordsForTraining = [];
+        if (this.settings.totalWords - this.settings.newWords > 0) {
+            const learnedWordsQuantity = this.settings.totalWords - this.settings.newWords;
+            const learnedWordsAggResponse = await WordService.getUserAggWords(
+                '', learnedWordsDateLimitedQuery, learnedWordsQuantity,
+            );
+            this.learnedWordsForTraining = learnedWordsAggResponse[0].paginatedResults;
+        }
+
+        this.words = this.newWordsforTraining.concat(this.learnedWordsForTraining);
+        console.log(this.words);
+
+        const totalLearnedWordsAggResponse = await WordService.getUserAggWords('', totalLearnedWordsQuery, 1);
+        const totalLearnedWords = totalLearnedWordsAggResponse[0].totalCount[0].count;
+        this.setState({ totalLearnedWordsQuantity: totalLearnedWords });
+    }
+
+    startTraining = async () => {
+        await this.getSettings();
+        await this.getWords();
         this.createCard();
         this.setState({
             isLoadWords: true,
             isLoadSettings: true,
-            needToLearnWordsQuantity: this.settings.totalWords,
+            needToLearnWordsQuantity: this.words.length,
         });
     }
 
@@ -121,6 +154,12 @@ export class Study extends Component {
 
                 this.audioPlayer.addEventListener('ended', () => {
                     if (this.state.showEvaluation === false) {
+                        if (this.state.isFirstTry) {
+                            this.setState((prev) => ({
+                                learnedWordsQuantity: prev.learnedWordsQuantity + 1,
+                                totalLearnedWordsQuantity: prev.totalLearnedWordsQuantity + 1,
+                            }));
+                        }
                         if (this.state.wordCount < this.words.length - 1) {
                             this.setState((prev) => ({
                                 wordCount: prev.wordCount + 1,
@@ -156,6 +195,8 @@ export class Study extends Component {
             if (this.state.wordCount < this.words.length - 1) {
                 this.setState((prev) => ({
                     wordCount: prev.wordCount + 1,
+                    learnedWordsQuantity: prev.learnedWordsQuantity + 1,
+                    totalLearnedWordsQuantity: prev.totalLearnedWordsQuantity + 1,
                 }));
                 this.createCard();
                 this.setState({
@@ -169,6 +210,10 @@ export class Study extends Component {
             }
         }
         this.setState({ showEvaluation: false });
+    }
+
+    handleClickToDifficult = () => {
+        console.log(this.words[this.state.wordCount]);
     }
 
     handleChange = (event) => {
@@ -188,7 +233,8 @@ export class Study extends Component {
     chooseLearnMethod = () => {
         const { showWordTranslate, showSentenceMeaning, showSentenceExample } = this.settings;
         const cardRenderVarieties = { showWordTranslate, showSentenceMeaning, showSentenceExample };
-        const selectredVariants = Object.keys(cardRenderVarieties).filter((setting) => this.settings[setting] === true);
+        const selectredVariants = Object.keys(cardRenderVarieties)
+            .filter((setting) => this.settings[setting] === true);
         const min = 0;
         const max = selectredVariants.length - 1;
         const randomNumb = this.randomInteger(min, max);
@@ -209,7 +255,8 @@ export class Study extends Component {
 
     render() {
         const {
-            isLoadSettings, isLoadWords, valueInput, isCorrectWord, showEvaluation, learnedWordsQuantity, needToLearnWordsQuantity, totalLearnedWordsQuantity,
+            isLoadSettings, isLoadWords, valueInput, isCorrectWord, showEvaluation,
+            learnedWordsQuantity, needToLearnWordsQuantity, totalLearnedWordsQuantity,
         } = this.state;
         if (isLoadSettings && isLoadWords) {
             return (
@@ -246,16 +293,10 @@ export class Study extends Component {
                                         currentWord={this.words[this.state.wordCount]}
                                     />
                                 </div>
-                                {
-                                    /* <div className="translation-container">
-                                    <div className="translation">{this.dataForCard.wordTranslate}</div>
-                                    <img className="dynamic-icon" src={dynamic} alt="dynamic" />
-                                </div> */
-                                }
                             </div>
                             <div className="buttons-block">
-                                <Button className="button delete-btn learn-btn" title="Delete" />
-                                <Button className="button hard-btn learn-btn" title="Add to hard" />
+                                <Button className="button delete-btn learn-btn" title="delete" />
+                                <Button className="button hard-btn learn-btn" title="difficult" />
                                 <Button className="button answer-btn learn-btn" title="Show Answer" onClick={this.handleClickShowAnswer} />
                             </div>
                         </section>
@@ -265,7 +306,11 @@ export class Study extends Component {
                             </Button>
                         </div>
                     </div>
-                    <Progress learnedWordsQuantity={learnedWordsQuantity} needToLearnWordsQuantity={needToLearnWordsQuantity} totalLearned={totalLearnedWordsQuantity} />
+                    <Progress
+                        learnedWordsQuantity={learnedWordsQuantity}
+                        needToLearnWordsQuantity={needToLearnWordsQuantity}
+                        totalLearnedWordsQuantity={totalLearnedWordsQuantity}
+                    />
                 </div>
             );
         }
