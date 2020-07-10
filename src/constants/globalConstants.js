@@ -1,4 +1,6 @@
 export const backend = 'https://afternoon-falls-25894.herokuapp.com';
+
+export const AUDIO_URL = 'https://raw.githubusercontent.com/mrJozhkinKot/rslang-data/master/';
 export const ALL_WORDS_COUNT = 3600;
 export const GROUP_WORDS_COUNT = 600;
 export const GROUP_COUNT = 6;

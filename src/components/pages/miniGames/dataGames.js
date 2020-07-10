@@ -9,33 +9,33 @@ const dataGames = [
     {
         title: 'SpeakIt',
         link: '/speakit',
-        imageSrc: `${speakitImg}`
+        imageSrc: `${speakitImg}`,
     },
     {
         title: 'English-puzzle',
         link: '/english-puzzle',
-        imageSrc: `${englishPuzzleImg}`
+        imageSrc: `${englishPuzzleImg}`,
     },
     {
         title: 'Savannah',
         link: '/savannah',
-        imageSrc: `${savannahImg}`
+        imageSrc: `${savannahImg}`,
     },
     {
         title: 'Audio call',
         link: '/audio-call',
-        imageSrc: `${audioCallImg}`
+        imageSrc: `${audioCallImg}`,
     },
     {
         title: 'Sprint',
         link: '/sprint',
-        imageSrc: `${sprintImg}`
+        imageSrc: `${sprintImg}`,
     },
     {
         title: 'Hangman',
         link: '/hangman',
-        imageSrc: `${hangmanImg}`
+        imageSrc: `${hangmanImg}`,
     },
-]
+];
 
 export default dataGames;
