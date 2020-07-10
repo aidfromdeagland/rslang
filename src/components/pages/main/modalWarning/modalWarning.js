@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import '../modal.scss';
+/* import '../modal.scss'; */
 import { Button } from '../../../shared/button';
 
 export class ModalWarning extends Component {
