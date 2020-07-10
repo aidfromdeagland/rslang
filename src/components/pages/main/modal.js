@@ -14,13 +14,13 @@ export class ModalSettings extends Component {
             isInvalidSettings,
         } = this.props;
         return (
-            <div id="openModal" className="modal">
-                <div className="modal-dialog">
-                    <div className="modal-content">
-                        <div className="modal-header">
-                            <Button className="close-modal close" onClick={closeModal} title="×" />
+            <div id="openModal" className="modal-study">
+                <div className="modal-study-dialog">
+                    <div className="modal-study-content">
+                        <div className="modal-study-header">
+                            <Button className="modal-study-close" onClick={closeModal} title="×" />
                         </div>
-                        <div className="modal-body">
+                        <div className="modal-study-body">
                             <div className="main-settings">
                                 <h3>Main settings</h3>
                                 <Checkbox text="word translation" onChange={() => onchangeCheckbox('showWordTranslate')} isChecked={settings.showWordTranslate} isInvalidSettings={isInvalidSettings} />
@@ -35,15 +35,15 @@ export class ModalSettings extends Component {
                             <div className="number-words-cards">
                                 <div className="number-words">
                                     <span>new words: </span>
-                                    <Button title="-" onClick={() => onChangeInput('newWords', '-')} />
+                                    <Button title="-" onClick={() => onChangeInput('newWords', '-')} className="counter-control counter-control_minus" />
                                     <input type="number" min="1" max="50" name="numberLearnWord" value={settings.newWords} readOnly />
-                                    <Button title="+" onClick={() => onChangeInput('newWords', '+')} />
+                                    <Button title="+" onClick={() => onChangeInput('newWords', '+')} className="counter-control counter-control_plus" />
                                 </div>
                                 <div className="number-cards">
                                     <span>total words:  </span>
-                                    <Button title="-" onClick={() => onChangeInput('totalWords', '-')} />
+                                    <Button title="-" onClick={() => onChangeInput('totalWords', '-')} className="counter-control counter-control_minus" />
                                     <input type="number" min="1" max="50" name="numberLearnCards" value={settings.totalWords} readOnly />
-                                    <Button title="+" onClick={() => onChangeInput('totalWords', '+')} />
+                                    <Button title="+" onClick={() => onChangeInput('totalWords', '+')} className="counter-control counter-control_plus" />
                                 </div>
                             </div>
                         </div>

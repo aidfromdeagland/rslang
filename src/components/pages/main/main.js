@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
 import './main.scss';
 import { Options } from './options';
-import { Progress } from '../study/progress';
 import { SettingService } from '../../../services/settingServices';
 import { settingsDefault } from '../../../constants/globalConstants';
-import { Spinner } from '../../shared/spinner';
 
 export class Main extends Component {
     constructor(props) {
