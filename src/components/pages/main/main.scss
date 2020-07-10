@@ -3,9 +3,11 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  & * {
+    box-sizing: border-box;
+  }
   .main-page-container {
     max-width: 1020px;
-    margin-bottom: 30px;
     h2 {
       font-family: "Literata", sans-serif;
       font-size: 32px;
@@ -15,13 +17,11 @@
   }
 
   .main-page_options {
+    box-sizing: border-box;
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
+    justify-content: center;
     background-color: #faede7;
-    margin-bottom: 50px;
-    margin-top: 30px;
-    padding: 10px 60px;
     border-radius: 5px;
     .options-settings {
       display: flex;
@@ -31,15 +31,5 @@
       display: flex;
       flex-direction: column;
     }
-    @media (max-width: 700px) {
-      justify-content: center;
-      padding: 10px 10px;
-    }
-  }
-  @media (max-width: 1030px) {
-    min-width: 900px;
-  }
-  @media (max-width: 900px) {
-    min-width: 0;
   }
 }

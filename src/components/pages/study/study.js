@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Redirect } from 'react-router-dom';
 import './study.scss';
 import next from '../../../assets/images/next-arrow.png';
 import { Button } from '../../shared/button';
@@ -36,6 +37,7 @@ export class Study extends Component {
             showEvaluation: false,
             isSubmitable: true,
             isAudioFinished: false,
+            redirected: false,
         };
 
         this.audioPlayer = new Audio();
@@ -43,6 +45,10 @@ export class Study extends Component {
 
     componentDidMount() {
         this.startTraining();
+    }
+
+    componentWillUnmount() {
+
     }
 
     getSettings = async () => {
@@ -78,19 +84,26 @@ export class Study extends Component {
         console.log(this.words);
 
         const totalLearnedWordsAggResponse = await WordService.getUserAggWords('', totalLearnedWordsQuery, 1);
-        const totalLearnedWords = totalLearnedWordsAggResponse[0].totalCount[0].count;
+        const totalLearnedWords = totalLearnedWordsAggResponse[0].totalCount.length
+            ? totalLearnedWordsAggResponse[0].totalCount[0].count
+            : 0;
         this.setState({ totalLearnedWordsQuantity: totalLearnedWords });
     }
 
     startTraining = async () => {
         await this.getSettings();
         await this.getWords();
-        this.createCard();
-        this.setState({
-            isLoadWords: true,
-            isLoadSettings: true,
-            needToLearnWordsQuantity: this.words.length,
-        });
+        if (this.words.length) {
+            this.createCard();
+            this.setState({
+                isLoadWords: true,
+                isLoadSettings: true,
+                needToLearnWordsQuantity: this.words.length,
+            });
+        } else {
+            alert('no words for training. change your settings');
+            this.setState({ redirected: true });
+        }
     }
 
     createCard = () => {
@@ -172,7 +185,8 @@ export class Study extends Component {
                                 isSubmitable: true,
                             });
                         } else {
-                            alert('FINISH!');
+                            alert('FINISH! / STATISTICS');
+                            this.setState({ redirected: true });
                         }
                     }
                     this.setState({ isAudioFinished: true });
@@ -206,7 +220,8 @@ export class Study extends Component {
                     isSubmitable: true,
                 });
             } else {
-                alert('FINISH');
+                alert('FINISH / STATISTICS');
+                this.setState({ redirected: true });
             }
         }
         this.setState({ showEvaluation: false });
@@ -255,9 +270,13 @@ export class Study extends Component {
 
     render() {
         const {
-            isLoadSettings, isLoadWords, valueInput, isCorrectWord, showEvaluation,
-            learnedWordsQuantity, needToLearnWordsQuantity, totalLearnedWordsQuantity,
+            isLoadSettings, isLoadWords, valueInput, isCorrectWord,
+            showEvaluation, learnedWordsQuantity, needToLearnWordsQuantity,
+            totalLearnedWordsQuantity, redirected,
         } = this.state;
+        if (redirected) {
+            return <Redirect to="/main" />;
+        }
         if (isLoadSettings && isLoadWords) {
             return (
                 <div className="study-page">

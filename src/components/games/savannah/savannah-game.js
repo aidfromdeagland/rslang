@@ -11,12 +11,14 @@ import { AUDIO_URL } from '../../../constants/globalConstants';
 import soundCorrect from '../../../assets/audio/correct.mp3';
 import soundError from '../../../assets/audio/error.mp3';
 import { SettingService } from '../../../services/settingServices';
+import { StatisticService } from '../../../services/statisticServices';
 
 import './savannah.scss';
 
 export class SavannahGame extends Component {
     constructor(props) {
         super(props);
+        this.statistic = [1, 2, 3];
         this.state = {
             word: {},
             translateWords: [],
@@ -74,6 +76,16 @@ export class SavannahGame extends Component {
 
     saveSettings = () => {
         const { group, page } = this.props;
+        const settings = {
+            group,
+            page,
+        };
+
+        this.saveSettingsSavannah(settings);
+    };
+
+    saveDataToStatistics = () => {
+        const { group, page } = this.props;
         const { allRightWords, allWrongWords } = this.state;
         const date = Date.now();
         const settings = {
@@ -83,8 +95,14 @@ export class SavannahGame extends Component {
             allRightWords,
             allWrongWords,
         };
-        this.saveSettingsSavannah(settings);
+        this.saveStatisticsSavannah(settings);
     };
+
+       saveStatisticsSavannah = async (savannahStats) => {
+           const settings = await StatisticService.get();
+           settings.optional.savannah = JSON.stringify(savannahStats);
+           await StatisticService.put(settings);
+       }
 
     handleClickByKeyboard =() => {
         const { translateWords, word, keyPressed } = this.state;
@@ -123,9 +141,15 @@ export class SavannahGame extends Component {
         return data;
     }
 
+    getUserWords = async () => {
+        const totalLearnedWordsQuery = { 'userWord.optional.isDeleted': false };
+        const data = await WordService.getUserAggWords('', totalLearnedWordsQuery, 3600);
+        return data[0].paginatedResults;
+    }
+
     getWrongWords = async () => {
         const { group } = this.props;
-        const data = await WordService.getUserAggWords(group, '', 100);
+        const data = await WordService.getUserAggWords(group, '', 3600);
         return data[0].paginatedResults;
     }
 
@@ -150,7 +174,7 @@ export class SavannahGame extends Component {
             allRightWords: allRightWords + 1,
         });
         new Audio(soundCorrect).play();
-        this.saveSettings();
+        this.saveDataToStatistics();
     }
 
     getNextPage = () => {
@@ -162,6 +186,7 @@ export class SavannahGame extends Component {
                 wordInx: 0,
             });
         }
+        this.saveSettings();
     }
 
     getWrongAnswer = () => {
@@ -181,7 +206,7 @@ export class SavannahGame extends Component {
             allWrongWords: allWrongWords + 1,
         });
         new Audio(soundError).play();
-        this.saveSettings();
+        this.saveDataToStatistics();
     }
 
     showRightCard = (card) => {
@@ -210,7 +235,7 @@ export class SavannahGame extends Component {
     getNewCards = async () => {
         const { wordInx } = this.state;
         const { mode } = this.props;
-        const userWord = await WordService.getUserWords();
+        const userWord = await this.getUserWords();
         const rightWord = mode === 'userWords' && userWord.length > 30 ? userWord : await this.getWord();
         const wrongWords = await this.getWrongWords();
 
@@ -267,9 +292,9 @@ export class SavannahGame extends Component {
     }
 
     startTimer = () => {
-        // this.timer = setInterval(() => {
-        //     this.getWrongAnswer();
-        // }, 7000);
+        this.timer = setInterval(() => {
+            this.getWrongAnswer();
+        }, 7000);
     }
 
     stopTimer= () => {
@@ -347,8 +372,8 @@ export class SavannahGame extends Component {
 }
 
 SavannahGame.propTypes = {
+    mode: PropTypes.string.isRequired,
     group: PropTypes.number.isRequired,
     page: PropTypes.number.isRequired,
-    mode: PropTypes.string.isRequired,
     getNextPage: PropTypes.func.isRequired,
 };
