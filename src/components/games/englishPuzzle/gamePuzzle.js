@@ -29,7 +29,7 @@ export class GamePuzzle extends Component {
             isCheckBtn: false,
             isContinueBtn: false,
             isDontKnowBtn: true,
-            isResultBtn: false,
+            // isResultBtn: false,
             isClickedDontKnow: false,
             isAutoPronunciation: true,
             isPicture: true,
@@ -64,7 +64,7 @@ export class GamePuzzle extends Component {
         this.settings = await SettingService.get();
         const settingsForGame = this.settings.optional.gamePuzzle
             ? JSON.parse(this.settings.optional.gamePuzzle)
-            : JSON.parse(settingsDefault.gamePuzzle);
+            : JSON.parse(settingsDefault.optional.gamePuzzle);
         this.setState({
             level: settingsForGame.level,
             page: settingsForGame.page,
@@ -91,11 +91,9 @@ export class GamePuzzle extends Component {
     }
 
     putStatistic = () => {
-        const { optional } = this.statistic;
         const gameStatistic = JSON.stringify(this.gameStatistic);
-        optional.gamePuzzle = gameStatistic;
-        const statistic = StatisticService.createObject(this.statistic.learnedWords, optional);
-        StatisticService.put(statistic);
+        this.statistic.optional.gamePuzzle = gameStatistic;
+        StatisticService.put(this.statistic);
     }
 
     addStatisticsData = (level, page) => {
@@ -137,11 +135,13 @@ export class GamePuzzle extends Component {
             this.allWords = await WordService.getWords(calculatingLevel, calculatingPage);
         }
         if (isGameWithUserWords) {
-            const data = await WordService.getUserWords();
-            this.allWords = this.getRandomData(data);
+            const totalLearnedWordsQuery = { 'userWord.optional.isDeleted': false };
+            const wordsResponse = await WordService.getUserAggWords('', totalLearnedWordsQuery, 3600);
+            const userWords = wordsResponse[0].paginatedResults;
+            this.allWords = this.getRandomData(userWords);
         }
         this.createDataForGame(wordCount);
-        this.setState({ haveWords: true });
+        // this.setState({ haveWords: true });
     }
 
     createDataForGame = (wordCount) => {
@@ -152,20 +152,20 @@ export class GamePuzzle extends Component {
         const {
             page,
         } = this.state;
-        let wordsForGameRound;
+        // this.wordsForGameRound;
         if (isGameWithLevels) {
-            wordsForGameRound = (page - 1) % 2 === 0
+            this.wordsForGameRound = (page - 1) % 2 === 0
                 ? this.allWords.slice(0, 10)
                 : this.allWords.slice(10, 20);
         }
         if (isGameWithUserWords) {
-            wordsForGameRound = this.allWords.slice();
+            this.wordsForGameRound = this.allWords.slice();
         }
-        this.sentence = wordsForGameRound[wordCount].textExample.replace(/(<([^>]+)>)/g, '');
+        this.sentence = this.wordsForGameRound[wordCount].textExample.replace(/(<([^>]+)>)/g, '');
         this.sentenceForPuzzle = this.mixWords(this.sentence);
-        this.translateSentence = wordsForGameRound[wordCount].textExampleTranslate;
-        this.audioSentence = wordsForGameRound[wordCount].audioExample;
-        this.image = wordsForGameRound[wordCount].image;
+        this.translateSentence = this.wordsForGameRound[wordCount].textExampleTranslate;
+        this.audioSentence = this.wordsForGameRound[wordCount].audioExample;
+        this.image = this.wordsForGameRound[wordCount].image;
         this.setState({
             sentence: this.sentence,
             sentenceForPuzzle: this.sentenceForPuzzle,
@@ -173,6 +173,7 @@ export class GamePuzzle extends Component {
             audioSentence: this.audioSentence,
             image: this.image,
             isNext: true,
+            haveWords: true,
         });
     }
 
@@ -268,6 +269,14 @@ export class GamePuzzle extends Component {
         const { level, page } = this.state;
         this.setState({ isRoundEnd: true });
         this.addStatisticsData(level, page);
+        if (level === 6 && page === 60) {
+            this.putSettings(1, 1);
+        }
+        if (page < 60) {
+            this.putSettings(level, parseFloat(page) + 1);
+        } else {
+            this.putSettings(level + 1, 1);
+        }
     }
 
     handleByNextRound = () => {
@@ -312,6 +321,7 @@ export class GamePuzzle extends Component {
         } = this.state;
         const {
             isGameWithLevels,
+            isGameWithUserWords,
         } = this.props;
         if (haveWords) {
             return (
@@ -367,7 +377,7 @@ export class GamePuzzle extends Component {
                                 isCheckBtn={isCheckBtn}
                                 isContinueBtn={isContinueBtn}
                                 isDontKnowBtn={isDontKnowBtn}
-                                isResultBtn={isResultBtn}
+                                // isResultBtn={isResultBtn}
                                 correctSentence={sentence}
                                 showButton={this.showButton}
                                 getNextWord={this.getNextWord}
@@ -380,6 +390,8 @@ export class GamePuzzle extends Component {
                                 addToResults={this.addToResults}
                                 showResults={this.showResults}
                                 isRoundEnd={isRoundEnd}
+                                isGameWithUserWords={isGameWithUserWords}
+                                wordForGameRound={this.wordsForGameRound[wordCount]}
                             />
                         </div>
                         <div className="progress-bar-game">

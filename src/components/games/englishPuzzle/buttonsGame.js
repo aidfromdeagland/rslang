@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import './startPage.scss';
 import './game-puzzle.scss';
 import { Button } from '../../shared/button';
+import { getMemoInfoMiniGames } from '../../../services/spacedRepetition';
+import { WordService } from '../../../services/wordServices';
 
 let audio;
 let audioPlay;
@@ -21,6 +23,8 @@ export class ButtonsBlock extends Component {
             isAutoPronunciation,
             wordCount,
             addToResults,
+            isGameWithUserWords,
+            wordForGameRound,
         } = this.props;
         const newCorrectSentence = correctSentence.split(' ');
         document.querySelectorAll('.completed').forEach((word) => {
@@ -46,8 +50,13 @@ export class ButtonsBlock extends Component {
                 this.handlePlayAudio(urlAudio);
             }
             addToResults('know', correctSentence, urlAudio);
-            if (wordCount === 9) {
-                showButton('iResultBtn', true);
+            if (isGameWithUserWords) {
+                const result = getMemoInfoMiniGames(true, wordForGameRound.userWord.optional.repeats, wordForGameRound.userWord.optional.nextDate);
+                const wordPut = { ...wordForGameRound };
+                wordPut.userWord.optional.repeats = result.repetitions;
+                wordPut.userWord.optional.prevDate = result.prevRepetitionDate;
+                wordPut.userWord.optional.nextDate = result.nextRepetitionDate;
+                WordService.putWord(wordPut.id, { optional: wordPut.userWord.optional });
             }
         } else {
             showButton('isDontKnowBtn', true);
@@ -84,6 +93,8 @@ export class ButtonsBlock extends Component {
             addToResults,
             isAutoPronunciation,
             audioSentence,
+            wordForGameRound,
+            isGameWithUserWords,
         } = this.props;
         document.querySelector('.puzzle-container-sentence').innerHTML = '';
         document.querySelector('.puzzle-pieces').innerHTML = '';
@@ -100,6 +111,14 @@ export class ButtonsBlock extends Component {
         showButton('isDontKnowBtn', false);
         showButton('isCheckBtn', false);
         addToResults('dontKnow', correctSentence, urlAudio);
+        if (isGameWithUserWords) {
+            const result = getMemoInfoMiniGames(false, wordForGameRound.userWord.optional.repeats, wordForGameRound.userWord.optional.nextDate);
+            const wordPut = { ...wordForGameRound };
+            wordPut.userWord.optional.repeats = result.repetitions;
+            wordPut.userWord.optional.prevDate = result.prevRepetitionDate;
+            wordPut.userWord.optional.nextDate = result.nextRepetitionDate;
+            WordService.putWord(wordPut.id, { optional: wordPut.userWord.optional });
+        }
     }
 
     handlePlayAudio = (url) => {
@@ -139,7 +158,6 @@ export class ButtonsBlock extends Component {
             isCheckBtn,
             isDontKnowBtn,
             isContinueBtn,
-            isResultBtn,
             audioSentence,
         } = this.props;
         return (
@@ -147,7 +165,6 @@ export class ButtonsBlock extends Component {
                 {isCheckBtn && <Button className="check-sentence puzzle-btn button" title="Check" onClick={this.handleCheck} />}
                 {isDontKnowBtn && <Button className="dont-know-sentence puzzle-btn button" title="Don't know" onClick={this.handleDontKnow} />}
                 {isContinueBtn && <Button className="continue-sentence puzzle-btn button" title="Continue" onClick={this.handleContinue} />}
-                {isResultBtn && <Button className="puzzle-result puzzle-btn button" title="Results" />}
                 <Button
                     className={isPlayingAudio ? 'dynamic-btn playing' : 'dynamic-btn'}
                     onClick={() => this.handlePlayAudio(`https://raw.githubusercontent.com/aidfromdeagland/rslang-data/master/${audioSentence}`)}
