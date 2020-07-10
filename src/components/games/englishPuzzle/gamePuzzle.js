@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './startPage.scss';
 import PropTypes from 'prop-types';
-import { Dropdown } from './dropDown/DropDown';
+import { Dropdown } from './dropDown/dropDown';
 import { Checkbox } from './checkBox/checkBox';
 import { WordService } from '../../../services/wordServices';
 import { Spinner } from '../../shared/spinner';
