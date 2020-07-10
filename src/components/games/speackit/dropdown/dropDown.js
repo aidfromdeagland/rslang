@@ -9,7 +9,6 @@ export class Dropdown extends Component {
         this.state = {
             isDropLevelOpen: false,
             isDropPageOpen: false,
-            isDropWordOpen: false,
             numberLevel: this.props.level,
             numberPage: this.props.page,
         };
@@ -37,7 +36,7 @@ export class Dropdown extends Component {
 
     handleButtonSelect = () => {
         const {
-            selectLevel
+            selectLevel,
         } = this.props;
         const {
             numberLevel,

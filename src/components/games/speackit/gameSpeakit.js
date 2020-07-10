@@ -17,6 +17,7 @@ import { SettingService } from '../../../services/settingServices';
 import { settingsDefault } from '../../../constants/globalConstants';
 import { StatisticService } from '../../../services/statisticServices';
 import { Button } from '../../shared/button';
+import { getMemoInfoMiniGames } from '../../../services/spacedRepetition';
 
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 const SpeechGrammarList = window.SpeechGrammarList || window.webkitSpeechGrammarList;
@@ -61,6 +62,13 @@ export class GameSpeakit extends Component {
         if (!haveWords) {
             this.loadWords();
         }
+    }
+
+    componentWillUnmount() {
+        recognition.stop();
+        recognition.onend = () => {
+            recognition.stop();
+        };
     }
 
     loadSettings = async () => {
@@ -133,11 +141,12 @@ export class GameSpeakit extends Component {
         }
         if (isGameWithUserWords) {
             const totalLearnedWordsQuery = { 'userWord.optional.isDeleted': false };
-            const userWords = WordService.getUserAggWords('', totalLearnedWordsQuery, 3600);
+            const wordsResponse = await WordService.getUserAggWords('', totalLearnedWordsQuery, 3600);
+            const userWords = wordsResponse[0].paginatedResults;
             this.allWords = this.getRandomData(userWords);
         }
         this.createDataForGame();
-        this.setState({ haveWords: true });
+        // this.setState({ haveWords: true });
     }
 
     createDataForGame = () => {
@@ -148,17 +157,17 @@ export class GameSpeakit extends Component {
         const {
             page,
         } = this.state;
-        let dataForGameRound;
+        // let dataForGameRound;
         if (isGameWithLevels) {
-            dataForGameRound = (page - 1) % 2 === 0
+            this.dataForGameRound = (page - 1) % 2 === 0
                 ? this.allWords.slice(0, 10)
                 : this.allWords.slice(10, 20);
         }
         if (isGameWithUserWords) {
-            dataForGameRound = this.allWords.slice();
+            this.dataForGameRound = this.allWords.slice();
         }
 
-        this.filterData = dataForGameRound.map((data) => ({
+        this.filterData = this.dataForGameRound.map((data) => ({
             word: data.word,
             wordTranslate: data.wordTranslate,
             wordAudio: data.audio,
@@ -168,6 +177,7 @@ export class GameSpeakit extends Component {
         }));
         this.setState({
             dataForGame: this.filterData,
+            haveWords: true,
         });
     }
 
@@ -271,16 +281,26 @@ export class GameSpeakit extends Component {
     }
 
     checkWords = (word) => {
+        const { isGameWithUserWords } = this.props;
         const correctWords = this.state.correctWords.slice();
         let totalSpokenWords = this.state.totalSpokenWords;
-        this.state.dataForGame.forEach((wordData) => {
+        this.dataForGameRound.forEach((wordData) => {
             if (wordData.word.toLowerCase() === word.toLowerCase()) {
                 correctWords.push(word.toLowerCase());
                 this.setState({
                     correctWords,
-                    activeImageUrl: `https://raw.githubusercontent.com/aidfromdeagland/rslang-data/master/${wordData.wordImage}`,
+                    activeImageUrl: `https://raw.githubusercontent.com/aidfromdeagland/rslang-data/master/${wordData.image}`,
                     isClickedCard: true,
                 });
+                if (isGameWithUserWords) {
+                    const result = getMemoInfoMiniGames(true, wordData.userWord.optional.repeats, wordData.userWord.optional.nextDate);
+                    const wordPut = { ...wordData };
+                    wordPut.userWord.optional.repeats = result.repetitions;
+                    wordPut.userWord.optional.prevDate = result.prevRepetitionDate;
+                    wordPut.userWord.optional.nextDate = result.nextRepetitionDate;
+                    WordService.putWord(wordPut.id, { optional: wordPut.userWord.optional });
+                }
+
                 if (correctWords.length === 10) {
                     this.handleRoundEnd();
                 }
@@ -295,7 +315,10 @@ export class GameSpeakit extends Component {
 
     handleRoundEnd = () => {
         const { level, page } = this.state;
-        this.setState({ isRoundEnd: true });
+        this.setState({
+            isRoundEnd: true,
+            listening: false,
+        });
         this.addStatisticsData(level, page);
     }
 

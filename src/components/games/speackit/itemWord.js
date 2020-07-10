@@ -55,9 +55,7 @@ export class ItemWord extends Component {
             cardIndex,
             indexClickedCard,
             isClickedCard,
-            handleClickCard,
             isGameModeTrain,
-            speakWord,
             correctWords,
         } = this.props;
         return (
@@ -72,31 +70,12 @@ export class ItemWord extends Component {
                         if (!correctWords.length) {
                             return 'card';
                         }
-
-                        if (correctWords.includes(wordData.word)) {
+                        if (correctWords.includes(wordData.word.toLowerCase())) {
                             return 'card card_match';
                         }
-
                         return 'card';
-
-                        // let name = '';
-                        // console.log(correctWords)
-                        // correctWords.forEach((word) => {
-                        //     console.log(word, wordData.word)
-                        //     if (word === wordData.word) {
-                        //         name = 'card card_match';
-                        //         return;
-                        //     }
-                        //     name = 'card';
-                        // });
-                        // return name;
                     })()
                 }
-                // className={isGameModeTrain && cardIndex === indexClickedCard && isClickedCard
-                //     ? 'card card_active'
-                //     : speakWord && speakWord.toLowerCase() === wordData.word
-                //         ? 'card card_match'
-                //         : 'card'}
                 onClick={() => {
                     if (!isGameModeTrain) {
                         return null;
