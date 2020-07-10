@@ -3,10 +3,10 @@ import './checkBox.scss';
 
 export class Checkbox extends Component {
     render() {
-        const {checkBoxHandle, text, checked} = this.props;
+        const {onChange, text, checked} = this.props;
         return (
             <label>
-                <input type="checkbox" className="option-input checkbox" onChange={checkBoxHandle} checked={checked} />
+                <input type="checkbox" className="option-input checkbox" onChange={onChange} checked={checked} />
                 {text}
             </label>
         );

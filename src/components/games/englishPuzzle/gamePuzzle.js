@@ -316,7 +316,6 @@ export class GamePuzzle extends Component {
             isContinueBtn,
             isCheckBtn,
             isDontKnowBtn,
-            isResultBtn,
 
         } = this.state;
         const {
@@ -327,12 +326,17 @@ export class GamePuzzle extends Component {
             return (
                 <div className="english-puzzle__wrapper">
                     <div className="game-puzzle__container">
-                        {isRoundEnd && (
-                            <ModalResult
-                                results={this.results}
-                                handleByNextRound={this.handleByNextRound}
-                            />
-                        )}
+                        {(() => {
+                            if (isRoundEnd) {
+                                return (
+                                    <ModalResult
+                                        results={this.results}
+                                        handleByNextRound={this.handleByNextRound}
+                                    />
+                                );
+                            }
+                            return null;
+                        })()}
                         <div className="game-puzzle__header">
                             {isGameWithLevels && (
                                 <Dropdown
@@ -345,12 +349,12 @@ export class GamePuzzle extends Component {
                                 <Checkbox
                                     text="Auto pronunciation"
                                     checked={isAutoPronunciation}
-                                    checkBoxHandle={() => this.checkBoxHandle('isAutoPronunciation')}
+                                    onChange={() => this.checkBoxHandle('isAutoPronunciation')}
                                 />
                                 <Checkbox
                                     text="Show Picture"
                                     checked={isPicture}
-                                    checkBoxHandle={() => this.checkBoxHandle('isPicture')}
+                                    onChange={() => this.checkBoxHandle('isPicture')}
                                 />
                             </div>
                         </div>
@@ -377,7 +381,6 @@ export class GamePuzzle extends Component {
                                 isCheckBtn={isCheckBtn}
                                 isContinueBtn={isContinueBtn}
                                 isDontKnowBtn={isDontKnowBtn}
-                                // isResultBtn={isResultBtn}
                                 correctSentence={sentence}
                                 showButton={this.showButton}
                                 getNextWord={this.getNextWord}
