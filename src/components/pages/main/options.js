@@ -32,18 +32,30 @@ export class Options extends Component {
                     ) : null}
                 <div className="options-settings">
                     <Button className="button" title="Settings" onClick={clickSettings} />
-                    <NavLink to="/main/study" className="learning-words">
+                    <NavLink to={{
+                        pathname: '/main/study',
+                        allowNewWords: true,
+                        allowLearnedWords: true,
+                    }}
+                    >
                         <Button className="button btn-start" title="START" />
                     </NavLink>
                 </div>
                 <div className="options-learning">
                     <NavLink to={{
                         pathname: '/main/study',
+                        allowNewWords: true,
+                        allowLearnedWords: false,
                     }}
                     >
                         <Button className="button" title="Learn new words" />
                     </NavLink>
-                    <NavLink to="/main/study" className="learning-words">
+                    <NavLink to={{
+                        pathname: '/main/study',
+                        allowNewWords: false,
+                        allowLearnedWords: true,
+                    }}
+                    >
                         <Button className="button" title="Repeat words" />
                     </NavLink>
                 </div>

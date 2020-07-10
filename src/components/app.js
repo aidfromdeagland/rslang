@@ -83,9 +83,7 @@ export class App extends Component {
                                         <Route exact path="/main">
                                             <Main />
                                         </Route>
-                                        <Route path="/main/study">
-                                            <Study />
-                                        </Route>
+                                        <Route path="/main/study" component={Study} />
                                         <Route exact path="/stats">
                                             <Stats />
                                         </Route>
