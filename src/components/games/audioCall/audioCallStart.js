@@ -54,7 +54,8 @@ export class AudioCallStart extends Component {
 
     handleSettingsChange(currentSettings) {
         tryExecute(async () => {
-            await this.repository.setNewSettings(currentSettings);
+            await this.repository.setNewSettings(currentSettings,
+                (repositoryState) => this.setState({ repositoryState }));
         }, this.props.errorFunction);
         this.setState({ repositoryState: this.repository.state, isOpenModal: false });
     }
@@ -113,6 +114,7 @@ export class AudioCallStart extends Component {
                     )}
                 <span className="audio-call__description">Select the translation of the spoken word</span>
                 <span className="audio-call__train">Improves the perception of English speech by ear</span>
+                <span className="audio-call__train">Use keyboard to be faster! (1, 2, 3, 4, 5, Enter)</span>
                 {
                     this.state.isLoading || !this.state.repositoryState
                         ? <Spinner />

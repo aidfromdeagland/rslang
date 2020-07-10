@@ -11,11 +11,13 @@
 
 .study-page {
   display: flex;
+  flex-direction: column;
   justify-content: center;
+  align-items: center;
+
   .card-container {
     display: flex;
     margin: 0 10px;
-    padding-top: 3rem;
     width: 100%;
   }
 }
@@ -72,6 +74,7 @@
   .answer-container {
     font-family: "RobotoMono-Regular", serif;
     font-size: 25px;
+    position: relative;
     .answer-form {
       display: inline-block;
     }
@@ -99,8 +102,8 @@
       animation: show 2s 1;
       animation-fill-mode: forwards;
     }
-    .uncorrect-letter {
-      color: #d35e27;
+    .incorrect-letter {
+      color: #f00002;
     }
     @keyframes show {
       0% {

@@ -32,3 +32,21 @@ export const getMemoInfo = (difficulty, prevRepetitions) => {
 
     return result;
 };
+
+export const getMemoInfoMiniGames = (isCorrect, prevRepetitions, nextDate) => {
+    const currentDateStamp = Date.now();
+    const dateCheckpoint = nextDate > currentDateStamp ? nextDate : currentDateStamp;
+
+    const resultedRepeats = prevRepetitions ? prevRepetitions + 1 : 1;
+    const resultedNextDate = isCorrect
+        ? dateCheckpoint + MILLISECONDS_PER_DAY * Math.ceil(resultedRepeats ** POWER_INDEX_GOOD)
+        : currentDateStamp;
+
+    const result = {
+        repetitions: resultedRepeats,
+        prevRepetitionDate: currentDateStamp,
+        nextRepetitionDate: resultedNextDate,
+    };
+
+    return result;
+};

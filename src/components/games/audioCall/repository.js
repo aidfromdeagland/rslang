@@ -51,7 +51,7 @@ export class Repository {
             load: {
                 loading: {},
                 loaded: {},
-            }
+            },
         };
 
         this.changeState = changeState || (() => {});
@@ -67,7 +67,7 @@ export class Repository {
         success(this.state.currentSettings);
     }
 
-    async setNewSettings(currentSettings) {
+    async setNewSettings(currentSettings, installedSettings) {
         const newCurrentSettings = currentSettings;
         if (newCurrentSettings.page === undefined) {
             newCurrentSettings.page = this.state.currentSettings.page || 0;
@@ -76,7 +76,12 @@ export class Repository {
         if (JSON.stringify(newCurrentSettings) === JSON.stringify(this.state.currentSettings)) {
             return;
         }
+        if (newCurrentSettings.modeGame !== this.state.currentSettings.modeGame
+            || newCurrentSettings.wordCount !== this.state.currentSettings.wordCount) {
+            this.repositoryId = Date.now();
+        }
         this.setSettings(newCurrentSettings);
+        installedSettings(this.state);
 
         await Repository.saveSettingsAudioCall(newCurrentSettings);
         await this.loadData();
@@ -194,28 +199,32 @@ export class Repository {
         const { currentSettings } = this.state;
         const loadingSettings = this.state.load.loading;
 
-        return currentSettings.modeGame === loadingSettings.modeGame
-            && currentSettings.wordCount === loadingSettings.wordCount
-            && currentSettings.group === loadingSettings.group
-            && currentSettings.page === loadingSettings.page
-            && this.repositoryId === loadingSettings.repositoryId;
+        return loadingSettings.modeGame === MODE_GAME['All words']
+            ? currentSettings.wordCount === loadingSettings.wordCount
+                && currentSettings.group === loadingSettings.group
+                && currentSettings.page === loadingSettings.page
+                && this.repositoryId === loadingSettings.repositoryId
+            : currentSettings.wordCount === loadingSettings.wordCount
+                && this.repositoryId === loadingSettings.repositoryId;
     }
 
     isActualLoaded() {
         const { currentSettings } = this.state;
         const loadedSettings = this.state.load.loaded;
 
-        return currentSettings.modeGame === loadedSettings.modeGame
-            && currentSettings.wordCount === loadedSettings.wordCount
-            && currentSettings.group === loadedSettings.group
-            && currentSettings.page === loadedSettings.page
-            && this.repositoryId === loadedSettings.repositoryId;
+        return loadedSettings.modeGame === MODE_GAME['All words']
+            ? currentSettings.wordCount === loadedSettings.wordCount
+                && currentSettings.group === loadedSettings.group
+                && currentSettings.page === loadedSettings.page
+                && this.repositoryId === loadedSettings.repositoryId
+            : currentSettings.wordCount === loadedSettings.wordCount
+                && this.repositoryId === loadedSettings.repositoryId;
     }
 
     async loadUserWords() {
-        const { wordCount, group, page } = this.state.currentSettings;
+        const { wordCount } = this.state.currentSettings;
         this.state.load.loading = {
-            wordCount, group, page, modeGame: MODE_GAME['User words'], repositoryId: this.repositoryId,
+            wordCount, modeGame: MODE_GAME['User words'], repositoryId: this.repositoryId,
         };
         const userWords = await WordService.getUserAggWords('', { userWord: { $exists: true } }, GROUP_WORDS_COUNT);
         if (userWords[0].paginatedResults.length >= wordCount) {
@@ -227,7 +236,7 @@ export class Repository {
             }
             this.state.gameWords = shuffle(userWords[0].paginatedResults).slice(0, wordCount);
             this.state.load.loaded = {
-                wordCount, group, page, modeGame: MODE_GAME['User words'], repositoryId: this.repositoryId,
+                wordCount, modeGame: MODE_GAME['User words'], repositoryId: this.repositoryId,
             };
         } else {
             // words are not enough for a user words game
@@ -243,7 +252,6 @@ export class Repository {
         };
         this.changeState();
 
-        const isLoadingPage = lastLoading.page !== page || lastLoading.group !== group;
         if (lastLoading.group !== group) {
             this.state.allWords = undefined;
             this.state.gameWords = undefined;
@@ -251,17 +259,23 @@ export class Repository {
             const words = aggWords[0].paginatedResults;
             this.state.allWords = words;
             this.state.load.loaded.group = group;
+            this.state.load.loaded = {
+                group, modeGame: MODE_GAME['All words'], repositoryId: this.repositoryId,
+            };
+            if (this.state.load.loading.page !== this.state.currentSettings.page) {
+                this.state.load.loading.page = this.state.currentSettings.page;
+            }
         }
-        if (this.state.load.loaded.group !== undefined && (isLoadingPage
-                || this.state.gameWords.length === wordCount)) {
+        if (this.state.load.loaded.group === this.state.load.loading.group) {
+            const loadingPage = this.state.currentSettings.page;
             this.state.gameWords = undefined;
             this.state.gameWords = shuffle(
-                this.state.allWords.filter((w) => w.page === page),
+                this.state.allWords.filter((w) => w.page === loadingPage),
             ).slice(0, wordCount);
+            this.state.load.loaded.wordCount = wordCount;
+            this.state.load.loaded.page = loadingPage;
+            this.state.load.loaded.repositoryId = this.repositoryId;
         }
-        this.state.load.loaded = {
-            wordCount, group, page, modeGame: MODE_GAME['All words'], repositoryId: this.repositoryId,
-        };
     }
 
     // #endregion private
