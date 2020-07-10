@@ -54,15 +54,17 @@ export class Dropdown extends Component {
         } = this.state;
         return (
             <div className="dropdown__options_container">
-                <div className={`dropdown ${isDropLevelOpen ? 'open' : ''}`}>
-                    Level:
-                    <Button className="mainmenubtn button" title={`${numberLevel}`} onClick={this.handleClickDropdownLevels} />
-                    {isDropLevelOpen ? <DropdownList chooseNumber={this.chooseNumberLevels} closeDropdown={this.handleClickDropdownLevels} totalNumber="6" /> : null}
-                </div>
-                <div className={`dropdown ${isDropPageOpen ? 'open' : ''}`}>
-                    Page:
-                    <Button className="mainmenubtn button" title={`${numberPage}`} onClick={this.handleClickDropdownPages} />
-                    {isDropPageOpen ? <DropdownList chooseNumber={this.chooseNumberPages} closeDropdown={this.handleClickDropdownPages} totalNumber="60" /> : null}
+                <div className="dropdown__controls-agregator">
+                    <div className={`dropdown ${isDropLevelOpen ? 'open' : ''}`}>
+                        Level:
+                        <Button className="mainmenubtn button" title={`${numberLevel}`} onClick={this.handleClickDropdownLevels} />
+                        {isDropLevelOpen ? <DropdownList chooseNumber={this.chooseNumberLevels} closeDropdown={this.handleClickDropdownLevels} totalNumber="6" /> : null}
+                    </div>
+                    <div className={`dropdown ${isDropPageOpen ? 'open' : ''}`}>
+                        Page:
+                        <Button className="mainmenubtn button" title={`${numberPage}`} onClick={this.handleClickDropdownPages} />
+                        {isDropPageOpen ? <DropdownList chooseNumber={this.chooseNumberPages} closeDropdown={this.handleClickDropdownPages} totalNumber="60" /> : null}
+                    </div>
                 </div>
                 <Button className="button select-level" title="Select" onClick={this.handleButtonSelect} />
             </div>

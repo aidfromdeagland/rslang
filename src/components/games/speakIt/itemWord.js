@@ -64,16 +64,16 @@ export class ItemWord extends Component {
                     (() => {
                         if (isGameModeTrain) {
                             return cardIndex === indexClickedCard && isClickedCard
-                                ? 'card card_active'
-                                : 'card';
+                                ? 'speakit-card speakit-card_active'
+                                : 'speakit-card';
                         }
                         if (!correctWords.length) {
-                            return 'card';
+                            return 'speakit-card';
                         }
                         if (correctWords.includes(wordData.word.toLowerCase())) {
-                            return 'card card_match';
+                            return 'speakit-card speakit-card_match';
                         }
-                        return 'card';
+                        return 'speakit-card';
                     })()
                 }
                 onClick={() => {
@@ -83,8 +83,8 @@ export class ItemWord extends Component {
                     return this.handleClickCard(cardIndex, wordData.wordAudio, wordData.wordImage, wordData.wordTranslate)
                 }}
             >
-                <p className="card__word">{wordData.word}</p>
-                <p className="card__transcription">{wordData.wordTranscription}</p>
+                <p className="speakit-card__word">{wordData.word}</p>
+                <p className="speakit-card__transcription">{wordData.wordTranscription}</p>
             </li>
         );
     }

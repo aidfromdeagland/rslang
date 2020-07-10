@@ -5,7 +5,7 @@ import { StartPage } from './startPage';
 export class SpeakIt extends Component {
     render() {
         return (
-            <div className="speak-it">
+            <div className="speakit">
                 <StartPage />
             </div>
         );

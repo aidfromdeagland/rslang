@@ -57,13 +57,13 @@ export class StartPage extends Component {
         if (isChecked) {
             return (
                 <div id="start-page">
-                    <div className="title">Speakit</div>
-                    <div className="description">
+                    <div className="speakit-title">Speakit</div>
+                    <div className="speakit-description">
                         <p>Click on the words to hear their sound</p>
                         <br />
                         <p>Press the button and say the words to check your pronunciation</p>
                     </div>
-                    <div className="start">
+                    <div className="speakit-start">
                         <Button
                             className="button btn-start"
                             onClick={() => this.handleClick('isGameWithLevels')}

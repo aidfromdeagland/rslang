@@ -1,13 +1,33 @@
-.game-speakit__header {
+.speakit-header {
+  .dropdown__options_container {
+    display: flex;
+    align-items: center;
+    height: 50px;
+
+    .dropdown__controls-agregator {
+      min-width: 200px;
+      display:flex;
+      justify-content: space-around;
+    }
+
+    .select-level {
+      width: auto;
+      flex-grow: 1;
+      max-width: 250px;
+    }
+  }
+
   .mainmenubtn {
+    box-sizing: border-box;
     background: #ffffff;
     font-size: 12px;
     color: #092c70;
     width: 50px;
     padding: 0;
-    padding-left: 3px;
+    padding-left: 0;
     padding-right: 20px;
-    text-align: left;
+    margin: 0;
+    text-align: center;
     &:hover {
       background-color: #0f4ab4;
       color: #ffffff;
@@ -19,10 +39,7 @@
     &::after {
       position: absolute;
       top: 50%;
-      right: 14px;
-      @media (max-width: 397px) {
-        right: 50%;
-      }
+      right: 10px;
       content: "";
       background: url(https://image.flaticon.com/icons/svg/271/271210.svg);
       background-size: contain;
@@ -51,7 +68,6 @@
     border: 1px solid #092c70;
   }
   .dropdown-child div {
-    color: white;
     padding: 20px;
     text-decoration: none;
     display: block;
@@ -65,4 +81,9 @@
       color: #ffffff;
     }
   }
+}
+
+@media (max-width: 639px) {
+
+
 }

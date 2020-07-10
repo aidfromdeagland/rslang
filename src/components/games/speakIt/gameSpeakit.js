@@ -2,17 +2,11 @@ import React, { Component } from 'react';
 import './startPage.scss';
 // import PropTypes from 'prop-types';
 import { ItemWord } from './itemWord';
-import './sass/blocks/card.scss';
-import './sass/scaffolding.scss';
-import './sass/blocks/cards.scss';
-import './sass/blocks/content.scss';
-import './sass/blocks/main.scss';
-import './sass/blocks/scene.scss';
 import question from '../../../assets/images/speakit/question-mark.png';
 import { Dropdown } from './dropdown/dropDown';
 import { WordService } from '../../../services/wordServices';
 import { Spinner } from '../../shared/spinner';
-import { ModalResult } from './modalResalt/modalResult';
+import { ModalResult } from './modalResult/modalResult';
 import { SettingService } from '../../../services/settingServices';
 import { settingsDefault } from '../../../constants/globalConstants';
 import { StatisticService } from '../../../services/statisticServices';
@@ -372,7 +366,7 @@ export class GameSpeakit extends Component {
                             handleByNextRound={this.handleByNextRound}
                         />
                     )}
-                    <div className="game-speakit__header">
+                    <div className="speakit-header">
                         {isGameWithLevels && (
                             <Dropdown
                                 selectLevel={this.selectLevel}
@@ -381,12 +375,12 @@ export class GameSpeakit extends Component {
                             />
                         )}
                     </div>
-                    <div className="content">
+                    <div className="speakit-content">
                         <span className="content__points">{'⭐'.repeat(correctWords.length)}</span>
-                        <ul className="cards-container">
-                            <li className="scene">
-                                <img className="scene__image" alt="word" src={isClickedCard ? activeImageUrl : question} />
-                                <p className={isGameModeTrain ? 'scene__translation' : 'scene__translation scene__translation_game'}>{activeTranslate}</p>
+                        <ul className="speakit-cards-container">
+                            <li className="speakit-scene">
+                                <img className="speakit-scene__image" alt="word" src={isClickedCard ? activeImageUrl : question} />
+                                <p className={isGameModeTrain ? 'speakit-scene__translation' : 'speakit-scene__translation speakit-scene__translation_game'}>{activeTranslate}</p>
                             </li>
                             {dataForGame.map((wordData, index) => (
                                 <ItemWord
@@ -405,7 +399,7 @@ export class GameSpeakit extends Component {
                             ))}
                         </ul>
                         <Button
-                            className="button content__button content__button_speak"
+                            className="speakit-content__button speakit-content__button_speak"
                             title={isGameModeTrain ? 'speak' : 'on air'}
                             onClick={this.changeGameMode}
                         />
