@@ -15,10 +15,7 @@ import { StatisticService } from '../../../services/statisticServices';
 import { Spinner } from '../../shared/spinner';
 
 // TODO Не реализовано (этот текст впоследствии обязательно удалю):
-// * Периодическое повторение!
 // * --переводы слов, из которых выбирается нужный, относятся к одной части речи
-// * Отображать ошибку во всплывающем окне
-// * При игре в слова пользователя не брать удалённые слова
 // Доп функционал:
 // * сбросить на настройки по умолчанию
 // * сбросить статистику игры
@@ -29,11 +26,12 @@ export class AudioCall extends Component {
         this.state = { auth: true, state: GAME_PROGRESS.start };
     }
 
-    errorFunction = (error, failedFunction) => {
+    errorFunction = (error, failedFunction, label) => {
         if (error.status === 401) {
             this.setState({ auth: false, failedFunction });
         } else {
-            this.props.setMessage(error.message);
+            const text = label ? `${label}: ${error.message}` : error.message;
+            this.props.setMessage(text);
         }
     }
 

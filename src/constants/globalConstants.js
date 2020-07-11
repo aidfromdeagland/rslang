@@ -35,3 +35,5 @@ export const statisticsDefault = {
         savannah: '{"group":0,"page":0}',
     },
 };
+
+export const totalLearnedWordsQuery = { 'userWord.optional.isDeleted': false };
