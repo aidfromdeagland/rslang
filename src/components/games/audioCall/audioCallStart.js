@@ -27,7 +27,7 @@ export class AudioCallStart extends Component {
             this.setState({
                 repositoryState: this.repository.state,
             });
-        });
+        }, this.props.errorFunction);
         tryExecute(async () => {
             if (this.state.repositoryState) {
                 await this.repository.setLevel(this.state.page, this.state.group);
