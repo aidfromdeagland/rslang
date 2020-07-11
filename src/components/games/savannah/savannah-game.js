@@ -54,6 +54,7 @@ export class SavannahGame extends Component {
 
         document.addEventListener('keydown', this.keydown);
         document.addEventListener('keyup', this.keyup);
+        this.saveSettings();
     }
 
     componentDidUpdate() {
@@ -68,11 +69,11 @@ export class SavannahGame extends Component {
         document.removeEventListener('keyup', this.keyup);
     }
 
-    saveSettingsSavannah = async (savannahSettings) => {
-        const settings = await SettingService.get();
-        settings.optional.savannah = JSON.stringify(savannahSettings);
-        await SettingService.put(settings);
-    }
+       saveSettingsSavannah = async (savannahSettings) => {
+           const settings = await SettingService.get();
+           settings.optional.savannah = JSON.stringify(savannahSettings);
+           await SettingService.put(settings);
+       }
 
     saveSettings = () => {
         const { group, page } = this.props;
@@ -92,8 +93,8 @@ export class SavannahGame extends Component {
             date,
             group,
             page,
-            allRightWords,
-            allWrongWords,
+            correct: allRightWords,
+            incorrect: allWrongWords,
         };
         this.saveStatisticsSavannah(settings);
     };
