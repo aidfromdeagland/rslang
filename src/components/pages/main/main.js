@@ -67,8 +67,8 @@ export class Main extends Component {
     handleInput = (property, operation) => {
         const { settings: { optional } } = this.state;
         let wordsQuantity = parseInt(optional[property], 10);
-        if (operation === '+') {
-            wordsQuantity += 10;
+        if (operation === '+' && wordsQuantity < 30) {
+            wordsQuantity += 5;
             this.setState((prev) => (
                 {
                     ...prev,
@@ -97,8 +97,8 @@ export class Main extends Component {
                 ));
             }
         }
-        if (operation === '-') {
-            wordsQuantity = wordsQuantity === 0 ? 0 : wordsQuantity - 10;
+        if (operation === '-' && wordsQuantity > 0) {
+            wordsQuantity = wordsQuantity === 0 ? 0 : wordsQuantity - 5;
             this.setState((prev) => (
                 {
                     ...prev,
