@@ -1,6 +1,7 @@
 /* eslint-disable react/no-access-state-in-setstate */
 /* eslint-disable react/destructuring-assignment */
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import './audioCall.scss';
 import { AudioCallStart } from './audioCallStart';
 import { AudioCallGame } from './audioCallGame';
@@ -23,8 +24,8 @@ import { Spinner } from '../../shared/spinner';
 // * сбросить статистику игры
 // * искать английские слова по произнесённому русскому
 export class AudioCall extends Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = { auth: true, state: GAME_PROGRESS.start };
     }
 
@@ -32,7 +33,7 @@ export class AudioCall extends Component {
         if (error.status === 401) {
             this.setState({ auth: false, failedFunction });
         } else {
-            // TODO отобразить ошибку error.message
+            this.props.setMessage(error.message);
         }
     }
 
@@ -130,3 +131,7 @@ export class AudioCall extends Component {
         }
     }
 }
+
+AudioCall.propTypes = {
+    setMessage: PropTypes.func.isRequired,
+};
