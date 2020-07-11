@@ -1,4 +1,6 @@
 export const backend = 'https://afternoon-falls-25894.herokuapp.com';
+
+export const AUDIO_URL = 'https://raw.githubusercontent.com/mrJozhkinKot/rslang-data/master/';
 export const ALL_WORDS_COUNT = 3600;
 export const GROUP_WORDS_COUNT = 600;
 export const GROUP_COUNT = 6;
@@ -22,5 +24,14 @@ export const settingsDefault = {
         showDifficultButton: true,
         autoPronunciation: true,
         audioCall: '{"modeGame":1,"wordCount":10,"colorStart":{"r":9,"g":44,"b":112},"colorEnd":{"r":224,"g":141,"b":157},"group":0,"page":0}',
+        speakit: '{"group":1,"page":1}',
+    },
+};
+
+export const statisticsDefault = {
+    learnedWords: 0,
+    optional: {
+        gamePuzzle: '{"level":1,"page":1}',
+        savannah: '{"group":0,"page":0}',
     },
 };

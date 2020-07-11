@@ -1,14 +1,12 @@
-import { backend } from '../constants/globalConstants';
+import { backend, statisticsDefault } from '../constants/globalConstants';
 import { User } from '../components/pages/auth/user';
 import { ServiceError } from './serviceError';
 
 export class StatisticService {
-    static createObject(learnedWords, testVal)/*: IStatistic */ {
+    static createObject(learnedWords, value)/*: IStatistic */ {
         return {
             learnedWords,
-            optional: {
-                testVal,
-            },
+            optional: value,
         };
     }
 
@@ -44,11 +42,7 @@ export class StatisticService {
             throw new ServiceError('Access token is missing or invalid', rawResponse.status);
         }
         if (rawResponse.status === 404) {
-            return {
-                learnedWords: 0,
-                optional: {
-                },
-            };
+            return statisticsDefault;
         }
 
         const errorText = await rawResponse.text();
