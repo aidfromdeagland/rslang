@@ -3,7 +3,8 @@ import { shuffle, randomInteger, getUniqueByKey } from '../../../utils/utils';
 import { WordService } from '../../../services/wordServices';
 import { SettingService } from '../../../services/settingServices';
 import {
-    MEDIA_PREFIX_URL, ALL_WORDS_COUNT, GROUP_WORDS_COUNT, GROUP_COUNT, PAGE_COUNT,
+    MEDIA_PREFIX_URL, totalLearnedWordsQuery,
+    ALL_WORDS_COUNT, GROUP_WORDS_COUNT, GROUP_COUNT, PAGE_COUNT,
 } from '../../../constants/globalConstants';
 import { MAX_INDEX_QUEST_WORDS, MAX_INDEX_QUEST_WORDS_NOT_CORRECT, MODE_GAME } from './constants';
 import { levenshtein, getDifferentColor } from './utils';
@@ -226,7 +227,7 @@ export class Repository {
         this.state.load.loading = {
             wordCount, modeGame: MODE_GAME['User words'], repositoryId: this.repositoryId,
         };
-        const userWords = await WordService.getUserAggWords('', { userWord: { $exists: true } }, GROUP_WORDS_COUNT);
+        const userWords = await WordService.getUserAggWords('', totalLearnedWordsQuery, ALL_WORDS_COUNT);
         if (userWords[0].paginatedResults.length >= wordCount) {
             this.changeState();
 

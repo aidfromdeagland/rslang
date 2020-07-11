@@ -1,18 +1,33 @@
 import { backend } from '../constants/globalConstants';
 import { User } from '../components/pages/auth/user';
 import { ServiceError } from './serviceError';
+import { getMemoInfoMiniGames } from './spacedRepetition';
 
 // подробное описание: https://afternoon-falls-25894.herokuapp.com/doc/#
 export class WordService {
-    static createWordPost(difficulty, isDel, isHard)/*: IWordPost */ {
+    static createWordPost(prevDate, nextDate, repeats, debutDate = Date.now(),
+        isDifficult = false, isDeleted = false)/*: IWordPost */ {
         return {
-            difficulty,
+            difficulty: 'useless',
             optional: {
-                date: Date.now(), // возможно лучше хранить распаршенное значение - строку
-                isDel,
-                isHard,
+                isDifficult,
+                isDeleted,
+                debutDate,
+                prevDate,
+                nextDate,
+                repeats,
             },
         };
+    }
+
+    static createStatisticWordPut(userWord, isCorrect)/*: IWordPost */ {
+        const newState = getMemoInfoMiniGames(isCorrect, userWord.optional.repeats,
+            userWord.optional.nextDate);
+        const updateUserWord = userWord;
+        updateUserWord.optional.prevDate = newState.nextRepetitionDate;
+        updateUserWord.optional.nextDate = newState.nextRepetitionDate;
+        updateUserWord.optional.repeats = newState.repetitions;
+        return updateUserWord;
     }
 
     static async getWords(group, page) {
@@ -284,9 +299,12 @@ export class WordService {
 // }
 
 // interface IOptional {
-//     date: date,
-//     isDel: boolean,
-//     isHard: boolean
+//      isDifficult: bool,
+//      isDeleted: bool,
+//      debutDate: number,
+//      prevDate: number,
+//      nextDate: number,
+//      repeats: number
 // }
 
 // interface IWordPost {
