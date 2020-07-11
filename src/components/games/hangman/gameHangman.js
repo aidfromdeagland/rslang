@@ -18,6 +18,7 @@ import { settingsDefault } from '../../../constants/globalConstants';
 import { StatisticService } from '../../../services/statisticServices';
 import { Button } from '../../shared/button';
 import { ALPHABET, IMAGES_GAL } from './data';
+import { Dropdown } from './dropDown/dropDown';
 
 export class GameHangman extends Component {
     constructor(props) {
@@ -217,7 +218,9 @@ export class GameHangman extends Component {
             return null;
         }
         if (dataForGame.word.split('').includes(letter.toLowerCase()) || dataForGame.word.split('').includes(letter.toUpperCase())) {
-            newCorrectLetters.push(letter);
+            const allLetters = dataForGame.word.split('').filter((lett) => lett.toLowerCase() === letter.toLowerCase());
+            console.log(allLetters)
+            newCorrectLetters.concat(allLetters);
         } else {
             newIncorrectLetters.push(letter);
             this.setState({
@@ -277,8 +280,8 @@ export class GameHangman extends Component {
             //     correctWords,
             //     totalSpokenWords,
             //     isRoundEnd,
-            //     level,
-            //     page,
+            level,
+            page,
             //     isGameModeTrain,
             //     speakWord,
         } = this.state;
@@ -290,65 +293,73 @@ export class GameHangman extends Component {
         if (haveWords) {
             return (
                 <div className="hangman-container">
-                    <span className="word-task">{dataForGame.wordTranslate}</span>
-                    <div className="main-image-container">
-                        <img src={IMAGES_GAL[wrongCount]} />
+                    <div className="hangman_header">
+                        <Dropdown
+                            level={level}
+                            page={page}
+                        />
                     </div>
-                    <div className="game-word">
-                        {dataForGame.word.split('').map((letter, index) => {
-                            if (correctLetters.includes(letter.toLowerCase()) || correctLetters.includes(letter.toUpperCase())) {
-                                return (<span>{letter.toUpperCase()}</span>);
-                            }
-                            return (<span>&nbsp;</span>);
-                        })}
-                        {/* <span>&nbsp;</span>
+                    <div className="hangman-content">
+                        <span className="word-task">{dataForGame.wordTranslate}</span>
+                        <div className="main-image-container">
+                            <img src={IMAGES_GAL[wrongCount]} />
+                        </div>
+                        <div className="game-word">
+                            {dataForGame.word.split('').map((letter, index) => {
+                                if (correctLetters.includes(letter.toLowerCase()) || correctLetters.includes(letter.toUpperCase())) {
+                                    return (<span>{letter.toUpperCase()}</span>);
+                                }
+                                return (<span>&nbsp;</span>);
+                            })}
+                            {/* <span>&nbsp;</span>
                         <span>&nbsp;</span>
                         <span>&nbsp;</span> */}
-                    </div>
-                    <div className="game-hint">Choose the letter</div>
+                        </div>
+                        <div className="game-hint">Choose the letter</div>
 
-                    {
-                        (() => {
-                            if (showWordResult) {
+                        {
+                            (() => {
+                                if (showWordResult) {
+                                    return (
+                                        <div className="game-over">
+                                            <span className="game-over_result">{isRightWord ? 'Win' : 'Sorry, you lost.'}</span>
+                                            <br />
+                                            Correct word: <span>{dataForGame.word}</span>
+                                            <Button
+                                                title="Continue"
+                                                onClick={() => this.getNextWord(wordCount)}
+                                            />
+                                        </div>
+                                    );
+                                }
+                                return null;
+                            })()
+                        }
+
+                        <div className="keypad-container">
+                            {ALPHABET.map((letter) => {
                                 return (
-                                    <div className="game-over">
-                                        <span className="game-over_result">{isRightWord ? 'Win' : 'Sorry, you lost.'}</span>
-                                        <br />
-                                        Correct word: <span>{dataForGame.word}</span>
-                                        <Button
-                                            title="Continue"
-                                            onClick={() => this.getNextWord(wordCount)}
-                                        />
-                                    </div>
+                                    <span
+                                        // className="knob knob-letter"
+                                        className={
+                                            (() => {
+                                                if (correctLetters.includes(letter.toLowerCase()) || correctLetters.includes(letter.toUpperCase())) {
+                                                    return 'knob knob-letter knob-right';
+                                                }
+                                                if (inCorrectLetters.includes(letter.toLowerCase()) || inCorrectLetters.includes(letter.toUpperCase())) {
+                                                    return 'knob knob-letter knob-wrong';
+                                                }
+                                                return 'knob knob-letter';
+                                            })()
+
+                                        }
+                                        onClick={() => this.handleCheckLetter(letter)}
+                                    >
+                                        {letter}
+                                    </span>
                                 );
-                            }
-                            return null;
-                        })()
-                    }
-
-                    <div className="keypad-container">
-                        {ALPHABET.map((letter) => {
-                            return (
-                                <span
-                                    // className="knob knob-letter"
-                                    className={
-                                        (() => {
-                                            if (correctLetters.includes(letter.toLowerCase()) || correctLetters.includes(letter.toUpperCase())) {
-                                                return 'knob knob-letter knob-right';
-                                            }
-                                            if (inCorrectLetters.includes(letter.toLowerCase()) || inCorrectLetters.includes(letter.toUpperCase())) {
-                                                return 'knob knob-letter knob-wrong';
-                                            }
-                                            return 'knob knob-letter';
-                                        })()
-
-                                    }
-                                    onClick={() => this.handleCheckLetter(letter)}
-                                >
-                                    {letter}
-                                </span>
-                            );
-                        })}
+                            })}
+                        </div>
                     </div>
                 </div>
             );

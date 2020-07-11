@@ -268,7 +268,7 @@ export class GamePuzzle extends Component {
     showResults = () => {
         const { level, page } = this.state;
         this.setState({ isRoundEnd: true });
-        this.addStatisticsData(level, page);
+        this.addStatisticsData(level, page);   // согласовать с режимом со словами пользователя
         if (level === 6 && page === 60) {
             this.putSettings(1, 1);
         }
