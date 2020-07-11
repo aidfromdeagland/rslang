@@ -12,6 +12,7 @@ import { ModalResult } from './modalStatistics/modalResult';
 import { SettingService } from '../../../services/settingServices';
 import { settingsDefault } from '../../../constants/globalConstants';
 import { StatisticService } from '../../../services/statisticServices';
+import { convertStatisticJson } from '../../../utils/utils';
 
 export class GamePuzzle extends Component {
     constructor(props) {
@@ -91,7 +92,8 @@ export class GamePuzzle extends Component {
     }
 
     putStatistic = () => {
-        const gameStatistic = JSON.stringify(this.gameStatistic);
+        const gameStatistic = convertStatisticJson(this.gameStatistic);
+        // const gameStatistic = JSON.stringify(filterStatistic);
         this.statistic.optional.gamePuzzle = gameStatistic;
         StatisticService.put(this.statistic);
     }
