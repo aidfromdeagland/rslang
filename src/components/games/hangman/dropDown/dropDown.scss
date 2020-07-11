@@ -16,6 +16,7 @@
   .dropdown {
     position: relative;
     display: inline-block;
+    margin: 0 10px;
     &::after {
       position: absolute;
       top: 50%;

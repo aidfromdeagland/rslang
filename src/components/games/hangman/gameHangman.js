@@ -12,17 +12,26 @@ import gal6 from '../../../assets/images/hangman/gal6.png';
 // import { Dropdown } from './dropdown/dropDown';
 import { WordService } from '../../../services/wordServices';
 import { Spinner } from '../../shared/spinner';
-// import { ModalResult } from './modalResult/modalResult';
+import { ModalResult } from './modalResults/modalResult';
 import { SettingService } from '../../../services/settingServices';
 import { settingsDefault } from '../../../constants/globalConstants';
 import { StatisticService } from '../../../services/statisticServices';
 import { Button } from '../../shared/button';
 import { ALPHABET, IMAGES_GAL } from './data';
 import { Dropdown } from './dropDown/dropDown';
+import { convertStatisticJson } from '../../../utils/utils';
+import { getMemoInfoMiniGames } from '../../../services/spacedRepetition';
+import { Checkbox } from './checkBox/checkBox';
 
+let audio;
+let audioPlay;
 export class GameHangman extends Component {
     constructor(props) {
         super(props);
+        this.results = {
+            know: [],
+            dontKnow: [],
+        };
         this.state = {
             level: 1,
             page: 1,
@@ -34,6 +43,8 @@ export class GameHangman extends Component {
             showWordResult: false,
             isRightWord: null,
             isNext: true,
+            isPlayingAudio: false,
+            isAutoPronunciation: true,
 
             isGameModeTrain: true,
             isClickedCard: false,
@@ -46,7 +57,7 @@ export class GameHangman extends Component {
     }
 
     componentDidMount() {
-        const { haveWords, isNext, wordCount } = this.state;
+        const { haveWords } = this.state;
         if (!haveWords) {
             this.loadSettings();
             this.loadStatistic();
@@ -76,9 +87,9 @@ export class GameHangman extends Component {
 
     loadSettings = async () => {
         this.settings = await SettingService.get();
-        const settingsForGame = this.settings.optional.speakit
-            ? JSON.parse(this.settings.optional.speakit)
-            : JSON.parse(settingsDefault.optional.speakit);
+        const settingsForGame = this.settings.optional.hangman
+            ? JSON.parse(this.settings.optional.hangman)
+            : JSON.parse(settingsDefault.optional.hangman);
         this.setState({
             level: settingsForGame.group,
             page: settingsForGame.page,
@@ -92,39 +103,28 @@ export class GameHangman extends Component {
             group: level,
             page,
         });
-        optional.speakit = gameSettings;
+        optional.hangman = gameSettings;
         const settings = SettingService.createObject(this.settings.wordsPerDay, optional);
         SettingService.put(settings);
     }
 
     loadStatistic = async () => {
         this.statistic = await StatisticService.get();
-        this.gameStatistic = this.statistic.optional.speakit
-            ? JSON.parse(this.statistic.optional.speakit)
+        this.gameStatistic = this.statistic.optional.hangman
+            ? JSON.parse(this.statistic.optional.hangman)
             : [];
+        console.log(this.statistic)
     }
 
     putStatistic = () => {
-        const gameStatistic = JSON.stringify(this.gameStatistic);
-        this.statistic.optional.speakit = gameStatistic;
+        const gameStatistic = convertStatisticJson(this.gameStatistic);
+        this.statistic.optional.hangman = gameStatistic;
         StatisticService.put(this.statistic);
     }
 
-    addStatisticsData = (level, page) => {
-        const {
-            totalSpokenWords,
-            correctWords,
-        } = this.state;
-        const date = new Date();
-        const timeStamp = date.getTime();
-        const statisticsField = {
-            date: timeStamp,
-            group: level,
-            page,
-            incorrect: totalSpokenWords - correctWords.length,
-            correct: correctWords.length,
-        };
-        this.gameStatistic.push(statisticsField);
+    addStatisticsData = () => {
+        const gameStatistic = StatisticService.createGameStat(this.results.know.length, this.results.dontKnow.length);
+        this.gameStatistic.push(gameStatistic);
         this.putStatistic();
     }
 
@@ -179,7 +179,6 @@ export class GameHangman extends Component {
             wordId: data.id,
             wordImage: data.image,
         }));
-        console.log(this.filterData, wordCount)
         this.setState({
             dataForGame: this.filterData[wordCount],
             haveWords: true,
@@ -203,6 +202,16 @@ export class GameHangman extends Component {
         return Math.round(rand);
     }
 
+    addToResults = (result, word, audioUrl) => {
+        this.results[result].push({ word, audioUrl });
+    }
+
+    checkBoxHandle = (prop) => {
+        this.setState((prev) => ({
+            [prop]: !prev[prop],
+        }));
+    }
+
     handleCheckLetter = (letter) => {
         const {
             dataForGame,
@@ -210,17 +219,30 @@ export class GameHangman extends Component {
             inCorrectLetters,
             wrongCount,
             showWordResult,
+            wordCount,
+            isAutoPronunciation,
         } = this.state;
-        const newCorrectLetters = correctLetters.slice();
+        const {
+            isGameWithUserWords,
+        } = this.props;
+        const wordForGameRound = this.dataForGameRound[wordCount];
+        let newCorrectLetters = correctLetters.slice();
         const newIncorrectLetters = inCorrectLetters.slice();
-        console.log(letter)
+
         if (showWordResult) {
-            return null;
+            return;
         }
+
+        if (newCorrectLetters.includes(letter.toLowerCase())
+            || newCorrectLetters.includes(letter.toUpperCase())
+            || newIncorrectLetters.includes(letter.toLowerCase())
+            || newIncorrectLetters.includes(letter.toUpperCase())) {
+            return;
+        }
+
         if (dataForGame.word.split('').includes(letter.toLowerCase()) || dataForGame.word.split('').includes(letter.toUpperCase())) {
             const allLetters = dataForGame.word.split('').filter((lett) => lett.toLowerCase() === letter.toLowerCase());
-            console.log(allLetters)
-            newCorrectLetters.concat(allLetters);
+            newCorrectLetters = newCorrectLetters.concat(allLetters);
         } else {
             newIncorrectLetters.push(letter);
             this.setState({
@@ -229,13 +251,38 @@ export class GameHangman extends Component {
         }
 
         if (newIncorrectLetters.length === 6) {
+            if (isGameWithUserWords) {
+                const result = getMemoInfoMiniGames(false, wordForGameRound.userWord.optional.repeats, wordForGameRound.userWord.optional.nextDate);
+                const wordPut = { ...wordForGameRound };
+                wordPut.userWord.optional.repeats = result.repetitions;
+                wordPut.userWord.optional.prevDate = result.prevRepetitionDate;
+                wordPut.userWord.optional.nextDate = result.nextRepetitionDate;
+                WordService.putWord(wordPut.id, { optional: wordPut.userWord.optional });
+            }
             this.setState({ isRightWord: false });
+            const urlAudio = `https://raw.githubusercontent.com/aidfromdeagland/rslang-data/master/${dataForGame.wordAudio}`;
+            if (isAutoPronunciation) {
+                this.handlePlayAudio(urlAudio);
+            }
+            this.addToResults('dontKnow', dataForGame.word, urlAudio);
             this.gameOverHandler();
         }
-        console.log(correctLetters, dataForGame)
 
         if (newCorrectLetters.length === dataForGame.word.split('').length) {
+            if (isGameWithUserWords) {
+                const result = getMemoInfoMiniGames(true, wordForGameRound.userWord.optional.repeats, wordForGameRound.userWord.optional.nextDate);
+                const wordPut = { ...wordForGameRound };
+                wordPut.userWord.optional.repeats = result.repetitions;
+                wordPut.userWord.optional.prevDate = result.prevRepetitionDate;
+                wordPut.userWord.optional.nextDate = result.nextRepetitionDate;
+                WordService.putWord(wordPut.id, { optional: wordPut.userWord.optional });
+            }
             this.setState({ isRightWord: true });
+            const urlAudio = `https://raw.githubusercontent.com/aidfromdeagland/rslang-data/master/${dataForGame.wordAudio}`;
+            if (isAutoPronunciation) {
+                this.handlePlayAudio(urlAudio);
+            }
+            this.addToResults('know', dataForGame.word, urlAudio);
             this.gameOverHandler();
         }
 
@@ -249,9 +296,19 @@ export class GameHangman extends Component {
         this.setState({ showWordResult: true });
     }
 
+    handleContinue = () => {
+        const { wordCount } = this.state;
+        if (wordCount < 9) {
+            this.getNextWord(wordCount + 1);
+        }
+        if (wordCount === 9) {
+            this.showResults();
+        }
+    }
+
     getNextWord = (count) => {
         this.setState({
-            wordCount: count + 1,
+            wordCount: count,
             showWordResult: false,
             correctLetters: [],
             inCorrectLetters: [],
@@ -259,7 +316,124 @@ export class GameHangman extends Component {
             wrongCount: 0,
             isRightWord: null,
         });
-        console.log(this.state.wordCount)
+    }
+
+    showResults = () => {
+        const { level, page } = this.state;
+        this.setState({ isRoundEnd: true });
+        this.addStatisticsData();
+        if (level === 6 && page === 60) {
+            this.putSettings(1, 1);
+        }
+        if (page < 60) {
+            this.putSettings(level, parseFloat(page) + 1);
+        } else {
+            this.putSettings(level + 1, 1);
+        }
+    }
+
+    selectLevel = (level, page) => {
+        const {
+            isGameWithUserWords,
+            isGameWithLevels,
+        } = this.props;
+        if (isGameWithLevels) {
+            this.setState({
+                level,
+                page,
+                haveWords: false,
+                wordCount: 0,
+                showWordResult: false,
+                correctLetters: [],
+                inCorrectLetters: [],
+                isNext: false,
+                wrongCount: 0,
+                isRightWord: null,
+            });
+        }
+        if (isGameWithUserWords) {
+            this.setState(() => ({
+                wordCount: 0,
+                haveWords: false,
+                showWordResult: false,
+                correctLetters: [],
+                inCorrectLetters: [],
+                isNext: false,
+                wrongCount: 0,
+                isRightWord: null,
+            }));
+        }
+        this.results.know = [];
+        this.results.dontKnow = [];
+        this.putSettings(level, page);
+    }
+
+    handleByNextRound = () => {
+        const {
+            level,
+            page,
+        } = this.state;
+        this.setState({ isRoundEnd: false });
+        if (level === 6 && page === 60) {
+            this.selectLevel(1, 1);
+        }
+        if (page < 60) {
+            this.selectLevel(level, parseFloat(page) + 1);
+        } else {
+            this.selectLevel(level + 1, 1);
+        }
+        this.results.know = [];
+        this.results.dontKnow = [];
+    }
+
+    handleDontKnow = () => {
+        const {
+            dataForGame,
+            isAutoPronunciation,
+        } = this.state;
+        this.setState({
+            wrongCount: 6,
+            showWordResult: true,
+            isRightWord: false,
+            correctLetters: [],
+            inCorrectLetters: [],
+        });
+        const urlAudio = `https://raw.githubusercontent.com/aidfromdeagland/rslang-data/master/${dataForGame.wordAudio}`;
+        this.addToResults('dontKnow', dataForGame.word, urlAudio);
+        if (isAutoPronunciation) {
+            this.handlePlayAudio(urlAudio);
+        }
+    }
+
+    handlePlayAudio = (url) => {
+        if (audioPlay) {
+            audioPlay.then(() => {
+                audio.pause();
+                audio = new Audio(url);
+                audioPlay = audio.play();
+                audio.onplaying = () => {
+                    this.setState({ isPlayingAudio: true });
+                };
+                audio.onended = () => {
+                    this.setState({ isPlayingAudio: false });
+                };
+                audio.onpause = () => {
+                    this.setState({ isPlayingAudio: false });
+                };
+            });
+        } else {
+            audio = new Audio(url);
+            audioPlay = audio.play();
+            audio.onplaying = () => {
+                this.setState({ isPlayingAudio: true });
+            };
+            audio.onended = () => {
+                this.setState({ isPlayingAudio: false });
+            };
+            audio.onpause = () => {
+                this.setState({ isPlayingAudio: false });
+            };
+        }
     }
 
     render() {
@@ -272,62 +446,85 @@ export class GameHangman extends Component {
             showWordResult,
             isRightWord,
             wordCount,
-            //     indexClickedCard,
-            //     isClickedCard,
-            //     activeAudioUrl,
-            //     activeImageUrl,
-            //     activeTranslate,
-            //     correctWords,
-            //     totalSpokenWords,
-            //     isRoundEnd,
+            isRoundEnd,
             level,
             page,
-            //     isGameModeTrain,
-            //     speakWord,
+            isPlayingAudio,
+            isAutoPronunciation,
         } = this.state;
-        // const {
-        //     isGameWithLevels,
-        // } = this.props;
-        // if (haveWords) {
-        // console.log(correctLetters, dataForGame)
+        const {
+            isGameWithLevels,
+        } = this.props;
         if (haveWords) {
             return (
                 <div className="hangman-container">
+                    {(() => {
+                        if (isRoundEnd) {
+                            return (
+                                <ModalResult
+                                    results={this.results}
+                                    handleByNextRound={this.handleByNextRound}
+                                />
+                            );
+                        }
+                        return null;
+                    })()}
                     <div className="hangman_header">
-                        <Dropdown
-                            level={level}
-                            page={page}
+                        {isGameWithLevels && (
+                            <Dropdown
+                                selectLevel={this.selectLevel}
+                                level={level}
+                                page={page}
+                            />
+                        )}
+                        <Checkbox
+                            text="Auto pronunciation"
+                            checked={isAutoPronunciation}
+                            onChange={() => this.checkBoxHandle('isAutoPronunciation')}
                         />
                     </div>
                     <div className="hangman-content">
                         <span className="word-task">{dataForGame.wordTranslate}</span>
                         <div className="main-image-container">
-                            <img src={IMAGES_GAL[wrongCount]} />
+                            <img src={IMAGES_GAL[wrongCount]} alt="some" />
                         </div>
                         <div className="game-word">
                             {dataForGame.word.split('').map((letter, index) => {
-                                if (correctLetters.includes(letter.toLowerCase()) || correctLetters.includes(letter.toUpperCase())) {
-                                    return (<span>{letter.toUpperCase()}</span>);
+                                if (correctLetters.includes(letter.toLowerCase())
+                                    || correctLetters.includes(letter.toUpperCase())) {
+                                    return (
+                                        <span
+                                            key={index}
+                                        >
+                                            {letter.toUpperCase()}
+                                        </span>
+                                    );
                                 }
-                                return (<span>&nbsp;</span>);
+                                return (<span key={index}>&nbsp;</span>);
                             })}
-                            {/* <span>&nbsp;</span>
-                        <span>&nbsp;</span>
-                        <span>&nbsp;</span> */}
                         </div>
-                        <div className="game-hint">Choose the letter</div>
+                        {!showWordResult && <div className="game-hint">Choose the letter</div>}
 
                         {
                             (() => {
                                 if (showWordResult) {
                                     return (
-                                        <div className="game-over">
-                                            <span className="game-over_result">{isRightWord ? 'Win' : 'Sorry, you lost.'}</span>
-                                            <br />
-                                            Correct word: <span>{dataForGame.word}</span>
+                                        <div className={isRightWord ? 'game-over game-over-correct' : 'game-over game-over-incorrect'}>
+                                            <span
+                                                className={isRightWord ? 'game-over_result correct-result' : 'game-over_result incorrect-result'}
+                                            >
+                                                {isRightWord ? 'Correct' : 'Sorry, you lost.'}
+                                            </span>
+                                            Correct word:
+                                            <span
+                                                className="correct-word"
+                                            >
+                                                {dataForGame.word}
+                                            </span>
                                             <Button
+                                                className="button"
                                                 title="Continue"
-                                                onClick={() => this.getNextWord(wordCount)}
+                                                onClick={() => this.handleContinue(wordCount)}
                                             />
                                         </div>
                                     );
@@ -337,16 +534,20 @@ export class GameHangman extends Component {
                         }
 
                         <div className="keypad-container">
-                            {ALPHABET.map((letter) => {
+                            {ALPHABET.map((letter, index) => {
                                 return (
                                     <span
-                                        // className="knob knob-letter"
+                                        role="button"
+                                        key={index}
+                                        tabIndex={0}
                                         className={
                                             (() => {
-                                                if (correctLetters.includes(letter.toLowerCase()) || correctLetters.includes(letter.toUpperCase())) {
+                                                if (correctLetters.includes(letter.toLowerCase())
+                                                    || correctLetters.includes(letter.toUpperCase())) {
                                                     return 'knob knob-letter knob-right';
                                                 }
-                                                if (inCorrectLetters.includes(letter.toLowerCase()) || inCorrectLetters.includes(letter.toUpperCase())) {
+                                                if (inCorrectLetters.includes(letter.toLowerCase())
+                                                    || inCorrectLetters.includes(letter.toUpperCase())) {
                                                     return 'knob knob-letter knob-wrong';
                                                 }
                                                 return 'knob knob-letter';
@@ -360,13 +561,27 @@ export class GameHangman extends Component {
                                 );
                             })}
                         </div>
+                        <div className="progress-bar-game">
+                            <div className="progress-percent-game" style={{ width: `${(wordCount + 1) * 10}%` }} />
+                        </div>
+                        <div className="buttons-block">
+                            {!showWordResult && (
+                                <Button
+                                    className="button"
+                                    title="Don't know"
+                                    onClick={this.handleDontKnow}
+                                />
+                            )}
+                            <Button
+                                className={isPlayingAudio ? 'dynamic-btn playing' : 'dynamic-btn'}
+                                onClick={() => this.handlePlayAudio(`https://raw.githubusercontent.com/aidfromdeagland/rslang-data/master/${dataForGame.wordAudio}`)}
+                            />
+                        </div>
+
                     </div>
                 </div>
             );
         }
         return <Spinner />;
-
-        // }
-        // return <Spinner />;
     }
 }
