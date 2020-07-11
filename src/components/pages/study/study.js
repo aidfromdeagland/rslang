@@ -9,6 +9,9 @@ import { SettingService } from '../../../services/settingServices';
 import { Spinner } from '../../shared/spinner';
 import { Progress } from './progress';
 
+const totalLearnedWordsQuery = { 'userWord.optional.isDeleted': false };
+const totalDifficultWordsQuery = { $and: [{ 'userWord.optional.isDeleted': false, 'userWord.optional.isDifficult': true }] };
+
 const audioPrefixMap = {
     showWordTranslate: 'audio',
     showSentenceMeaning: 'audioMeaning',
@@ -53,52 +56,63 @@ export class Study extends Component {
 
     getSettings = async () => {
         const settings = await SettingService.get();
-        this.settings = settings.optional;
-        console.log(this.settings);
+        const settingsToWork = settings.optional;
+        return settingsToWork;
     }
 
     getWords = async () => {
+        const { allowNewWords, allowLearnedWords, allowDifficultWords, } = this.props.location;
         const newWordsQuery = { userWord: null };
-        const totalLearnedWordsQuery = { 'userWord.optional.isDeleted': false };
         const todayMidnightDate = new Date(Date.now()).setHours(23, 59, 59, 999);
         const learnedWordsDateLimitedQuery = { $and: [{ 'userWord.optional.isDeleted': false, 'userWord.optional.nextDate': { $lt: todayMidnightDate } }] };
 
-        this.newWordsforTraining = [];
-        if (this.settings.newWords) {
+        let newWordsforTraining = [];
+        if (this.settings.newWords && allowNewWords) {
             const newWordsQuantity = this.settings.newWords;
             const newWordsAggResponse = await WordService.getUserAggWords(
                 '', newWordsQuery, newWordsQuantity,
             );
-            this.newWordsforTraining = newWordsAggResponse[0].paginatedResults;
+            newWordsforTraining = newWordsAggResponse[0].paginatedResults;
         }
-        this.learnedWordsForTraining = [];
-        if (this.settings.totalWords - this.settings.newWords > 0) {
+        let learnedWordsForTraining = [];
+        if ((this.settings.totalWords - this.settings.newWords > 0) && allowLearnedWords) {
+            let learnedWordsAggResponse;
             const learnedWordsQuantity = this.settings.totalWords - this.settings.newWords;
-            const learnedWordsAggResponse = await WordService.getUserAggWords(
-                '', learnedWordsDateLimitedQuery, learnedWordsQuantity,
-            );
-            this.learnedWordsForTraining = learnedWordsAggResponse[0].paginatedResults;
+            if (allowDifficultWords) {
+                learnedWordsAggResponse = await WordService.getUserAggWords(
+                    '', totalDifficultWordsQuery, learnedWordsQuantity,
+                );
+                learnedWordsForTraining = learnedWordsAggResponse[0].paginatedResults;
+            } else {
+                learnedWordsAggResponse = await WordService.getUserAggWords(
+                    '', learnedWordsDateLimitedQuery, learnedWordsQuantity,
+                );
+                learnedWordsForTraining = learnedWordsAggResponse[0].paginatedResults;
+            }
         }
 
-        this.words = this.newWordsforTraining.concat(this.learnedWordsForTraining);
-        console.log(this.words);
+        return newWordsforTraining.concat(learnedWordsForTraining);
+    }
 
+    getTotalWordsQuantity = async () => {
         const totalLearnedWordsAggResponse = await WordService.getUserAggWords('', totalLearnedWordsQuery, 1);
-        const totalLearnedWords = totalLearnedWordsAggResponse[0].totalCount.length
+        return totalLearnedWordsAggResponse[0].totalCount.length
             ? totalLearnedWordsAggResponse[0].totalCount[0].count
             : 0;
-        this.setState({ totalLearnedWordsQuantity: totalLearnedWords });
     }
 
     startTraining = async () => {
-        await this.getSettings();
-        await this.getWords();
+        this.settings = await this.getSettings();
+        const [words, totalLearnedWordsQuantity] = await Promise.all([this.getWords(), this.getTotalWordsQuantity()]);
+        this.words = words;
+        this.totalLearnedWordsQuantity = totalLearnedWordsQuantity;
         if (this.words.length) {
             this.createCard();
             this.setState({
                 isLoadWords: true,
                 isLoadSettings: true,
                 needToLearnWordsQuantity: this.words.length,
+                totalLearnedWordsQuantity: this.totalLearnedWordsQuantity,
             });
         } else {
             alert('no words for training. change your settings');
@@ -141,6 +155,10 @@ export class Study extends Component {
         return word;
     }
 
+    pushWord = () => {
+        this.words.push(this.words[this.state.wordCount]);
+    }
+
     handleSubmit = (event) => {
         if (event) {
             event.preventDefault();
@@ -154,7 +172,7 @@ export class Study extends Component {
                     this.setState({ showEvaluation: true });
                     console.log('GOOD TRY');
                 } else {
-                    this.words.push(this.words[this.state.wordCount]);
+                    this.pushWord();
                     console.log(this.words);
                 }
                 this.audioPlayer.src = this.dataForCard.audioContext;
@@ -274,9 +292,12 @@ export class Study extends Component {
             showEvaluation, learnedWordsQuantity, needToLearnWordsQuantity,
             totalLearnedWordsQuantity, redirected,
         } = this.state;
-        if (redirected) {
+        if (redirected
+            || (this.props.location.allowNewWords === undefined
+            || this.props.location.allowLearnedWords === undefined)) {
             return <Redirect to="/main" />;
         }
+
         if (isLoadSettings && isLoadWords) {
             return (
                 <div className="study-page">
@@ -284,7 +305,7 @@ export class Study extends Component {
                         <section className="card">
                             <div className="hints-container">
                                 <div className="img-container">
-                                    {this.settings.showPicture
+                                    {this.settings.showWordImage
                                         && <img src={this.dataForCard.wordImage} alt="exampleImg" />}
                                 </div>
                                 <div className="transcription">
@@ -309,14 +330,25 @@ export class Study extends Component {
                                         isCorrectWord={isCorrectWord}
                                         showEvaluation={showEvaluation}
                                         handleEvaluate={this.handleEvaluate}
+                                        pushWord={this.pushWord}
                                         currentWord={this.words[this.state.wordCount]}
                                     />
                                 </div>
                             </div>
                             <div className="buttons-block">
-                                <Button className="button delete-btn learn-btn" title="delete" />
-                                <Button className="button hard-btn learn-btn" title="difficult" />
-                                <Button className="button answer-btn learn-btn" title="Show Answer" onClick={this.handleClickShowAnswer} />
+                                {this.settings.showDeleteButton
+                                && <Button className="button delete-btn learn-btn" title="delete" />}
+
+                                {this.settings.showDifficultButton
+                                && <Button className="button hard-btn learn-btn" title="difficult" />}
+                                {this.settings.showAnswerButton
+                                && (
+                                    <Button
+                                        className="button answer-btn learn-btn"
+                                        title="Show Answer"
+                                        onClick={this.handleClickShowAnswer}
+                                    />
+                                )}
                             </div>
                         </section>
                         <div className="navigate-next">
