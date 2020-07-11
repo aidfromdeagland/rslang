@@ -28,3 +28,15 @@ export const settingsDefault = {
         savannah: '{"group":0,"page":0}',
     },
 };
+
+export const statisticsDefault = {
+    learnedWords: 0,
+    optional: {
+        savannah: '{"date":null,"correct":null,"incorrect":null,"success":null}',
+        gamePuzzle: '{"date":null,"correct":null,"incorrect":null,"success":null}',
+        audioCall: '{"date":null,"correct":null,"incorrect":null,"success":null}',
+        speakit: '{"date":null,"correct":null,"incorrect":null,"success":null}',
+        sprint: '{"date":null,"correct":null,"incorrect":null,"success":null}',
+        hangman: '{"date":null,"correct":null,"incorrect":null,"success":null}',
+    },
+};

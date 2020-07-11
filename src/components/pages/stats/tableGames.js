@@ -1,131 +1,70 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import { TableSpeakit } from './tableSpeakit';
+import { TablePuzzle } from './tablePuzzle';
+import { TableSavannah } from './tableSavannah';
+import { TableAudiocall } from './tableAudiocall';
+import { TableSprint } from './tableSprint';
+import { TableHangman } from './tableHangman';
 import { StatisticService } from '../../../services/statisticServices';
 
-const Row = ({
-    game, date, win, lose, score,
-}) => (
-    <div className="row">
-        <div>{game}</div>
-        <div>{date}</div>
-        <div>{win}</div>
-        <div>{lose}</div>
-        <div>{score}</div>
-
-    </div>
-);
 export class TableGames extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            data: [
+    loadStatistics = (game) => {
+        const amountsOfround = game.length;
+        const data = [];
+        for (let i = 0; i < amountsOfround; i += 1) {
+            data.push(
                 {
-                    game: 'SpeakIt', date: null, win: null, lose: null, score: null,
+                    date: this.getTimeFormat(game[i].date),
+                    win: game[i].correct,
+                    lose: game[i].incorrect,
+                    success: ((game[i].correct * 100) / (game[i].correct + game[i].incorrect)),
                 },
-                {
-                    game: 'English Puzzle', date: null, win: null, lose: null, score: null,
-                },
-                {
-                    game: 'Savannh', date: null, win: null, lose: null, score: null,
-                },
-                {
-                    game: 'Audio Call', date: null, win: null, lose: null, score: null,
-                },
-                {
-                    game: 'Sprint', date: null, win: null, lose: null, score: null,
-                },
-                {
-                    game: 'Hangman', date: null, win: null, lose: null, score: null,
-                },
+            );
+        }
+        return data;
+    }
 
-            ],
+    getTimeFormat = (timestamp) => {
+        const options = {
+            day: 'numeric',
+            month: 'long',
+            hour: 'numeric',
+            minute: 'numeric',
+            hour12: false,
         };
+        const date = new Date(timestamp);
+        const dateFormat = date.toLocaleString('en', options);
+        return dateFormat;
     }
 
-    componentDidMount() {
-        this.loadStatistics();
+    render() {
+        return (
+            <div className="tables__minigames">
+                <h2>SpeakIt</h2>
+                <TableSpeakit
+                    loadStatistics={this.loadStatistics}
+                />
+                <h2>English-puzzle</h2>
+                <TablePuzzle
+                    loadStatistics={this.loadStatistics}
+                />
+                <h2>Savannah</h2>
+                <TableSavannah
+                    loadStatistics={this.loadStatistics}
+                />
+                <h2>Audio call</h2>
+                <TableAudiocall
+                    loadStatistics={this.loadStatistics}
+                />
+                <h2>Sprint</h2>
+                <TableSprint
+                    loadStatistics={this.loadStatistics}
+                />
+                <h2>Hangman</h2>
+                <TableHangman
+                    loadStatistics={this.loadStatistics}
+                />
+            </div>
+        );
     }
-
-     loadStatistics = async () => {
-         const data = await StatisticService.get();
-         const dataGame = data.optional;
-         const dataSavanna = JSON.parse(dataGame.savannah);
-         // const dataGamePuzzle = JSON.parse(settings.gamePuzzle);
-
-         this.setState({
-             data: [
-                 {
-                     game: 'SpeakIt', date: null, win: null, lose: null, score: null,
-                 },
-                 {
-                     game: 'English Puzzle', date: null, win: null, lose: null, score: null,
-                 },
-                 {
-                     game: 'Savannah', date: this.getTimeFormat(dataSavanna.date), win: dataSavanna.correct, lose: dataSavanna.incorrect, score: null,
-                 },
-                 {
-                     game: 'Audio Call', date: null, win: null, lose: null, score: null,
-                 },
-                 {
-                     game: 'Sprint', date: null, win: null, lose: null, score: null,
-                 },
-                 {
-                     game: 'Hangman', date: null, win: null, lose: null, score: null,
-                 },
-
-             ],
-         });
-         console.log((JSON.parse(dataGame.savannah)));
-         console.log(data);
-     }
-
-     getTimeFormat = (timestamp) => {
-         const options = {
-             day: 'numeric',
-             month: 'long',
-             hour: 'numeric',
-             minute: 'numeric',
-             second: 'numeric',
-             hour12: false,
-         };
-         const date = new Date(timestamp);
-         const dateFormat = date.toLocaleString('en', options);
-         return dateFormat;
-     }
-
-     render() {
-         const { data } = this.state;
-         const rows = data.map((rowData, index) => (
-             <Row
-                 key={index}
-                 {...rowData}
-             />
-         ));
-
-         return (
-
-             <div className="table">
-
-                 <div className="table__header">
-                     <div>Game</div>
-                     <div>Last Game</div>
-                     <div>Correct Answers</div>
-                     <div>Wrong Answers</div>
-                     <div>Score</div>
-
-                 </div>
-                 <div className="body">
-                     {rows}
-                 </div>
-             </div>
-         );
-     }
 }
-
-TableGames.propTypes = {
-    game: PropTypes.string.isRequired,
-    date: PropTypes.string.isRequired,
-    win: PropTypes.number.isRequired,
-    lose: PropTypes.number.isRequired,
-    score: PropTypes.number,
-};
