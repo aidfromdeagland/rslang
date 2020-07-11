@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 import './hangman.scss';
 
 import gal0 from '../../../components/games/hangman/hangmanimg/gal0.png';
-import gal1 from '../../../components/games/hangman/hangmanimg/gal1.png';
-import gal2 from '../../../components/games/hangman/hangmanimg/gal2.png';
-import gal3 from '../../../components/games/hangman/hangmanimg/gal3.png';
-import gal4 from '../../../components/games/hangman/hangmanimg/gal4.png';
-import gal5 from '../../../components/games/hangman/hangmanimg/gal5.png';
-import gal6 from '../../../components/games/hangman/hangmanimg/gal6.png';
+//import gal1 from '../../../components/games/hangman/hangmanimg/gal1.png';
+//import gal2 from '../../../components/games/hangman/hangmanimg/gal2.png';
+//import gal3 from '../../../components/games/hangman/hangmanimg/gal3.png';
+//import gal4 from '../../../components/games/hangman/hangmanimg/gal4.png';
+//import gal5 from '../../../components/games/hangman/hangmanimg/gal5.png';
+//import gal6 from '../../../components/games/hangman/hangmanimg/gal6.png';
 
 export class Hangman extends Component {
     constructor(props) {
@@ -28,7 +28,6 @@ export class Hangman extends Component {
             this.letterTrue = []; 
             this.letterTrue.push(arr[0]);
             this.letterTrue.push(arr[arr.length-1]);
-            console.log(arr);
             return {currentWord: arr};
         });
         this.letterFalse = [];
