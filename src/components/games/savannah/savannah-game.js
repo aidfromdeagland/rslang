@@ -92,8 +92,8 @@ export class SavannahGame extends Component {
             date,
             group,
             page,
-            allRightWords,
-            allWrongWords,
+            correct: allRightWords,
+            incorrect: allWrongWords,
         };
         this.saveStatisticsSavannah(settings);
     };
