@@ -92,14 +92,15 @@
   }
 
   &__button {
+    filter: invert(80%);
     &:hover {
       transform: scale(1.05);
-      filter: saturate(125%);
+      filter: invert(100%);
     }
 
     &:active {
       transform: scale(0.95);
-      filter: saturate(75%);
+      filter: invert(50%);
     }
   }
 

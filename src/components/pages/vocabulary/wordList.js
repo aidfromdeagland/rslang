@@ -43,6 +43,8 @@ WordList.defaultProps = {
 };
 
 WordList.propTypes = {
+    // eslint-disable-next-line react/forbid-prop-types
+    settings: PropTypes.object.isRequired,
     words: PropTypes.arrayOf(PropTypes.object).isRequired,
     isSpecial: PropTypes.bool,
 };

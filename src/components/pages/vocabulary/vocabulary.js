@@ -5,9 +5,6 @@ import {
     Tab, Tabs, TabList, TabPanel,
 } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
-
-import PropTypes from 'prop-types';
-import { wordsMockLearned, wordsMockDifficult, wordsMockDeleted } from './tempMock';
 import { WordList } from './wordList';
 import { WordService } from '../../../services/wordServices';
 import { Spinner } from '../../shared/spinner';
@@ -42,16 +39,19 @@ export class Vocabulary extends Component {
             '', totalUserWordsAggregatedQuery, maximumWordsQuantity,
         );
         const totalWords = totalWordsResponse[0].paginatedResults;
-        this.learnedWords = totalWords.filter((wordObject) => wordObject.userWord.optional.isDeleted === false && wordObject.userWord.optional.isDifficult === false);
-        this.difficultWords = totalWords.filter((wordObject) => wordObject.userWord.optional.isDifficult === true);
-        this.deletedWords = totalWords.filter((wordObject) => wordObject.userWord.optional.isDeleted === true);
-        console.log('WORDS: ', this.learnedWords, this.difficultWords, this.deletedWords);
+        this.learnedWords = totalWords
+            .filter((wordObject) => (
+                wordObject.userWord.optional.isDeleted === false
+                && wordObject.userWord.optional.isDifficult === false));
+        this.difficultWords = totalWords
+            .filter((wordObject) => wordObject.userWord.optional.isDifficult === true);
+        this.deletedWords = totalWords
+            .filter((wordObject) => wordObject.userWord.optional.isDeleted === true);
     };
 
     getSettings = async () => {
         const settings = await SettingService.get();
         this.settings = settings.optional;
-        console.log('SETTINGS: ', this.settings);
     }
 
     render() {
@@ -67,13 +67,24 @@ export class Vocabulary extends Component {
                         </TabList>
 
                         <TabPanel className="vocabulary__panel">
-                            <WordList words={this.learnedWords} settings={this.settings} />
+                            <WordList
+                                words={this.learnedWords}
+                                settings={this.settings}
+                            />
                         </TabPanel>
                         <TabPanel className="vocabulary__panel">
-                            <WordList words={this.difficultWords} settings={this.settings} isSpecial />
+                            <WordList
+                                words={this.difficultWords}
+                                settings={this.settings}
+                                isSpecial
+                            />
                         </TabPanel>
                         <TabPanel className="vocabulary__panel">
-                            <WordList words={this.deletedWords} settings={this.settings} isSpecial />
+                            <WordList
+                                words={this.deletedWords}
+                                settings={this.settings}
+                                isSpecial
+                            />
                         </TabPanel>
                     </Tabs>
                 </div>

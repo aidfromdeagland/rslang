@@ -10,6 +10,7 @@ const defaultDateFormat = {
 };
 const shortDateFormat = { month: 'short', day: 'numeric' };
 
+/* eslint-disable react/prop-types */
 export class VocabularyWord extends Component {
     constructor(props) {
         super(props);
@@ -17,8 +18,10 @@ export class VocabularyWord extends Component {
     }
 
     onAudioClickHandler = (audioSrc) => {
-        this.audioPlayer.src = audioSrc;
-        this.audioPlayer.play();
+        if (this.audioPlayer.readyState === 0 || this.audioPlayer.readyState === 2) {
+            this.audioPlayer.src = audioSrc;
+            this.audioPlayer.play();
+        }
     }
 
     render() {
@@ -51,7 +54,24 @@ export class VocabularyWord extends Component {
                 </div>
                 <div className="word-card__additionalContainer">
                     {settings.showSentenceExample && <p className="word-card__example" dangerouslySetInnerHTML={{ __html: word.textExample }} />}
-                    {settings.showSentenceMeaning && <p className="word-card__meaning" dangerouslySetInnerHTML={{ __html: word.textMeaning }} />}
+                    {settings.showSentenceExample && settings.showSentencesTranslate
+                    && (
+                        <p className="word-card__example word-card__example_translate">
+                            {word.textExampleTranslate}
+                        </p>
+                    ) }
+                    {settings.showSentenceMeaning
+                    && (
+                        <div className="word-card__meaning-containrer">
+                            <p className="word-card__meaning" dangerouslySetInnerHTML={{ __html: word.textMeaning }} />
+                            {settings.showSentencesTranslate
+                        && (
+                            <p className="word-card__meaning word-card__meaning_translate">
+                                {word.textMeaningTranslate}
+                            </p>
+                        )}
+                        </div>
+                    )}
                     <div className="word-card__training-info">
                         <div className="word-card__bottom-left-container">
                             <p className="word-card__last-used">{ `last used: ${new Date(word.userWord.optional.prevDate).toLocaleString(defaultLocale, defaultDateFormat)}` }</p>
