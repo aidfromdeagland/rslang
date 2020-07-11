@@ -30,7 +30,8 @@ export class AudioCall extends Component {
         if (error.status === 401) {
             this.setState({ auth: false, failedFunction });
         } else {
-            const text = label ? `${label}: ${error.message}` : error.message;
+            const errorMessage = typeof error !== 'string' ? error.message : error;
+            const text = label ? `${label}: ${errorMessage}` : errorMessage;
             this.props.setMessage(text);
         }
     }
