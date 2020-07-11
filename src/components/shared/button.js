@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 export class Button extends Component {
     render() {
         const {
-            className, isDisabled, onClick, title, children
+            className, isDisabled, onClick, title, children,
         } = this.props;
         return (
             <button

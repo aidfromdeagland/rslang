@@ -1,0 +1,121 @@
+.game-board {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  background: rgb(255, 255, 255);
+  box-shadow: 0 3px 0.5rem #3c3c3c;
+  border-radius: 0.5rem;
+  align-items: center;
+  margin: 50px 0;
+  .image-container {
+    width: 240px;
+    margin-top: 27px;
+    img {
+      width: 100%;
+      border-radius: 5px;
+    }
+  }
+  .game-board__translation {
+    padding: 20px 20px;
+    font-size: 30px;
+    text-align: center;
+  }
+  .game-board__btn-block {
+    background-color: #c0c3c5;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    @media (max-width: 430px) {
+      flex-direction: column;
+    }
+    .puzzle-btn {
+      width: auto;
+    }
+    .dynamic-btn {
+      margin-left: auto;
+      @media (max-width: 430px) {
+        margin-left: 0;
+      }
+    }
+  }
+}
+
+.game-board__action {
+  margin: 30px 0;
+  padding: 0 20px;
+  .puzzle-container-sentence {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #e6e9ee;
+    border-radius: 5px;
+    margin-bottom: 32px;
+    background-color: rgba(126, 145, 159, 0.02);
+    display: flex;
+    min-height: 40px;
+    flex-wrap: wrap;
+  }
+  .puzzle-pieces {
+    padding: 8px 12px;
+    display: flex;
+    border: 1px solid #e6e9ee;
+    min-height: 40px;
+    flex-wrap: wrap;
+    border-radius: 5px;
+  }
+  .puzzle-container {
+    display: flex;
+  }
+}
+
+.puzzle-pieces_word-container {
+  margin: 0 6px 12px;
+  width: auto;
+  min-width: 40px;
+  min-height: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-radius: 4px;
+  border: 1px solid #e6e9ee;
+  background-color: #fff;
+  outline: none;
+  border: 1px solid #e6e9ee;
+}
+
+.drag-word {
+  width: auto;
+  margin: 0 1px;
+  transition: all 0.2s ease;
+  border-radius: 4px;
+  border: none;
+  background-color: #f4f6f7;
+  padding: 8px 10px 8px 10px;
+  outline: none;
+  cursor: grab;
+  user-select: none;
+  margin: 2px 2px;
+  &.completed.un-correct-word {
+    background: #eab49f;
+  }
+  &.completed.correct-word {
+    background: #72eac2;
+  }
+  .word-text {
+    width: 100%;
+    max-width: 200px;
+    display: inline-flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    text-align: left;
+    font-size: 18px;
+    font-weight: 600;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.43;
+    letter-spacing: normal;
+    color: #7e919f;
+    transition: all 0.2s ease;
+  }
+}
