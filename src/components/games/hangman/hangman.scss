@@ -6,6 +6,52 @@
     min-height: 100vh;
     width: 100%;
 
+    &-start {
+        display: flex;
+        /*flex-direction: */
+        justify-content: space-between;
+        /*margin: 0 auto;*/
+        background-image: url("./../../../components/games/hangman/hangmanimg/simm_gal.jpg");
+        background-size: cover;
+        background-position: left;
+        min-height: calc(100vh - 100px);
+        text-align: center;
+        color: #ffff;
+
+        &-text {
+            /*display: flex;
+            flex-direction: column;*/
+            width: 40%;
+            padding-top: 3rem;
+            font-size: 2rem;
+            text-align: left;
+        }
+
+        &-custom {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 28%;
+           
+        
+
+        .hangman-start-btn {
+            width: 150px;
+            height: 50px;
+            margin-bottom: 45px;
+            margin-left: 35%;
+            font-family: "OpenSans", sans-serif;
+            font-size: 1.3rem;
+            background-color: #092c70;
+            color: #ffff;
+            border-radius: 7px;
+            cursor: pointer;
+            
+        }
+    }
+    }
+
+
     .dop-block{
         width: 70px;
         height: 30px;
@@ -117,5 +163,47 @@
         .btn-active{
             display: block;
         }
+
+
+    .hangmanstat {
+        color: #092c70;
+        margin: 0;
+        text-align: center;
+        align-items: center;
+        background-color: yellow;
+    
+        .stat{
+            display:flex;
+            justify-content: space-between;
+    
+            .stat-current
+            .stat-history {
+                height: 50px;
+                margin-top: 30px;
+                display: flex;
+                justify-content: space-between;
+                text-align: center;
+                align-items: center;
+                border: 1px solid  grey;
+            }
+        }
+    
+        .btn-back{
+            width: 130px;
+            height: 35px;
+            color: #fff;
+            text-align: center;
+            align-items: center;
+            margin: auto;
+            margin-top: 20px;
+            padding-top: 10px;
+            font-family: "OpenSans", sans-serif;
+            background-color: #092c70;
+            border-radius: 7px;
+            cursor: pointer;
+        }
+    
+    }    
+        
 
 }    

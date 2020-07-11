@@ -2,12 +2,13 @@ import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
 import './hangmanstat.scss';
 
-export class Hangmanstat extends Component {
-    // constructor(props) {
-    //     super(props);
+export class HangmanStat extends Component {
+     constructor(props) {
+         super(props);
+         //this.props.func()
     //     //this.state = {}
     //     this.goBack = this.goBack.bind(this);
-    // }
+     }
 
     // componentDidMount() {
     //     console.log('Stat');
@@ -27,7 +28,10 @@ export class Hangmanstat extends Component {
 
     render() {
         //const {isContinue} = this.state;
-        console.log('Stat');
+        const {wordStat} = this.props;
+        //oconsole.log(wordStat);
+        const {correctAnswers} = Math.round(((wordStat.trueLetters.lenght) / (wordStat.falseLetters.lenght)) * 100);
+        
         return (
             <div className="hangmanstat">
                 {/* <h1 tabIndex="-1" ref={( content ) => {this.content = content;}}>Hangman</h1> */}
@@ -36,13 +40,19 @@ export class Hangmanstat extends Component {
                 <div className="stat">
                     <div className="stat-current">
                         <h3>Current game</h3>
+                        Correct answers: {correctAnswers}
+                        Number of moves: {wordStat.countMoves}
+                        Guesssed letters: {wordStat.trueLetters}
+                        Invalid letters: {wordStat.falseLetters}
                     </div>
                     <div className="stat-history">
                     <h3>History</h3>
                     </div>
                 </div>   
                 <NavLink to="/mini-games/hangman">
-                    <div className='btn-back'>Back</div>
+                    <div className='btn-back' 
+                    onClick={() => this.props.handleStatistics(false)}
+                    >Back</div>
                 </NavLink>
             </div>
         );
