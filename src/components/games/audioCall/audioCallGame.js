@@ -6,6 +6,7 @@ import { MEDIA_PREFIX_URL } from '../../../constants/globalConstants';
 import { Repository } from './repository';
 import { MAX_COUNT_QUEST_WORDS } from './constants';
 import { tryExecute } from './utils';
+import { WordService } from '../../../services/wordServices';
 
 export class AudioCallGame extends Component {
     constructor(props) {
@@ -65,14 +66,24 @@ export class AudioCallGame extends Component {
         };
     }
 
-    addResult(word, isCorrect) {
+    async addResult(word, isCorrect) {
         this.result.push({ word, isCorrect });
+        try {
+            // custom add user words:
+            // await WordService.postWord(word.id,
+            //     WordService.createWordPost(Date.now(), Date.now(), 1));
+            // await WordService.deleteWord(word.id);
+            WordService.putWord(word.id, WordService.createStatisticWordPut(
+                word.userWord, isCorrect,
+            ));
+        } catch (e) {
+            this.props.errorFunction(e, undefined, 'Save statistic');
+        }
     }
 
     handleSelectWord(word, isCorrect) {
         this.addResult(word, isCorrect);
         this.setState({ selectedWord: true });
-        // сохранить статистику
     }
 
     handleSpeak() {

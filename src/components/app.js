@@ -23,6 +23,7 @@ import { Study } from './pages/study/study';
 import { Table } from './pages/stats/table';
 import { User } from './pages/auth/user';
 import { Spinner } from './shared/spinner';
+import { MessagePanel } from './message/messagePanel';
 
 export class App extends Component {
     constructor(props) {
@@ -43,9 +44,12 @@ export class App extends Component {
         this.setState({ isAuth: false, isChecking: false });
     }
 
-    render() {
-        const { isAuth, isChecking } = this.state;
+    setMessage = (text, isError = true) => {
+        this.setState({ message: { text, isError } });
+    }
 
+    render() {
+        const { isAuth, isChecking, message } = this.state;
         if (isChecking) {
             return (<Spinner />);
         }
@@ -72,7 +76,7 @@ export class App extends Component {
                                             <Savannah />
                                         </Route>
                                         <Route path="/mini-games/audio-call">
-                                            <AudioCall />
+                                            <AudioCall setMessage={this.setMessage} />
                                         </Route>
                                         <Route path="/mini-games/sprint">
                                             <Sprint />
@@ -127,6 +131,7 @@ export class App extends Component {
                         }
                     </main>
                     <Footer />
+                    <MessagePanel message={message} />
                 </div>
             </Router>
         );
