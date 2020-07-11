@@ -12,13 +12,13 @@ import soundCorrect from '../../../assets/audio/correct.mp3';
 import soundError from '../../../assets/audio/error.mp3';
 import { SettingService } from '../../../services/settingServices';
 import { StatisticService } from '../../../services/statisticServices';
+import { convertStatisticJson } from '../../../utils/utils';
 
 import './savannah.scss';
 
 export class SavannahGame extends Component {
     constructor(props) {
         super(props);
-        this.statistic = [1, 2, 3];
         this.state = {
             word: {},
             translateWords: [],
@@ -85,25 +85,23 @@ export class SavannahGame extends Component {
         this.saveSettingsSavannah(settings);
     };
 
-    saveDataToStatistics = () => {
-        const { group, page } = this.props;
-        const { allRightWords, allWrongWords } = this.state;
-        const date = Date.now();
-        const settings = {
-            date,
-            group,
-            page,
-            correct: allRightWords,
-            incorrect: allWrongWords,
-        };
-        this.saveStatisticsSavannah(settings);
-    };
+    saveStatisticsSavannah = async () => {
+        const gameStatistic = JSON.stringify(this.gameStatistic);
+        this.statistic.optional.savannah = gameStatistic;
+        console.log(this.statistic);
+        StatisticService.put(this.statistic);
+    }
 
-       saveStatisticsSavannah = async (savannahStats) => {
-           const settings = await StatisticService.get();
-           settings.optional.savannah = JSON.stringify(savannahStats);
-           await StatisticService.put(settings);
-       }
+    saveDataToStatistics = async () => {
+        const { allRightWords, allWrongWords } = this.state;
+        this.statistic = await StatisticService.get();
+        this.gameStatistic = this.statistic.optional.savannah
+            ? JSON.parse(this.statistic.optional.savannah)
+            : [];
+        const statisticsData = await StatisticService.createGameStat(allRightWords, allWrongWords);
+        this.gameStatistic.push(statisticsData);
+        this.saveStatisticsSavannah();
+    };
 
     handleClickByKeyboard =() => {
         const { translateWords, word, keyPressed } = this.state;
@@ -175,7 +173,6 @@ export class SavannahGame extends Component {
             allRightWords: allRightWords + 1,
         });
         new Audio(soundCorrect).play();
-        this.saveDataToStatistics();
     }
 
     getNextPage = () => {
@@ -207,7 +204,6 @@ export class SavannahGame extends Component {
             allWrongWords: allWrongWords + 1,
         });
         new Audio(soundError).play();
-        this.saveDataToStatistics();
     }
 
     showRightCard = (card) => {
@@ -314,6 +310,7 @@ export class SavannahGame extends Component {
                     rightAnswers={rightAnswers}
                     wrongAnswers={wrongAnswers}
                     getAudio={this.getAudio}
+                    saveDataToStatistics={this.saveDataToStatistics}
                 />
             );
         }
