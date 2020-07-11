@@ -12,7 +12,7 @@ import { Promo } from './pages/promo/promo';
 import { Stats } from './pages/stats/stats';
 import { Vocabulary } from './pages/vocabulary/vocabulary';
 import { NotFound } from './pages/notFound/notFound';
-import { SpeakIt } from './games/speackit/SpeakIt';
+import { SpeakIt } from './games/speakIt/speakIt';
 import { EnglishPuzzle } from './games/englishPuzzle/englishPuzzle';
 import { Savannah } from './games/savannah/savannah';
 import { AudioCall } from './games/audioCall/audioCall';

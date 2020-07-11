@@ -24,6 +24,14 @@ export const settingsDefault = {
         showDifficultButton: true,
         autoPronunciation: true,
         audioCall: '{modeGame:1,"wordCount":10,"colorStart":{"r":9,"g":44,"b":112},"colorEnd":{"r":224,"g":141,"b":157},"group":0,"page":0}',
+        speakit: '{"group":1,"page":1}',
+    },
+};
+
+export const statisticsDefault = {
+    learnedWords: 0,
+    optional: {
         gamePuzzle: '{"level":1,"page":1}',
+        savannah: '{"group":0,"page":0}',
     },
 };

@@ -6,6 +6,7 @@ import { SelectRound } from './select-round';
 import { SavannahGame } from './savannah-game';
 import { WordService } from '../../../services/wordServices';
 import { SettingService } from '../../../services/settingServices';
+import { settingsDefault } from '../../../constants/globalConstants';
 
 export class SavannahStart extends Component {
     constructor(props) {
@@ -13,8 +14,6 @@ export class SavannahStart extends Component {
         this.state = {
             isStart: false,
             mode: 'levelWords',
-            group: 0,
-            page: 0,
             isAvailableUserWords: true,
         };
     }
@@ -54,12 +53,13 @@ export class SavannahStart extends Component {
      }
 
     loadSettings = async () => {
-        const { group, page } = this.state;
-        const set = await SettingService.get();
-        const settings = (JSON.parse(set.optional.savannah));
+        this.settings = await SettingService.get();
+        const settingsForGame = this.settings.optional.savannah
+            ? JSON.parse(this.settings.optional.savannah)
+            : JSON.parse(settingsDefault.optional.savannah);
         this.setState({
-            group: settings.group || group,
-            page: settings.page || page,
+            group: settingsForGame.group,
+            page: settingsForGame.page,
         });
     }
 
