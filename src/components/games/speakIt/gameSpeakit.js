@@ -140,7 +140,6 @@ export class GameSpeakit extends Component {
             this.allWords = this.getRandomData(userWords);
         }
         this.createDataForGame();
-        // this.setState({ haveWords: true });
     }
 
     createDataForGame = () => {
@@ -151,7 +150,6 @@ export class GameSpeakit extends Component {
         const {
             page,
         } = this.state;
-        // let dataForGameRound;
         if (isGameWithLevels) {
             this.dataForGameRound = (page - 1) % 2 === 0
                 ? this.allWords.slice(0, 10)
