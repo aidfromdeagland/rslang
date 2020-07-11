@@ -54,6 +54,7 @@ export class SavannahGame extends Component {
 
         document.addEventListener('keydown', this.keydown);
         document.addEventListener('keyup', this.keyup);
+        this.saveSettings();
     }
 
     componentDidUpdate() {
