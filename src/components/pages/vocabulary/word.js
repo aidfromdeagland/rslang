@@ -18,10 +18,10 @@ export class VocabularyWord extends Component {
     }
 
     onAudioClickHandler = (audioSrc) => {
-        if (this.audioPlayer.readyState === 0 || this.audioPlayer.readyState === 2) {
+        if (this.audioPlayer.src !== audioSrc) {
             this.audioPlayer.src = audioSrc;
-            this.audioPlayer.play();
         }
+        this.audioPlayer.play();
     }
 
     render() {
