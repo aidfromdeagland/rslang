@@ -1,3 +1,106 @@
-.hangman {
+@font-face {
+  font-family: "Literata", "Roboto";
+  src: url("../../../assets/fonts/Literata-Bold.ttf") format("ttf"),
+    url("../../../assets/fonts/Literata-Regular.ttf") format("ttf"),
+    url("../../../assets/fonts/Literata-VariableFont.ttf") format("ttf"),
+    url("../../../assets/fonts/RobotoMono-Bold.ttf") format("ttf"),
+    url("../../../assets/fonts/RobotoMono-Regular.ttf") format("ttf");
+  font-weight: normal;
+  font-style: normal;
+}
 
+.hangman {
+  // background: url('../../../assets/images/background-speakit.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  width: 100%;
+  min-height: calc(100vh - 100px);
+  flex-grow: 1;
+  justify-content: center;
+  align-items: center;
+  user-select: none;
+  font-family: "RobotoMono", sans-serif;
+  padding-bottom: 10px;
+}
+
+.hangman-container {
+  margin-top: 30px;
+  .hangman-header {
+    position: fixed;
+    z-index: 2;
+    top: 60px;
+    left: 0;
+    height: 60px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(to top, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7));
+    border-bottom: 2px solid #000000;
+  }
+
+  .main-image-container {
+    img {
+      width: 45%;
+    }
+  }
+
+  .game-word {
+    display: flex;
+    justify-content: center;
+    span {
+      width: 20px;
+      margin: 0 0.1em;
+      font-size: 4.6em;
+      border-bottom: 1px solid #333;
+    }
+  }
+
+  .game-hint {
+    margin: 20px 0;
+    text-align: center;
+  }
+
+  .game-over {
+    margin: 1.6em auto;
+    max-width: 33em;
+    line-height: 1.6;
+    padding: 1.6em;
+    background-color: #f5f5f5;
+    border-radius: 10px;
+  }
+
+  .keypad-container {
+    max-width: 36em;
+    margin: 0 auto 1.1em;
+    .knob {
+      margin: 0.34em;
+      display: inline-block;
+      padding: 0.3em 0.7em;
+      color: #066c99;
+      border: 1px solid;
+      border-color: #ddd #ccc #ccc #ddd;
+      border-radius: 3px;
+      white-space: nowrap;
+      background-clip: padding-box;
+      cursor: pointer;
+    }
+    .knob-letter {
+      width: 2.2em;
+      padding-left: 0;
+      padding-right: 0;
+      text-align: center;
+      text-transform: uppercase;
+    }
+    .knob-right {
+      color: #480;
+      background-color: #e5f7d6;
+    }
+    .knob-wrong {
+      color: #b12525;
+      background-color: #ffebe4;
+    }
+  }
 }

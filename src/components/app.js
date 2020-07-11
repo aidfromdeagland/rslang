@@ -17,7 +17,7 @@ import { EnglishPuzzle } from './games/englishPuzzle/englishPuzzle';
 import { Savannah } from './games/savannah/savannah';
 import { AudioCall } from './games/audioCall/audioCall';
 import { Sprint } from './games/sprint/sprint';
-import { Hangman } from './games/hangman/Hangman';
+import { Hangman } from './games/hangman/hangman';
 import { Footer } from './footer/footer';
 import { Study } from './pages/study/study';
 import { Table } from './pages/stats/table';
