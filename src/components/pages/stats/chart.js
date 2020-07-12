@@ -102,7 +102,6 @@ export class Chart extends Component {
                              position: 'bottom',
                          },
                      }}
-
                  />
 
              </div>

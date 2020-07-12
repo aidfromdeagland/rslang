@@ -31,6 +31,16 @@
  position: relative;
  height: 100vw;
  width: 100vh;
+ 
+ @media (max-width: 640px) {
+  height: 85vw;
+  width: 85vh; 
+}
+@media (max-width: 540px) {
+  height: 80vw;
+  width: 80vh; 
+}
+
 }
 }
 
