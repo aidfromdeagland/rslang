@@ -1,47 +1,53 @@
-import avatar from '../../../assets/images/avatars/avatar.png';
+import artemAvatar from '../../../assets/images/avatars/artem.png';
+import glebAvatar from '../../../assets/images/avatars/gleb.png';
+import juliaAvatar from '../../../assets/images/avatars/julia.png';
+import nataliaAvatar from '../../../assets/images/avatars/natalia.png';
+import olegAvatar from '../../../assets/images/avatars/oleg.png';
+import olgaAvatar from '../../../assets/images/avatars/olga.png';
+import stasAvatar from '../../../assets/images/avatars/stas.png';
 
 const dataAboutTeam = [
     {
-        photo: avatar,
+        photo: glebAvatar,
         name: 'Gleb',
-        description: 'React promoter:), mentoring, reviewing, initial organization questions.',
-        gitHub: '#',
+        description: 'react promoter :), mentoring, reviewing, initial organization questions',
+        github: 'https://github.com/oltarium',
     },
     {
-        photo: avatar,
+        photo: stasAvatar,
         name: 'Stas',
-        description: 'Reviewing, environment setting, promo page, vocabulary page, mini game "Speak it", main application logic, other minor features.',
-        gitHub: 'https://github.com/aidfromdeagland',
+        description: 'reviewing, environment setting, promo page,vocabulary page ,about team page, mini game "Speak it", main application logic, other minor features',
+        github: 'https://github.com/aidfromdeagland',
     },
     {
-        photo: avatar,
+        photo: nataliaAvatar,
         name: 'Natalia',
-        description: 'Design, content graphic, mini game "Sprint", other minor features.',
-        gitHub: 'https://github.com/natein',
+        description: 'design, content graphic, mini game "Sprint", other minor features',
+        github: 'https://github.com/natein',
     },
     {
-        photo: avatar,
+        photo: olegAvatar,
         name: 'Oleg',
-        description: 'All project services, error logger, authorisation page, mini game "Audio call",  other minor features',
-        gitHub: 'https://github.com/OlegD89',
+        description: 'all project services, error logger, authorisation page, mini game "Audio call",  other minor features',
+        github: 'https://github.com/OlegD89',
     },
     {
-        photo: avatar,
-        name: 'Yulia',
-        description: 'Design, statistics page, mini game "Savannah", navigation component, other minor features.',
-        gitHub: 'https://github.com/mrJozhkinKot',
+        photo: juliaAvatar,
+        name: 'Julia',
+        description: 'design, statistics page, mini game "Savannah", navigation, other minor features',
+        github: 'https://github.com/mrJozhkinKot',
     },
     {
-        photo: avatar,
+        photo: artemAvatar,
         name: 'Artem',
-        description: 'Main page, study page, about team page, mini games page, mini game "English puzzle", mini game "Hangman", mini game "Speak it", other minor features.',
-        gitHub: 'https://github.com/Dirtymalka',
+        description: 'main page, study page, about team page, mini games page, mini game "English puzzle", mini game "Hangman", mini game "Speak it", other minor features',
+        github: 'https://github.com/Dirtymalka',
     },
     {
-        photo: avatar,
+        photo: olgaAvatar,
         name: 'Olga',
         description: 'mini game "Hangman", other minor features',
-        gitHub: 'https://github.com/HelgaAnt',
+        github: 'https://github.com/HelgaAnt',
     },
 ];
 
