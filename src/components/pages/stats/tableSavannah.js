@@ -18,7 +18,13 @@ export class TableSavannah extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            data: [],
+            data: [
+                {
+                    Date: '',
+                    Correct: null,
+                    Incorrect: null,
+                },
+            ],
         };
     }
 

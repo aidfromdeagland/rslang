@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Line } from 'react-chartjs-2';
 import './stats.scss';
-import { StatisticService } from '../../../services/statisticServices';
+import { WordService } from '../../../services/wordServices';
 
 export class Chart extends Component {
     constructor(props) {
@@ -9,21 +9,11 @@ export class Chart extends Component {
         this.state = {
 
             charData: {
+                labels: [],
                 datasets: [
                     {
                         label: 'amount words you learned',
-                        data: [{
-                            x: 1594507855256,
-                            y: 10,
-                        }, {
-                            x: 1594590257821,
-                            y: 30,
-                        },
-                        {
-                            x: 1594690257821,
-                            y: 45,
-                        },
-                        ],
+                        data: [],
                         backgroundColor: [
                             'rgba(255, 99, 132, 0.6)',
                         ],
@@ -39,8 +29,56 @@ export class Chart extends Component {
     }
 
      loadDatatoGraph = async () => {
-         const res = await StatisticService.get();
-         console.log(res);
+         const wordObject = await this.getWordsForDay();
+         const { length } = Object.keys(wordObject);
+         const amountOfWords = [];
+         const labelsTime = [];
+         let sumPrevWords = 0;
+         for (let i = 0; i < length; i += 1) {
+             sumPrevWords += Object.values(wordObject)[i];
+             amountOfWords.push(
+                 sumPrevWords,
+             );
+
+             labelsTime.push(
+                 Object.keys(wordObject)[i],
+             );
+         }
+
+         this.setState({
+             charData: {
+                 labels: labelsTime,
+                 datasets: [
+                     {
+                         label: 'amount words you learned',
+                         data: amountOfWords,
+                     },
+                 ],
+             },
+         });
+         console.log(Object.values(wordObject));
+     }
+
+     getWordsForDay = async () => {
+         const arr = [];
+         const userWord = await WordService.getUserWords();
+         for (let i = 0; i < userWord.length; i += 1) {
+             const date = new Date(userWord[i].optional.debutDate);
+             const options = {
+                 day: 'numeric',
+                 month: 'long',
+                 hour: 'numeric',
+                 minute: 'numeric',
+                 hour12: false,
+             };
+             const dateFormat = date.toLocaleString('en', options);
+             arr.push(dateFormat);
+         }
+         const result = arr.reduce((acc, el) => {
+             acc[el] = (acc[el] || 0) + 1;
+             return acc;
+         }, {});
+         return result;
      }
 
      render() {
@@ -62,24 +100,6 @@ export class Chart extends Component {
                          legend: {
                              display: true,
                              position: 'bottom',
-                         },
-                         scales: {
-
-                             xAxes: [{
-                                 type: 'time',
-                                 time: {
-                                     unit: 'day',
-                                     // unitStepSize: 0.5,
-                                     // round: 'hour',
-                                     tooltipFormat: 'MMM D',
-                                     displayFormats: {
-                                         hour: 'MMM D',
-                                     },
-                                 },
-                                 gridLines: {
-                                     display: false,
-                                 },
-                             }],
                          },
                      }}
 
