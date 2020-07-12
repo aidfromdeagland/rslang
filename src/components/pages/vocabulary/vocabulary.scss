@@ -1,3 +1,158 @@
-.vocabulary {
-
+@font-face {
+  font-family: "Literata";
+  src: url("../../../assets/fonts/Literata-Bold.ttf") format("ttf"),
+  url("../../../assets/fonts/Literata-Regular.ttf") format("ttf"),
+  url("../../../assets/fonts/Literata-VariableFont.ttf") format("ttf");
+  font-weight: normal;
+  font-style: normal;
 }
+
+.vocabulary {
+  box-sizing: border-box;
+  position: relative;
+  min-height: 80vh;
+  max-width: 1020px;
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  font-family: Literata, "Open Sans", sans-serif;
+
+  * {
+    box-sizing: inherit;
+  }
+
+  p, h4 {
+    margin: 0;
+  }
+
+  h4 {
+    color: #092c70;
+  }
+
+  &__tab-list {
+    position: fixed;
+    z-index: 2;
+    padding: 0 20px;
+    left: 0;
+    width: 100%;
+    height: 35px;
+    display: flex;
+    align-items: flex-end;
+    list-style: none;
+    margin: 0;
+    border-bottom: 2px solid #092c70;
+    background-color: #ffffff;
+    box-shadow: 0 2px 3px 0 #ffffff;
+  }
+
+  &__tab {
+    min-width: 90px;
+    height: 25px;
+    padding: 0 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid #092C70;
+    border-radius: 5px 5px 0 0;
+    border-bottom: none;
+    background-color: #FAEDE7;
+    cursor: pointer;
+    transition: transform 0.2s, font-weight 0.2s;
+
+    &_active {
+      position: relative;
+      transform-origin: bottom;
+      transform: scale(1.06);
+      height: 30px;
+      bottom: -2px;
+      color: #092C70;
+      font-weight: bold;
+      background-color: #ffffff;
+    }
+  }
+
+  &__panel {
+  }
+
+
+  &__words {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+  }
+
+  &__example {
+    margin: 0;
+
+  }
+
+  &__meaning {
+    margin: 0;
+
+  }
+
+  &__button {
+    filter: invert(80%);
+    &:hover {
+      transform: scale(1.05);
+      filter: invert(100%);
+    }
+
+    &:active {
+      transform: scale(0.95);
+      filter: invert(50%);
+    }
+  }
+
+  &__button_audio {
+    background: url("../../../assets/icons/dynamic.svg") center no-repeat;
+    width: 32px;
+    height: 1.5em;
+    border: none;
+    background-size: contain;
+    cursor: pointer;
+    transition: transform 0.3s, filter 0.2s;
+  }
+
+  &__button_restore {
+    position: absolute;
+    z-index: 1;
+    left: 5px;
+    top: 5px;
+    align-self: flex-end;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #092c70;
+    color: #fff;
+    border-radius: 7px;
+    height: 1.5rem;
+    padding: 0 1.5rem;
+    border: none;
+    font-family: "OpenSans", sans-serif;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #0f4Ab4;
+    }
+  }
+}
+
+.content-container {
+  position: relative;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  max-width: 1020px;
+  text-align: center;
+}
+
+@media (min-width: 1020px) {
+  .vocabulary {
+    &__tab-list {
+      width:1020px;
+      left: calc((100% - 1020px) / 2)
+    }
+  }
+}
+

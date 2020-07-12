@@ -1,3 +1,103 @@
-.english-puzzle {
+@font-face {
+  font-family: "Literata", "Roboto";
+  src: url("../../../assets/fonts/Literata-Bold.ttf") format("ttf"),
+    url("../../../assets/fonts/Literata-Regular.ttf") format("ttf"),
+    url("../../../assets/fonts/Literata-VariableFont.ttf") format("ttf"),
+    url("../../../assets/fonts/RobotoMono-Bold.ttf") format("ttf"),
+    url("../../../assets/fonts/RobotoMono-Regular.ttf") format("ttf");
+  font-weight: normal;
+  font-style: normal;
+}
 
+.english-puzzle {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.219), rgba(0, 0, 0, 0.226)), url(../../../assets/images/background-puzzle.png);
+  background-repeat: no-repeat;
+  background-size: cover;
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  user-select: none;
+  font-family: "RobotoMono", sans-serif;
+  .english-puzzle__wrapper {
+    width: 100%;
+    padding: 0 20px;
+    .game-puzzle__container {
+      max-width: 1200px;
+      margin: auto;
+      .game-puzzle__header {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        @media (max-width: 759px) {
+          justify-content: center;
+        }
+        .dropdown__options_container {
+          display: flex;
+          align-items: center;
+          .select-level {
+            width: 100px;
+          }
+        }
+        .checkbox__options_container {
+          display: flex;
+        }
+      }
+      .progress-bar-game {
+        width: 100%;
+        position: relative;
+        height: 0.25rem;
+        background-color: #dcdcdc;
+        border-radius: 0.125rem;
+        box-shadow: 0 3px 0.5rem #ffffff;
+        margin-bottom: 20px;
+        .progress-percent-game {
+          border-radius: 0.125rem;
+          position: absolute;
+          left: 0;
+          top: 0;
+          height: 0.25rem;
+          width: 0;
+          transition: width 200ms ease;
+          z-index: 10;
+          background-color: #092c70;
+        }
+      }
+    }
+  }
+
+  .button {
+    width: auto;
+  }
+
+  .btn-start {
+    width: 300px;
+  }
+
+  .dynamic-btn {
+    background-image: url(../../../assets/icons/dynamic.svg);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    padding: 0;
+    border: 0;
+    background-color: #c0c3c5;
+    margin-right: 20px;
+    width: 30px;
+    height: 30px;
+    margin-bottom: 10px;
+    &.playing {
+      background-image: url(../../../assets/icons/dynamicPlaying.svg);
+    }
+    &:hover {
+      cursor: pointer;
+    }
+    &:active,
+    &:focus {
+      outline: none !important;
+    }
+  }
 }
