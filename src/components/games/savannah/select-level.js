@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 export class SelectLevel extends Component {
     constructor(props) {
         super(props);
-        this.state = { group: this.props.group };
+        this.state = { group: 0 };
     }
 
     handleChange = (e) => {

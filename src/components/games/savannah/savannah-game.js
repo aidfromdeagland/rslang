@@ -88,7 +88,6 @@ export class SavannahGame extends Component {
     saveStatisticsSavannah = async () => {
         const gameStatistic = JSON.stringify(this.gameStatistic);
         this.statistic.optional.savannah = gameStatistic;
-        console.log(this.statistic);
         StatisticService.put(this.statistic);
     }
 
@@ -147,8 +146,7 @@ export class SavannahGame extends Component {
     }
 
     getWrongWords = async () => {
-        const { group } = this.props;
-        const data = await WordService.getUserAggWords(group, '', 3600);
+        const data = await WordService.getUserAggWords('', '', 3600);
         return data[0].paginatedResults;
     }
 
@@ -227,7 +225,7 @@ export class SavannahGame extends Component {
         return 'savannah__cards-card';
     }
 
-    getRandomIndex = () => Math.floor(Math.random() * (99 - 0)) + 0;
+    getRandomIndex = () => Math.floor(Math.random() * (3599 - 0)) + 0;
 
     getNewCards = async () => {
         const { wordInx } = this.state;
