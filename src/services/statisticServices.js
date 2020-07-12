@@ -10,14 +10,8 @@ export class StatisticService {
         };
     }
 
-    static createGameStat(correct, incorrect, group, page, score)/*: IStatisticGame */ {
+    static createGameStat(correct, incorrect, score)/*: IStatisticGame */ {
         const result = { Date: Date.now(), Correct: correct, Incorrect: incorrect };
-        if (group !== undefined) {
-            result.Group = group;
-        }
-        if (page !== undefined) {
-            result.Page = page;
-        }
         if (score !== undefined) {
             result.Score = score;
         }

@@ -6,7 +6,7 @@ import './audioCall.scss';
 import { AudioCallStart } from './audioCallStart';
 import { AudioCallGame } from './audioCallGame';
 import { AudioCallResult } from './audioCallResult';
-import { GAME_PROGRESS, MODE_GAME } from './constants';
+import { GAME_PROGRESS } from './constants';
 import { Repository } from './repository';
 import { Auth } from '../../pages/auth/auth';
 import { tryExecute } from './utils';
@@ -53,7 +53,7 @@ export class AudioCall extends Component {
         this.setState({ isLoading: true });
         tryExecute(async () => {
             const newRepositoryState = await Repository.setNextGame(this.state.repositoryState);
-            await this.saveStatistics(result, this.state.repositoryState);
+            await this.saveStatistics(result);
             this.setState({
                 state: GAME_PROGRESS.result,
                 gameResult: result,
@@ -71,15 +71,12 @@ export class AudioCall extends Component {
     }
 
     // eslint-disable-next-line class-methods-use-this
-    async saveStatistics(result, repositoryState) {
+    async saveStatistics(result) {
         const loadStatistic = await StatisticService.get();
         const audioCallStatistic = JSON.parse(loadStatistic.optional.audioCall || '[]');
-        const isLevelMode = repositoryState.load.loaded.modeGame === MODE_GAME['All words'];
         const roundStatistic = StatisticService.createGameStat(
             result.filter((o) => o.isCorrect).length,
             result.filter((o) => !o.isCorrect).length,
-            isLevelMode ? repositoryState.load.loaded.group : undefined,
-            isLevelMode ? repositoryState.load.loaded.page : undefined,
         );
         audioCallStatistic.push(roundStatistic);
         const audioCallStatisticJson = convertStatisticJson(audioCallStatistic);

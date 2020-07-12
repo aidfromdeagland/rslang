@@ -7,6 +7,13 @@
     min-height: calc(100vh - 100px);
     span, button {
         font-family: 'OpenSans', sans-serif;
+        text-align: center;
+    }
+    &_start-page {
+        background-image: url("./../../../assets/images/call.jpg");
+        background-position: center;
+        background-size: cover;
+        background-repeat: no-repeat;
     }
     &__word {
         background-color: rgba(255, 255, 255, 0.6);
@@ -46,16 +53,33 @@
     }
     .list {
         margin: 5px 15px;
+        font-size: 20px;
     }
     &__header {
         color: #0F4AB4;
+        text-shadow: 1px 1px 4px #ffffff, 1px 1px 4px #ffffff;
+        font-size: 5rem;
+        text-align: center;
     }
     &__start-game {
         padding: 20px;
         font-size: 32px;
     }
+    &__full-description {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(to bottom, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.4));
+        font-size: 2rem;
+        padding: 10px;
+        @media (max-width: 500px) {
+            font-size: 1.5rem;
+        }
+    }
     &__levels {
         display: flex;
+        margin-bottom: 10px;
     }
     &__dinamic {
         display: block;
