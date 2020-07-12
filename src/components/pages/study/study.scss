@@ -168,9 +168,14 @@
     width: 100%;
     height: 100%;
     cursor: pointer;
+    transition: all 0.3s;
     &:hover {
       cursor: pointer;
       background: #f9efeb59;
+    }
+    &:disabled {
+      opacity: 0.5;
+      filter: grayscale(100%);
     }
   }
 
@@ -192,6 +197,11 @@
   }
   .learn-btn {
     width: 180px;
+    transition: all 0.3s;
+    &:disabled {
+      opacity: 0.5;
+      filter: grayscale(100%);
+    }
   }
   .button {
     margin: 0 10px;

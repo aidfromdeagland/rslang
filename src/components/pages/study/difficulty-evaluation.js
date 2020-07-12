@@ -6,13 +6,7 @@ import './difficulty-evaluation.scss';
 
 export class DifficultyEvaluation extends Component {
     handleCLick = (difficultyLevel) => {
-        const { handleEvaluate, currentWord, pushWord } = this.props;
-        if (difficultyLevel > 2) {
-            pushWord();
-            setTimeout(handleEvaluate, 0);
-            return;
-        }
-
+        const { handleEvaluate, currentWord } = this.props;
         if (currentWord.userWord) {
             const {
                 isDeleted, isDifficult, repeats, debutDate,
@@ -47,16 +41,21 @@ export class DifficultyEvaluation extends Component {
 
             WordService.postWord(currentWord.id, defaultWordPostTemplate);
         }
-        setTimeout(handleEvaluate, 0);
+        setTimeout(() => handleEvaluate(), 0);
     }
 
     render() {
+        const { handleRepeatEvaluate } = this.props;
         return (
             <div className="difficulty-evaluation">
                 <Button title="easy" className="difficulty-button difficulty-button_easy" onClick={() => { this.handleCLick(0); }} />
                 <Button title="normal" className="difficulty-button difficulty-button_normal" onClick={() => { this.handleCLick(1); }} />
                 <Button title="difficult" className="difficulty-button difficulty-button_difficult" onClick={() => { this.handleCLick(2); }} />
-                <Button title="again" className="difficulty-button difficulty-button_again" onClick={() => { this.handleCLick(3); }} />
+                <Button
+                    title="again"
+                    className="difficulty-button difficulty-button_again"
+                    onClick={handleRepeatEvaluate}
+                />
             </div>
         );
     }
