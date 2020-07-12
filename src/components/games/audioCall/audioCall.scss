@@ -60,6 +60,7 @@
         text-shadow: 1px 1px 4px #ffffff, 1px 1px 4px #ffffff;
         font-size: 5rem;
         text-align: center;
+        user-select: none;
     }
     &__start-game {
         padding: 20px;
@@ -85,7 +86,7 @@
         display: block;
         width: 94px;
         height: 94px;
-        background: url("./../../../assets/icons/dynamic.svg") center no-repeat;
+        background: url("./../../../assets/icons/dynamicPlaying.svg") center no-repeat;
         background-size: 64px 64px;
         background-position: center;
         background-color: rgba(0, 0, 0, 0.2);
