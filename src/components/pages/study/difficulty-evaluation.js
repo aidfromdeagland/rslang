@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { Button } from '../../shared/button';
 import { WordService } from '../../../services/wordServices';
 import { getMemoInfo } from '../../../services/spacedRepetition';
@@ -7,7 +6,7 @@ import './difficulty-evaluation.scss';
 
 export class DifficultyEvaluation extends Component {
     handleCLick = (difficultyLevel) => {
-        const { handleEvaluate, currentWord, pushWord} = this.props;
+        const { handleEvaluate, currentWord, pushWord } = this.props;
         if (difficultyLevel > 2) {
             pushWord();
             setTimeout(handleEvaluate, 0);
@@ -15,13 +14,16 @@ export class DifficultyEvaluation extends Component {
         }
 
         if (currentWord.userWord) {
-            const { isDeleted, isDifficult, repeats } = currentWord.userWord.optional;
+            const {
+                isDeleted, isDifficult, repeats, debutDate,
+            } = currentWord.userWord.optional;
             const result = getMemoInfo(difficultyLevel, repeats);
 
             const defaultWordPutTemplate = {
                 optional: {
                     isDeleted,
                     isDifficult,
+                    debutDate,
                     prevDate: result.prevRepetitionDate,
                     nextDate: result.nextRepetitionDate,
                     repeats: result.repetitions,
@@ -36,6 +38,7 @@ export class DifficultyEvaluation extends Component {
                 optional: {
                     isDeleted: false,
                     isDifficult: false,
+                    debutDate: result.prevRepetitionDate,
                     prevDate: result.prevRepetitionDate,
                     nextDate: result.nextRepetitionDate,
                     repeats: result.repetitions,
