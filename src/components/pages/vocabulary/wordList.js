@@ -39,25 +39,12 @@ export class WordList extends Component {
 }
 
 WordList.defaultProps = {
-    settings: {
-        mainSettings: {
-            word: true,
-            sentence: true,
-            textMeaning: true,
-        },
-        additionalSettings: {
-            transcription: true,
-            image: true,
-        },
-    },
     isSpecial: false,
 };
 
 WordList.propTypes = {
+    // eslint-disable-next-line react/forbid-prop-types
+    settings: PropTypes.object.isRequired,
     words: PropTypes.arrayOf(PropTypes.object).isRequired,
-    settings: PropTypes.objectOf(PropTypes.shape({
-        mainSettings: PropTypes.object,
-        additionalSettings: PropTypes.object,
-    })),
     isSpecial: PropTypes.bool,
 };

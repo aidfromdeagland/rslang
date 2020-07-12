@@ -6,7 +6,8 @@ import { DifficultyEvaluation } from './difficulty-evaluation';
 export class Answer extends Component {
     createContext = () => {
         const {
-            isCorrectWord, valueInput, checkWord, handleSubmit, handleChange, contextAudio, wordAudio,
+            isCorrectWord, valueInput, checkWord,
+            handleSubmit, handleChange, contextAudio, wordAudio,
         } = this.props;
         const context = this.props.context.split(/(\s+)/);
         const total = context.map((word, index) => {
@@ -35,11 +36,11 @@ export class Answer extends Component {
     }
 
     render() {
-        const { showEvaluation, handleEvaluate, currentWord } = this.props;
+        const { showEvaluation, handleEvaluate, currentWord, pushWord} = this.props;
         return (
             <div className="answer-container">
                 {this.createContext()}
-                {showEvaluation ? <DifficultyEvaluation handleEvaluate={handleEvaluate} currentWord={currentWord} /> : null}
+                {showEvaluation ? <DifficultyEvaluation handleEvaluate={handleEvaluate} currentWord={currentWord} pushWord={pushWord} /> : null}
             </div>
         );
     }

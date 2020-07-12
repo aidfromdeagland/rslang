@@ -18,14 +18,7 @@ export class TableHangman extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            data: [
-                {
-                    date: null,
-                    win: null,
-                    lose: null,
-                    success: null,
-                },
-            ],
+            data: [],
         };
     }
 
@@ -38,7 +31,7 @@ export class TableHangman extends Component {
          this.res = await StatisticService.get();
          const dataGame = this.res.optional.hangman
              ? JSON.parse(this.res.optional.hangman)
-             : JSON.parse(statisticsDefault.optional.hangman);
+             : JSON.parse(statisticsDefault.optional.gamePuzzle);
          const data = loadStatistics(dataGame);
          this.setState({
              data,

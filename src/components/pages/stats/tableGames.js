@@ -5,19 +5,20 @@ import { TableSavannah } from './tableSavannah';
 import { TableAudiocall } from './tableAudiocall';
 import { TableSprint } from './tableSprint';
 import { TableHangman } from './tableHangman';
-import { StatisticService } from '../../../services/statisticServices';
 
 export class TableGames extends Component {
     loadStatistics = (game) => {
         const amountsOfround = game.length;
         const data = [];
         for (let i = 0; i < amountsOfround; i += 1) {
+            const percent = (Math.round((game[i].Correct * 100) / (game[i].Correct + game[i].Incorrect)));
+            const resSuccess = isNaN(percent) ? '' : percent;
             data.push(
                 {
-                    date: this.getTimeFormat(game[i].date),
-                    win: game[i].correct,
-                    lose: game[i].incorrect,
-                    success: ((game[i].correct * 100) / (game[i].correct + game[i].incorrect)),
+                    date: this.getTimeFormat(game[i].Date),
+                    win: game[i].Correct,
+                    lose: game[i].Incorrect,
+                    success: resSuccess,
                 },
             );
         }
@@ -32,9 +33,11 @@ export class TableGames extends Component {
             minute: 'numeric',
             hour12: false,
         };
-        const date = new Date(timestamp);
-        const dateFormat = date.toLocaleString('en', options);
-        return dateFormat;
+        if (timestamp !== null) {
+            const date = new Date(timestamp);
+            const dateFormat = date.toLocaleString('en', options);
+            return dateFormat;
+        }
     }
 
     render() {

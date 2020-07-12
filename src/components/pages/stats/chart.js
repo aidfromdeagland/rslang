@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Line } from 'react-chartjs-2';
 import './stats.scss';
+import { StatisticService } from '../../../services/statisticServices';
 
 export class Chart extends Component {
     constructor(props) {
@@ -12,92 +13,79 @@ export class Chart extends Component {
                     {
                         label: 'amount words you learned',
                         data: [{
-                            x: 0,
-                            y: 0,
+                            x: 1594507855256,
+                            y: 10,
                         }, {
-                            x: 100,
-                            y: 3,
-                        }, {
-                            x: 1000,
-                            y: 27,
-                        }, {
-                            x: 3000,
-                            y: 83,
-                        }],
+                            x: 1594590257821,
+                            y: 30,
+                        },
+                        {
+                            x: 1594690257821,
+                            y: 45,
+                        },
+                        ],
                         backgroundColor: [
                             'rgba(255, 99, 132, 0.6)',
                         ],
                         pointRadius: 3,
-
                     },
                 ],
             },
-            amount: null,
         };
     }
 
-    render() {
-        const { charData, amount } = this.state;
-
-        return (
-            <div className="chart">
-                <Line
-
-                    data={charData}
-                    options={{
-                        title: {
-                            display: true,
-                            text: 'Look at your progress!',
-                            fontSize: 25,
-                            fontColor: '#092C70',
-                            padding: 25,
-                        },
-                        legend: {
-                            display: true,
-                            position: 'bottom',
-                        },
-                        scales: {
-                            yAxes: [{
-                                ticks: {
-                                    max: 100,
-                                    min: 0,
-                                    stepSize: 10,
-                                },
-                            }],
-                            xAxes: [{
-                                type: 'linear',
-                                ticks: {
-                                    max: 3600,
-                                    min: 0,
-                                    stepSize: 300,
-                                },
-                            }],
-                        },
-                        tooltips: {
-                            xLabel: null,
-                            callbacks: {
-                                afterLabel: () => {
-                                    const option = {
-                                        day: 'numeric',
-                                        month: 'long',
-                                    };
-                                    return new Date().toLocaleString('en-US', option);
-                                },
-                                label: () => (`words a day: ${amount}`),
-                                title: () => null,
-                                labelColor: () => ({
-
-                                    backgroundColor: 'rgba(255, 99, 132, 0.6)',
-                                }),
-
-                            },
-                        },
-
-                    }}
-
-                />
-
-            </div>
-        );
+    componentDidMount() {
+        this.loadDatatoGraph();
     }
+
+     loadDatatoGraph = async () => {
+         const res = await StatisticService.get();
+         console.log(res);
+     }
+
+     render() {
+         const { charData } = this.state;
+
+         return (
+             <div className="chart">
+                 <Line
+
+                     data={charData}
+                     options={{
+                         title: {
+                             display: true,
+                             text: 'Look at your progress!',
+                             fontSize: 25,
+                             fontColor: '#092C70',
+                             padding: 25,
+                         },
+                         legend: {
+                             display: true,
+                             position: 'bottom',
+                         },
+                         scales: {
+
+                             xAxes: [{
+                                 type: 'time',
+                                 time: {
+                                     unit: 'day',
+                                     // unitStepSize: 0.5,
+                                     // round: 'hour',
+                                     tooltipFormat: 'MMM D',
+                                     displayFormats: {
+                                         hour: 'MMM D',
+                                     },
+                                 },
+                                 gridLines: {
+                                     display: false,
+                                 },
+                             }],
+                         },
+                     }}
+
+                 />
+
+             </div>
+         );
+     }
 }

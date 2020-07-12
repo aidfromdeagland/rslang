@@ -18,14 +18,7 @@ export class TableSprint extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            data: [
-                {
-                    date: null,
-                    win: null,
-                    lose: null,
-                    score: null,
-                },
-            ],
+            data: [],
         };
     }
 
@@ -38,7 +31,7 @@ export class TableSprint extends Component {
          this.res = await StatisticService.get();
          const dataGame = this.res.optional.sprint
              ? JSON.parse(this.res.optional.sprint)
-             : JSON.parse(statisticsDefault.optional.sprint);
+             : JSON.parse(statisticsDefault.optional.gamePuzzle);
          const data = loadStatistics(dataGame);
          this.setState({
              data,

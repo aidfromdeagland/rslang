@@ -23,7 +23,8 @@ export const settingsDefault = {
         showDeleteButton: true,
         showDifficultButton: true,
         autoPronunciation: true,
-        audioCall: '{modeGame:1,"wordCount":10,"colorStart":{"r":9,"g":44,"b":112},"colorEnd":{"r":224,"g":141,"b":157},"group":0,"page":0}',
+        audioCall: '{"modeGame":1,"wordCount":10,"colorStart":{"r":9,"g":44,"b":112},"colorEnd":{"r":224,"g":141,"b":157},"group":0,"page":0}',
+        speakit: '{"group":1,"page":1}',
         gamePuzzle: '{"level":1,"page":1}',
         savannah: '{"group":0,"page":0}',
     },
@@ -32,11 +33,13 @@ export const settingsDefault = {
 export const statisticsDefault = {
     learnedWords: 0,
     optional: {
-        savannah: '{"date":null,"correct":null,"incorrect":null,"success":null}',
-        gamePuzzle: '{"date":null,"correct":null,"incorrect":null,"success":null}',
-        audioCall: '{"date":null,"correct":null,"incorrect":null,"success":null}',
-        speakit: '{"date":null,"correct":null,"incorrect":null,"success":null}',
-        sprint: '{"date":null,"correct":null,"incorrect":null,"success":null}',
-        hangman: '{"date":null,"correct":null,"incorrect":null,"success":null}',
+        audioCall: '[{"Date":null,"Correct":null,"Incorrect":null}]',
+        speakit: '[{"Date":null,"Correct":null,"Incorrect":null}]',
+        gamePuzzle: '[{"Date":null,"Correct":null,"Incorrect":null}]',
+        savannah: '[{"Date":null,"Correct":null,"Incorrect":null}]',
+        hangman: '[{"Date":null,"Correct":null,"Incorrect":null}]',
+        sprint: '[{"Date":null,"Correct":null,"Incorrect":null}]',
     },
 };
+
+export const totalLearnedWordsQuery = { 'userWord.optional.isDeleted': false };

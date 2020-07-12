@@ -1,4 +1,4 @@
-import { backend } from '../constants/globalConstants';
+import { backend, statisticsDefault } from '../constants/globalConstants';
 import { User } from '../components/pages/auth/user';
 import { ServiceError } from './serviceError';
 
@@ -10,14 +10,8 @@ export class StatisticService {
         };
     }
 
-    static createGameStat(correct, incorrect, group, page, score)/*: IStatisticGame */ {
+    static createGameStat(correct, incorrect, score)/*: IStatisticGame */ {
         const result = { Date: Date.now(), Correct: correct, Incorrect: incorrect };
-        if (group !== undefined) {
-            result.Group = group;
-        }
-        if (page !== undefined) {
-            result.Page = page;
-        }
         if (score !== undefined) {
             result.Score = score;
         }
@@ -42,11 +36,7 @@ export class StatisticService {
             throw new ServiceError('Access token is missing or invalid', rawResponse.status);
         }
         if (rawResponse.status === 404) {
-            return {
-                learnedWords: 0,
-                optional: {
-                },
-            };
+            return statisticsDefault;
         }
 
         const errorText = await rawResponse.text();
