@@ -23,6 +23,8 @@ const contextMap = {
     showSentenceExample: 'textExample',
 };
 
+const tagPlusContentReg = new RegExp('<b>(.*?)</b>|<i>(.*?)</i>');
+
 export class Study extends Component {
     constructor(props) {
         super(props);
@@ -124,6 +126,7 @@ export class Study extends Component {
         this.dataForCard = {
             context: this.actualCard[contextMap[this.context]],
             word: this.actualCard.word,
+            wordToCompare: this.actualCard.word,
             wordTranslate: this.actualCard.wordTranslate,
             audioContext: `https://raw.githubusercontent.com/aidfromdeagland/rslang-data/master/${this.actualCard[this.audioContext]}`,
             audioWord: `https://raw.githubusercontent.com/aidfromdeagland/rslang-data/master/${this.actualCard.audio}`,
@@ -132,11 +135,15 @@ export class Study extends Component {
             wordImage: `https://raw.githubusercontent.com/aidfromdeagland/rslang-data/master/${this.actualCard.image}`,
             transcription: this.actualCard.transcription,
         };
-    }
+        if (this.context === 'showSentenceMeaning' || 'showSentenceExample') {
+            this.dataForCard.wordToCompare = this.dataForCard.context.match(tagPlusContentReg)[0].replace(/(<(\/?[^>]+)>)/g, '').trim();
+        }
+    };
 
     checkWord = () => {
         const actualValue = this.prevValue.toLocaleLowerCase();
-        const studiedWord = this.dataForCard.word;
+        /* const studiedWord = this.dataForCard.word; */
+        const studiedWord = this.dataForCard.wordToCompare;
 
         const word = studiedWord.split('').map((letter, index) => (
             <span
@@ -151,69 +158,49 @@ export class Study extends Component {
         return word;
     }
 
-    pushWord = () => {
-        this.words.push(this.words[this.state.wordCount]);
+    pushWordToEnd = () => {
+        this.words.push(this.words.splice(this.words[this.state.wordCount], 1)[0]);
+        this.state.wordCount = this.state.wordCount === 0 ? 0 : this.state.wordCount - 1;
     }
 
     handleSubmit = (event) => {
         if (event) {
             event.preventDefault();
         }
-        console.log(this.words);
         const { valueInput } = this.state;
         const actualValue = valueInput.toLocaleLowerCase();
 
-        if (actualValue === this.dataForCard.word.toLocaleLowerCase()) {
-            if (this.state.isFirstTry) {
-                this.audioPlayer.src = this.dataForCard.audioContext;
-                this.setState({ showEvaluation: true });
-                if (this.settings.autoPronunciation) {
-                    this.audioPlayer.play();
-                }
-                console.log('GOOD TRY');
-            } else {
-                this.setState({
-                    isCorrectWord: true,
-                });
-                if (this.settings.autoPronunciation) {
+        if (actualValue === this.dataForCard.wordToCompare.toLocaleLowerCase()) {
+            if (!this.state.showEvaluation) {
+                if (this.state.isFirstTry) {
                     this.audioPlayer.src = this.dataForCard.audioContext;
-                    this.audioPlayer.play();
-                    this.audioPlayer.addEventListener('ended', () => {
-                        this.pushWord();
-                        this.goNextCard();
-                    }, { once: true });
+                    this.setState({ showEvaluation: true });
+                    if (this.settings.autoPronunciation) {
+                        this.audioPlayer.play();
+                        this.audioPlayer.addEventListener('ended', () => {
+                            if (!this.state.showEvaluation) {
+                                this.goNextCard();
+                            }
+                        });
+                    }
+                    console.log('GOOD TRY');
                 } else {
-                    this.pushWord();
-                    this.goNextCard();
+                    this.setState({
+                        isCorrectWord: true,
+                    });
+                    if (this.settings.autoPronunciation) {
+                        this.audioPlayer.src = this.dataForCard.audioContext;
+                        this.audioPlayer.play();
+                        this.audioPlayer.addEventListener('ended', () => {
+                            this.pushWordToEnd();
+                            this.goNextCard();
+                        }, { once: true });
+                    } else {
+                        this.pushWordToEnd();
+                        this.goNextCard();
+                    }
                 }
             }
-
-            /* this.audioPlayer.addEventListener('ended', () => {
-                    if (this.state.showEvaluation === false) {
-                        if (this.state.isFirstTry) {
-                            this.setState((prev) => ({
-                                learnedWordsQuantity: prev.learnedWordsQuantity + 1,
-                                totalLearnedWordsQuantity: prev.totalLearnedWordsQuantity + 1,
-                            }));
-                        }
-                        if (this.state.wordCount < this.words.length - 1) {
-                            this.setState((prev) => ({
-                                wordCount: prev.wordCount + 1,
-                            }));
-                            this.createCard();
-                            this.setState({
-                                isCorrectWord: null,
-                                valueInput: '',
-                                isFirstTry: true,
-                                isSubmitable: true,
-                            });
-                        } else {
-                            alert('FINISH! / STATISTICS');
-                            this.props.history.push('/main');
-                        }
-                    }
-                    this.setState({ isAudioFinished: true });
-                }, { once: true }); */
         } else {
             this.audioPlayer.src = this.dataForCard.audioWord;
             this.audioPlayer.play();
@@ -241,7 +228,13 @@ export class Study extends Component {
 
     handleEvaluate = () => {
         if (this.state.wordCount < this.words.length - 1) {
-            this.goNextCard();
+            if (this.settings.autoPronunciation) {
+                if (this.audioPlayer.ended) {
+                    this.goNextCard();
+                }
+            } else {
+                this.goNextCard();
+            }
         } else {
             this.props.history.push('/main');
             alert('FINISH / STATISTICS');
@@ -255,7 +248,7 @@ export class Study extends Component {
 
     handleRepeatEvaluate = () => {
         setTimeout(() => {
-            this.pushWord();
+            this.pushWordToEnd();
             this.goNextCard();
             this.setState({ showEvaluation: false });
         }, 0);
@@ -274,7 +267,7 @@ export class Study extends Component {
 
     handleClickShowAnswer = () => {
         this.setState({
-            valueInput: this.dataForCard.word,
+            valueInput: this.dataForCard.wordToCompare,
             isFirstTry: false,
         });
     }
@@ -321,7 +314,7 @@ export class Study extends Component {
                             <div className="hints-container">
                                 <div className="img-container">
                                     {this.settings.showWordImage
-                                        && <img src={this.dataForCard.wordImage} alt="exampleImg" />}
+                                        && <img className="card__image" src={this.dataForCard.wordImage} alt="illustration" />}
                                 </div>
                                 <div className="transcription">
                                     {this.settings.showTranscription
@@ -335,7 +328,7 @@ export class Study extends Component {
                                 <div className="card-input">
                                     <Answer
                                         context={this.dataForCard.context}
-                                        word={this.dataForCard.word}
+                                        word={this.dataForCard.wordToCompare}
                                         wordAudio={this.dataForCard.audioWord}
                                         contextAudio={this.dataForCard.audioContext}
                                         checkWord={this.checkWord}
@@ -374,7 +367,7 @@ export class Study extends Component {
                                 && (
                                     <Button
                                         className="button answer-btn learn-btn"
-                                        title="Show Answer"
+                                        title="answer"
                                         onClick={this.handleClickShowAnswer}
                                         isDisabled={showEvaluation}
                                     />

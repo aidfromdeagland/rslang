@@ -11,8 +11,7 @@ export class Answer extends Component {
         } = this.props;
         const context = this.props.context.split(/(\s+)/);
         const total = context.map((word, index) => {
-            if (/<i>(.*?)<\/i>/.test(word) || /<b>(.*?)<\/b>/.test(word) || context.length === 1) {
-                word.replace(/(\<(\/?[^>]+)>)/g, '');
+            if (word.toLowerCase().includes(this.props.word.toLowerCase())) {
                 return (
                     <InputContainer
                         word={this.props.word}
