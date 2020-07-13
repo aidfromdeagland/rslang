@@ -1,16 +1,17 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { InputContainer } from './inputContainer';
+import { DifficultyEvaluation } from './difficulty-evaluation';
 
 export class Answer extends Component {
     createContext = () => {
         const {
-            isCorrectWord, valueInput, checkWord, handleSubmit, handleChange, contextAudio, wordAudio,
+            isCorrectWord, valueInput, checkWord,
+            handleSubmit, handleChange, contextAudio, wordAudio,
         } = this.props;
         const context = this.props.context.split(/(\s+)/);
         const total = context.map((word, index) => {
-            if (/<i>(.*?)<\/i>/.test(word) || /<b>(.*?)<\/b>/.test(word) || context.length === 1) {
-                word.replace(/(\<(\/?[^>]+)>)/g, '');
+            if (word.toLowerCase().includes(this.props.word.toLowerCase())) {
                 return (
                     <InputContainer
                         word={this.props.word}
@@ -34,9 +35,19 @@ export class Answer extends Component {
     }
 
     render() {
+        const {
+            showEvaluation, handleEvaluate, currentWord, handleRepeatEvaluate,
+        } = this.props;
         return (
             <div className="answer-container">
                 {this.createContext()}
+                {showEvaluation ? (
+                    <DifficultyEvaluation
+                        handleEvaluate={handleEvaluate}
+                        handleRepeatEvaluate={handleRepeatEvaluate}
+                        currentWord={currentWord}
+                    />
+                ) : null}
             </div>
         );
     }

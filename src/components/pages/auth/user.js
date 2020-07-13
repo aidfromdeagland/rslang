@@ -11,12 +11,16 @@ export class User {
         return Storage.settings && Storage.settings.token;
     }
 
-    static async checkToken() {
+    static async checkToken(resolve, reject) {
         try {
             await UserService.getUser(User.userId, User.token);
-            return true;
+            if (resolve) {
+                resolve();
+            }
         } catch (e) {
-            return false;
+            if (reject) {
+                reject();
+            }
         }
     }
 

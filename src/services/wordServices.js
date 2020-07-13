@@ -1,18 +1,33 @@
 import { backend } from '../constants/globalConstants';
 import { User } from '../components/pages/auth/user';
 import { ServiceError } from './serviceError';
+import { getMemoInfoMiniGames } from './spacedRepetition';
 
 // подробное описание: https://afternoon-falls-25894.herokuapp.com/doc/#
 export class WordService {
-    static createWordPost(difficulty, isDel, isHard)/*: IWordPost */ {
+    static createWordPost(prevDate, nextDate, repeats, debutDate = Date.now(),
+        isDifficult = false, isDeleted = false)/*: IWordPost */ {
         return {
-            difficulty,
+            difficulty: 'useless',
             optional: {
-                date: Date.now(), // возможно лучше хранить распаршенное значение - строку
-                isDel,
-                isHard,
+                isDifficult,
+                isDeleted,
+                debutDate,
+                prevDate,
+                nextDate,
+                repeats,
             },
         };
+    }
+
+    static createStatisticWordPut(userWord, isCorrect)/*: IWordPost */ {
+        const newState = getMemoInfoMiniGames(isCorrect, userWord.optional.repeats,
+            userWord.optional.nextDate);
+        const updateUserWord = userWord;
+        updateUserWord.optional.prevDate = newState.nextRepetitionDate;
+        updateUserWord.optional.nextDate = newState.nextRepetitionDate;
+        updateUserWord.optional.repeats = newState.repetitions;
+        return updateUserWord;
     }
 
     static async getWords(group, page) {
@@ -178,10 +193,9 @@ export class WordService {
         throw new ServiceError(errorText, rawResponse.status);
     }
 
-    static async getUserAggWords(group, filter, wordsPerPage = 20) {
+    static async getUserAggWords(group, filter = '', wordsPerPage = 20) {
         const url = `${backend}/users/${User.userId}/aggregatedWords`
             + `?group=${group}&filter=${JSON.stringify(filter)}&wordsPerPage=${wordsPerPage}`;
-        // url = 'https://afternoon-falls-25894.herokuapp.com/users/5edcc9c356c3d600176edc54/aggregatedWords?group=0&wordsPerPage=20&onlyUserWords=true&filter={"userWord.difficulty":"weak"}';
         const rawResponse = await fetch(url, {
             method: 'GET',
             withCredentials: true,
@@ -192,6 +206,14 @@ export class WordService {
         });
         if (rawResponse.ok) {
             const content = await rawResponse.json();
+            content[0].paginatedResults.map((w) => {
+                const word = w;
+                // eslint-disable-next-line no-underscore-dangle
+                word.id = w._id;
+                // eslint-disable-next-line no-underscore-dangle
+                delete word._id;
+                return word;
+            });
             return content; //  IAggWords[]
         }
         if (rawResponse.status === 401) {
@@ -251,7 +273,7 @@ export class WordService {
 // }
 
 // interface IAggWord {
-//    _id: string,
+//     id: string,
 //     word: string,
 //     image: string,
 //     audio: string,
@@ -277,9 +299,12 @@ export class WordService {
 // }
 
 // interface IOptional {
-//     date: date,
-//     isDel: boolean,
-//     isHard: boolean
+//      isDifficult: bool,
+//      isDeleted: bool,
+//      debutDate: number,
+//      prevDate: number,
+//      nextDate: number,
+//      repeats: number
 // }
 
 // interface IWordPost {

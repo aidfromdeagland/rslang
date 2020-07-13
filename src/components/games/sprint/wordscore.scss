@@ -1,0 +1,47 @@
+.wordscore {
+  height: 100px;  
+  text-align: center;
+}
+
+.wordscore p {
+  font-size: 24px;
+  line-height: 24px;
+}
+
+.wordscore p span:first-child {
+  margin-right: 10px;
+}
+
+.yes_container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  width: 200px;
+  height: 50px;
+  margin: 0 auto;
+}
+
+.yes,
+.empty {
+  width: 35px;
+  height: 35px;
+  margin-right: 10px;
+  border-radius: 50%;  
+  background-size: 20px;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.yes {
+  background-image: url('../../../assets/icons/yes.svg');
+  background-color: green;
+}
+
+.empty {
+  background-color: #ccc;
+}
+
+.yes:last-child, 
+.empty:last-child {  
+  margin-right: 0;
+}

@@ -11,23 +11,32 @@
 
 .study-page {
   display: flex;
+  flex-direction: column;
   justify-content: center;
+  align-items: center;
+
   .card-container {
     display: flex;
     margin: 0 10px;
-    padding-top: 3rem;
     width: 100%;
   }
-}
+  .card {
+    width: 100%;
+    background: #faede7;
+    box-shadow: 0 3px 0.5rem #d9d9d9;
+    border-radius: 0.5rem;
+    padding: 0 2.5rem;
+    @media (max-width: 700px) {
+      padding: 0 10px;
+    }
 
-.card {
-  width: 100%;
-  background-color: #faede7;
-  box-shadow: 0 3px 0.5rem #d9d9d9;
-  border-radius: 0.5rem;
-  padding: 0 2.5rem;
-  @media (max-width: 700px) {
-    padding: 0 10px;
+    &_difficult {
+      background: repeating-linear-gradient(-45deg,
+        #faede7,
+        #faede7 10%,
+        #faad99 10%,
+        #faad99 20%);
+    }
   }
 }
 
@@ -47,9 +56,11 @@
   .img-container {
     display: flex;
     max-width: 300px;
-    img {
-      border-radius: 5px;
-      width: 100%;
+    .card__image {
+      border-radius: 7px;
+      height: 200px;
+      width: auto;
+      border: 2px solid #092c70;
     }
   }
   .transcription {
@@ -72,6 +83,7 @@
   .answer-container {
     font-family: "RobotoMono-Regular", serif;
     font-size: 25px;
+    position: relative;
     .answer-form {
       display: inline-block;
     }
@@ -80,9 +92,9 @@
 
 .input-container {
   position: relative;
-  color: #338c99;
+  color: green;
   .background {
-    background: #5196a67a;
+    background: #cccccc;
     border-radius: 5px;
     font-size: 27px;
     &.correct {
@@ -93,8 +105,22 @@
     position: absolute;
     left: 0;
     top: 0;
-    .uncorrect-letter {
-      color: #d35e27;
+    .check-letter {
+      opacity: 1;
+      transition: 1s;
+      animation: show 2s 1;
+      animation-fill-mode: forwards;
+    }
+    .incorrect-letter {
+      color: #f00002;
+    }
+    @keyframes show {
+      0% {
+        opacity: 1;
+      }
+      100% {
+        opacity: 0.7;
+      }
     }
   }
   .hidden {
@@ -106,7 +132,7 @@
   background: transparent;
   border: 0 none;
   outline: none;
-  color: #338c99;
+  color: #000000;
   position: absolute;
   left: 0;
   top: 0;
@@ -152,9 +178,14 @@
     width: 100%;
     height: 100%;
     cursor: pointer;
+    transition: all 0.3s;
     &:hover {
       cursor: pointer;
       background: #f9efeb59;
+    }
+    &:disabled {
+      opacity: 0.5;
+      filter: grayscale(100%);
     }
   }
 
@@ -168,14 +199,21 @@
   display: flex;
   justify-content: space-around;
   margin: 10px 0;
+  .learn-btn {
+    width: 180px;
+    transition: all 0.3s;
+    box-shadow: 0 0 0 2px #f00002;
+    &:disabled {
+      opacity: 0.5;
+      filter: grayscale(100%);
+    }
+  }
   .delete-btn {
     background: #af0001;
+    box-shadow: 0 0 0 2px #092c70;
     &:hover {
       background: #da3d3dd7;
     }
-  }
-  .learn-btn {
-    width: 180px;
   }
   .button {
     margin: 0 10px;

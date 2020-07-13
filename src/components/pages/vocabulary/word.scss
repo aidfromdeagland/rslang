@@ -44,6 +44,11 @@
     align-items: center;
   }
 
+  &__meaning-containrer {
+    margin-top: 5px;
+    border-top: 1px solid #092c70;
+  }
+
   &__training-info {
     margin-top: 5px;
     display: flex;

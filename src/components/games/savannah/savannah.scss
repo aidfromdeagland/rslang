@@ -1,3 +1,388 @@
-.savannah {
+$main-color: #d372e2;
+$bg-color: #ecf5ea;
+$secondary-color: #56dde4;
+$text-color: #5c6bf5;
+$lives-color: #d372e2;
+$shadow-color: #4abbff;
+$success-color: #56e4c3;
+$error-color: #e2727d;
+$btn-color: #092c70;
+$btn-hover-color: #0f4ab4;
 
+.savannah {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    min-height: 100vh;
+    width:100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin: 0 auto;
+    background-color: #000;
+    color: #fff;
+    font-family: "Literata", sans-serif;
+
+    &__start {
+        background-color: #aad9f5;
+        background-image: url("./../../../assets/images/lion.jpg");
+        background-size: cover;
+        background-position: left;
+        min-height: calc(100vh - 100px);
+        margin: 0 auto;
+        text-align: center;
+        display: flex;
+        color: #fff;
+        @media (max-width: 720px) {
+          display: block,
+          }
+        
+        &-text {
+            padding-top: 2rem;
+            font-size: 2rem;
+            width: 60%;
+
+            @media (max-width: 720px) {
+                font-size: 1.5rem;
+                width: 100%;
+              }
+
+            @media (max-width: 720px) {
+                font-size: 1.5rem;
+                width: 100%;
+              }
+
+            div {
+                font-size: 1.5rem;
+                margin-top: 1rem;
+
+                
+            @media (max-width: 720px) {
+                font-size: 1rem;
+              }
+                span {
+                    border: 1px solid #fff;
+                    border-radius: 7px;
+                    padding: 0 0.3rem;
+                    margin-right: 0.5rem;
+
+                    &:first-child {
+                    margin-left: 1rem;
+                    }
+                }
+            }
+        }
+
+        &-warning {
+           color: $error-color;
+        }
+
+        &-form {
+                margin: 1rem 2rem;
+                font-size: 1.2rem;
+                text-align: left;
+                @media (max-width: 720px) {
+                    font-size: 0.9rem;
+                  }
+              
+        }
+
+        &-select{
+            margin-left: 2rem;
+            display: flex;
+            align-items: baseline;
+
+            select {
+                appearance: none;
+                outline: 0;
+                box-shadow: none;
+                border: 0 ;
+                background: $btn-color;
+                background-image: none;
+                font-size: 1.2rem;
+                @media (max-width: 720px) {
+                    font-size: 0.9rem;
+                  }
+              }
+            
+             .select {
+                position: relative;
+                display: flex;
+                width: 10rem;
+                height: 3rem;
+                background: $bg-color;
+                overflow: hidden;
+                border-radius: .25em;
+                margin: 0 1rem;
+                          }
+              select {
+                flex: 1;
+                padding: 0.5rem;
+                color: #fff;
+                cursor: pointer;
+              }
+             
+              .select::after {
+                content: '\25BC';
+                position: absolute;
+                top: 0;
+                right: 0;
+                padding: 0.2rem 1rem;
+                background: $btn-color;
+                cursor: pointer;
+                pointer-events: none;
+                transition: .25s all ease;
+                @media (max-width: 720px) {
+                    padding: 0.6rem;
+                  }
+              }
+             
+              .select:hover::after {
+                color: $btn-hover-color;
+              }
+        }
+
+        &-btn {
+            height: 4rem;
+            margin: 3rem 0 0 3rem;
+            border: 1px solid transparent;
+            border-radius: 7px;
+            background-color: $btn-color;
+            color: #fff;
+            padding: 1rem;
+            cursor: pointer;
+            font-size: 1.1rem;
+            &:hover {
+                background-color: $btn-hover-color;
+            }
+            @media (max-width: 720px) {
+                font-size: 0.8rem;
+                height: 3rem;
+              }
+        }
+    }
+
+    &__header {
+        display: flex;
+        justify-content: space-between;
+        padding: 0 1rem;
+        &-lives {
+            display: flex;
+            justify-content: flex-end;
+            padding: 2rem;
+            align-items: baseline;
+       
+    
+    
+            &-life {
+                display: flex;
+                width: 40px;
+                height: 40px;
+                background-image: url("./../../../assets/icons/heart-savannah.svg");
+                @media (max-width: 720px) {
+                    width: 30px;
+                    height: 30px;
+                  }
+        
+            }
+              
+        }
+        &-btnClose {
+            font-size: 2rem;
+            padding: 1rem;
+            cursor: pointer;
+          
+        }
+
+        a{
+            color: #fff;
+            text-decoration: none;
+        }
+    }
+
+   
+    &__cards {
+        max-width: 1020px;
+        height: 100px;
+        width: 100%;
+        margin: 15rem auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        text-align: center;
+        flex: none;
+        color: $text-color;
+        text-transform: uppercase;
+        
+        &-card {
+            background-color: $secondary-color;
+            width: 23%;
+            padding: 0.8rem 0;
+            text-align: center;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            box-shadow: 0 0 10px $shadow-color;
+            outline: none;
+          
+
+            @media (max-width: 1200px) {
+                font-size: 0.8rem;
+                width: 18%;
+                margin-bottom: 1rem;
+                text-align: center;
+              }
+
+              @media (max-width: 720px) {
+                overflow: hidden;
+              }
+
+              @media (max-width: 420px) {
+                font-size: 0.6rem;
+                width: 20%;
+                margin-bottom: 1rem;
+                text-align: center;
+              }
+              
+            &-success {
+                background-color: $success-color;
+            }
+            &-error {
+                background-color: $error-color;
+            }
+        }
+    }
+
+    &__image {
+        position: relative;
+        margin: 0 auto 5rem;
+        background-image: url("../../../assets/images/crystal.jpg");
+        background-size: contain;
+        background-repeat: no-repeat;
+    }
+
+    &__statistics {
+        position: relative;
+        margin: 5rem auto;
+        background-color: $bg-color;
+        width: 50%;
+        max-height: 70%;
+        overflow-y: scroll;
+        overflow-x: hidden;
+        border-radius: 5px;
+        color: #000;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        padding: 2rem;
+        box-shadow: 0 0 20px $shadow-color;
+
+        @media (max-width: 720px) {
+           width: 90%;
+           font-size: 0.8rem;
+          }
+        
+
+        &-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: left;
+
+            &_word {
+                min-width: 30%;
+                text-align: left;
+            }
+
+            &_transcription {
+                min-width: 35%;
+                text-align: left;
+            }
+
+            &_translate {
+                min-width: 35%;
+                text-align: left;
+            }
+
+            &_sound {
+                min-width: 10%;
+                background-image: (url("../../../assets/icons/dynamic-savannah.svg"));
+                background-size: contain;
+                background-repeat: no-repeat;
+                cursor: pointer;
+                outline: none;
+            }
+        }
+
+        &-wrong {
+            color: $error-color;
+            flex: 0;
+        }
+
+        &-right {
+            color: $success-color;
+        }
+
+        &-btn {
+            margin: 3rem 0;
+            border: 1px solid transparent;
+            border-radius: 7px;
+            background-color: $btn-color;
+            color: #fff;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            font-size: 1.1rem;
+            &:hover {
+                background-color: $btn-hover-color;
+            }
+        }
+
+        &-btnClose {
+            position: absolute;
+            top: 0.5rem;
+            right: 1rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+
+            a {
+                text-decoration: none;
+                color: #000;
+            }
+        }
+
+        h1 {
+            color: $btn-color;
+        }
+    }
+
+    &__card-transition {
+        position: absolute;
+        top: -3rem;
+        left: 40%;
+        padding: 1rem;
+        min-width: 10rem;
+        min-height: 3rem;
+        font-size: 2rem;
+        text-transform: uppercase;
+        letter-spacing: 0.4rem;
+        color: #fff;
+
+        @media (max-width: 720px) {
+            font-size:1.5rem;
+            left: 30%;  
+          }
+
+          @media (max-width: 420px) {
+            font-size:1rem;
+            left: 25%;  
+          }
+    }
+
+    .card-bottom {
+        top: 30rem;
+        color: $secondary-color;
+        transition: all 7s linear;
+    }
+  
 }
+

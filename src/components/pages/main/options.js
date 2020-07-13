@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './main.scss';
-import { BrowserRouter as Router, Route, Link, NavLink } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { Button } from '../../shared/button';
 import { ModalSettings } from './modal';
 
@@ -14,6 +14,7 @@ export class Options extends Component {
             clickSettings,
             checkSettings,
             onchangeCheckbox,
+            isInvalidSettings,
         } = this.props;
         return (
             <div className="main-page_options">
@@ -26,23 +27,48 @@ export class Options extends Component {
                             onchangeCheckbox={onchangeCheckbox}
                             clickSettings={clickSettings}
                             checkSettings={checkSettings}
+                            isInvalidSettings={isInvalidSettings}
                         />
                     ) : null}
                 <div className="options-settings">
-                    <Button className="button" title="Settings" onClick={clickSettings} />
-                    <NavLink to="/main/study" className="learning-words">
+                    <NavLink to={{
+                        pathname: '/main/study',
+                        allowNewWords: true,
+                        allowLearnedWords: true,
+                        allowDifficultWords: false,
+                    }}
+                    >
                         <Button className="button btn-start" title="START" />
                     </NavLink>
+                    <Button className="button" title="settings" onClick={clickSettings} />
                 </div>
                 <div className="options-learning">
                     <NavLink to={{
                         pathname: '/main/study',
+                        allowNewWords: true,
+                        allowLearnedWords: false,
+                        allowDifficultWords: false,
                     }}
                     >
-                        <Button className="button" title="Learn new words" />
+                        <Button className="button" title="new words" />
                     </NavLink>
-                    <NavLink to="/main/study" className="learning-words">
-                        <Button className="button" title="Repeat words" />
+                    <NavLink to={{
+                        pathname: '/main/study',
+                        allowNewWords: false,
+                        allowLearnedWords: true,
+                        allowDifficultWords: false,
+                    }}
+                    >
+                        <Button className="button" title="learned words" />
+                    </NavLink>
+                    <NavLink to={{
+                        pathname: '/main/study',
+                        allowNewWords: false,
+                        allowLearnedWords: true,
+                        allowDifficultWords: true,
+                    }}
+                    >
+                        <Button className="button" title="difficult words" />
                     </NavLink>
                 </div>
             </div>
