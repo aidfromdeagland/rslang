@@ -64,6 +64,10 @@
   text-shadow: 0 1px 0 #fff;
   opacity: 0.5;
   text-decoration: none;
+  width: auto;
+  height: auto;
+  background-color: transparent;
+  outline: none;
 }
 
 .close:focus,
@@ -85,7 +89,20 @@
     display: flex;
     justify-content: space-around;
     align-items: center;
+    select, input {
+      cursor: pointer;
+    }
   }
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: space-around;
+}
+
+.modal-reset {
+  width: 90px;
+  background-color: rgba($color: #0F4AB4, $alpha: 0.5)
 }
 
 .close-modal-ok {
@@ -107,7 +124,6 @@
   line-height: 27px;
   color: #ffffff;
   &:hover {
-    cursor: pointer;
     background-color: #0F4AB4;
   }
   &:active, &:focus {

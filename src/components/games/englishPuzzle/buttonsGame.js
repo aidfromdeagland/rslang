@@ -21,7 +21,6 @@ export class ButtonsBlock extends Component {
             audioSentence,
             showButton,
             isAutoPronunciation,
-            wordCount,
             addToResults,
             isGameWithUserWords,
             wordForGameRound,

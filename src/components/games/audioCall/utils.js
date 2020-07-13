@@ -1,3 +1,5 @@
+import { MODE_GAME_LANG } from './constants';
+
 export const tryExecute = async (funcExecute, errorFunc) => {
     try {
         await funcExecute();
@@ -28,6 +30,13 @@ export const getDifferentColor = (proccent, startColor, diffColor) => {
         b: startColor.b + Math.round(diffColor.b * proccent),
     };
     return `rgb(${color.r}, ${color.g}, ${color.b})`;
+};
+
+export const getTextWord = (word, modeLangGame, isQuest) => {
+    if (modeLangGame === MODE_GAME_LANG['English to russian']) {
+        return isQuest ? word.word : word.wordTranslate;
+    }
+    return isQuest ? word.wordTranslate : word.word;
 };
 
 /**

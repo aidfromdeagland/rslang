@@ -19,6 +19,7 @@ import './savannah.scss';
 export class SavannahGame extends Component {
     constructor(props) {
         super(props);
+        this.statisticsData = [];
         this.state = {
             word: {},
             translateWords: [],
@@ -40,6 +41,7 @@ export class SavannahGame extends Component {
     componentDidMount() {
         this.getNewCards();
         this.startTimer();
+        this.loadStatistic();
 
         let isPressed = false;
         this.keydown = (e) => {
@@ -85,6 +87,13 @@ export class SavannahGame extends Component {
         this.saveSettingsSavannah(settings);
     };
 
+    loadStatistic = async () => {
+        this.statistic = await StatisticService.get();
+        this.gameStatistic = this.statistic.optional.savannah
+            ? JSON.parse(this.statistic.optional.savannah)
+            : [];
+    }
+
     saveStatisticsSavannah = async () => {
         const gameStatistic = JSON.stringify(this.gameStatistic);
         this.statistic.optional.savannah = gameStatistic;
@@ -93,10 +102,9 @@ export class SavannahGame extends Component {
 
     saveDataToStatistics = async () => {
         const { allRightWords, allWrongWords } = this.state;
-        this.statistic = await StatisticService.get();
         this.gameStatistic = this.statistic.optional.savannah
             ? JSON.parse(this.statistic.optional.savannah)
-            : [];
+            : this.statisticsData;
         const statisticsData = await StatisticService.createGameStat(allRightWords, allWrongWords);
         this.gameStatistic.push(statisticsData);
         this.saveStatisticsSavannah();

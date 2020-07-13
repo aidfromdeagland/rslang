@@ -1,79 +1,73 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import { TableSpeakit } from './tableSpeakit';
+import { TablePuzzle } from './tablePuzzle';
+import { TableSavannah } from './tableSavannah';
+import { TableAudiocall } from './tableAudiocall';
+import { TableSprint } from './tableSprint';
+import { TableHangman } from './tableHangman';
 
-const Row = ({
-    game, total, win, lose, success,
-}) => (
-    <div className="row">
-        <div>{game}</div>
-        <div>{total}</div>
-        <div>{win}</div>
-        <div>{lose}</div>
-        <div>{success}</div>
-
-    </div>
-);
 export class TableGames extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            data: [
+    loadStatistics = (game) => {
+        const amountsOfround = game.length;
+        const data = [];
+        for (let i = 0; i < amountsOfround; i += 1) {
+            const percent = (Math.round((game[i].Correct * 100) / (game[i].Correct + game[i].Incorrect)));
+            const resSuccess = isNaN(percent) ? '' : percent;
+            data.push(
                 {
-                    game: 'SpeakIt', total: null, win: null, lose: null, success: null,
+                    date: this.getTimeFormat(game[i].Date),
+                    win: game[i].Correct,
+                    lose: game[i].Incorrect,
+                    success: resSuccess,
                 },
-                {
-                    game: 'English Puzzle', total: null, win: null, lose: null, success: null,
-                },
-                {
-                    game: 'Savannh', total: null, win: null, lose: null, success: null,
-                },
-                {
-                    game: 'Audio Call', total: null, win: null, lose: null, success: null,
-                },
-                {
-                    game: 'Sprint', total: null, win: null, lose: null, success: null,
-                },
-                {
-                    game: 'Hangman', total: null, win: null, lose: null, success: null,
-                },
+            );
+        }
+        return data;
+    }
 
-            ],
+    getTimeFormat = (timestamp) => {
+        const options = {
+            day: 'numeric',
+            month: 'long',
+            hour: 'numeric',
+            minute: 'numeric',
+            hour12: false,
         };
+        if (timestamp !== null) {
+            const date = new Date(timestamp);
+            const dateFormat = date.toLocaleString('en', options);
+            return dateFormat;
+        }
     }
 
     render() {
-        const { data } = this.state;
-        const rows = data.map((rowData, index) => (
-            <Row
-                key={index}
-                {...rowData}
-            />
-        ));
-
         return (
-
-            <div className="table">
-
-                <div className="table__header">
-                    <div>Game</div>
-                    <div>Rounds</div>
-                    <div>Win</div>
-                    <div>Lose</div>
-                    <div>% success</div>
-
-                </div>
-                <div className="body">
-                    {rows}
-                </div>
+            <div className="tables__minigames">
+                <h2>SpeakIt</h2>
+                <TableSpeakit
+                    loadStatistics={this.loadStatistics}
+                />
+                <h2>English-puzzle</h2>
+                <TablePuzzle
+                    loadStatistics={this.loadStatistics}
+                />
+                <h2>Savannah</h2>
+                <TableSavannah
+                    loadStatistics={this.loadStatistics}
+                />
+                <h2>Audio call</h2>
+                <TableAudiocall
+                    loadStatistics={this.loadStatistics}
+                />
+                <h2>Sprint</h2>
+                <TableSprint
+                    loadStatistics={this.loadStatistics}
+                />
+                <h2>Hangman</h2>
+                <TableHangman
+                    loadStatistics={this.loadStatistics}
+                />
             </div>
         );
     }
 }
-
-TableGames.propTypes = {
-    game: PropTypes.string.isRequired,
-    total: PropTypes.number.isRequired,
-    win: PropTypes.number.isRequired,
-    lose: PropTypes.number.isRequired,
-    success: PropTypes.number.isRequired,
-};
