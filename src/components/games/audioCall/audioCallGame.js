@@ -4,8 +4,8 @@ import PropTypes from 'prop-types';
 import { WordList } from './wordList';
 import { MEDIA_PREFIX_URL } from '../../../constants/globalConstants';
 import { Repository } from './repository';
-import { MAX_COUNT_QUEST_WORDS } from './constants';
-import { tryExecute } from './utils';
+import { MAX_COUNT_QUEST_WORDS, MODE_GAME } from './constants';
+import { tryExecute, getTextWord } from './utils';
 import { WordService } from '../../../services/wordServices';
 
 export class AudioCallGame extends Component {
@@ -17,7 +17,6 @@ export class AudioCallGame extends Component {
     }
 
     componentDidMount() {
-        this.handleSpeak();
         this.setDirectionWords();
         let isPressed = false;
 
@@ -68,6 +67,9 @@ export class AudioCallGame extends Component {
 
     async addResult(word, isCorrect) {
         this.result.push({ word, isCorrect });
+        if (this.props.repositoryState.currentSettings.modeGame === MODE_GAME['All words']) {
+            return;
+        }
         try {
             // custom add user words:
             // await WordService.postWord(word.id,
@@ -124,6 +126,7 @@ export class AudioCallGame extends Component {
         const {
             round, selectedWord, pressNumber, isDirectionColumn,
         } = this.state;
+        const { modeLangGame } = this.props.repositoryState.currentSettings;
         return (
             <div className="audio-call" style={{ background: round.background }} ref={(el) => { this.audioCallContainer = el; }}>
                 <span
@@ -132,7 +135,7 @@ export class AudioCallGame extends Component {
                 />
                 <div className={`audio-call__quest ${selectedWord ? 'audio-call__quest_show' : ''}`}>
                     <span className="audio-call__dinamic" onMouseDown={() => this.handleSpeak()} tabIndex="0" role="button"> </span>
-                    <span className="audio-call__quest-word">{this.state.round.word.word}</span>
+                    <span className="audio-call__quest-word">{getTextWord(this.state.round.word, modeLangGame, true)}</span>
                 </div>
                 <WordList
                     ref={(el) => { this.wordListComponent = el; }}
@@ -142,6 +145,7 @@ export class AudioCallGame extends Component {
                     selectCorrect={selectedWord}
                     pressNumber={pressNumber}
                     isDirectionColumn={isDirectionColumn}
+                    modeLangGame={modeLangGame}
                 />
                 {this.state.selectedWord
                     ? <button className="audio-call__button" type="button" onClick={() => this.handleNextWord()}>→→→</button>
@@ -156,6 +160,8 @@ AudioCallGame.propTypes = {
         currentSettings: PropTypes.shape({
             group: PropTypes.number,
             page: PropTypes.number,
+            modeGame: PropTypes.number,
+            modeLangGame: PropTypes.number,
         }),
     }).isRequired,
     endGame: PropTypes.func.isRequired,

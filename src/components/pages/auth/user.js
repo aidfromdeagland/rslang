@@ -25,6 +25,6 @@ export class User {
     }
 
     static logOut() {
-        Storage.clearUser();
+        Storage.clearToken();
     }
 }

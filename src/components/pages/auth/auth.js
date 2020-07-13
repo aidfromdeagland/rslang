@@ -50,7 +50,7 @@ export class Auth extends Component {
 
         if (!validatePassword(password.value)) {
             this.setState({
-                errorPassword: 'the password must contain at least 8 characters, at least one uppercase letter, one uppercase letter, one digit, and one special character',
+                errorPassword: 'the password must contain at least 8 characters, at least one uppercase letter, one digit, and one special character',
                 errorMain: undefined,
             });
         } else if (!validateEmail(login.value)) {

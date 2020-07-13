@@ -2,18 +2,19 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Word } from './word';
+import { getTextWord } from './utils';
 
 export class WordList extends Component {
     render() {
         const {
-            words, wordId, selected, selectCorrect, pressNumber, isDirectionColumn,
+            words, wordId, selected, selectCorrect, pressNumber, isDirectionColumn, modeLangGame,
         } = this.props;
 
         const wordsRender = words.map((w, i) => (
             <Word
                 key={w.id + wordId}
                 id={w.id}
-                text={w.wordTranslate}
+                text={getTextWord(w, modeLangGame, false)}
                 isCorrect={w.id === wordId}
                 selected={selected}
                 selectCorrect={selectCorrect}
@@ -48,4 +49,5 @@ WordList.propTypes = {
     selectCorrect: PropTypes.bool,
     pressNumber: PropTypes.number,
     isDirectionColumn: PropTypes.bool,
+    modeLangGame: PropTypes.number.isRequired,
 };
