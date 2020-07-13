@@ -12,6 +12,7 @@ import { settingsDefault } from '../../../constants/globalConstants';
 import { StatisticService } from '../../../services/statisticServices';
 import { Button } from '../../shared/button';
 import { getMemoInfoMiniGames } from '../../../services/spacedRepetition';
+import { convertStatisticJson } from '../../../utils/utils';
 
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 const SpeechGrammarList = window.SpeechGrammarList || window.webkitSpeechGrammarList;
@@ -96,25 +97,18 @@ export class GameSpeakit extends Component {
     }
 
     putStatistic = () => {
-        const gameStatistic = JSON.stringify(this.gameStatistic);
+        const gameStatistic = convertStatisticJson(this.gameStatistic);
         this.statistic.optional.speakit = gameStatistic;
         StatisticService.put(this.statistic);
     }
 
-    addStatisticsData = (level, page) => {
+    addStatisticsData = () => {
         const {
             totalSpokenWords,
             correctWords,
         } = this.state;
-        const date = new Date();
-        const timeStamp = date.getTime();
-        const statisticsField = {
-            date: timeStamp,
-            group: level,
-            page,
-            incorrect: totalSpokenWords - correctWords.length,
-            correct: correctWords.length,
-        };
+
+        const statisticsField = StatisticService.createGameStat(totalSpokenWords - correctWords.length, correctWords.length);
         this.gameStatistic.push(statisticsField);
         this.putStatistic();
     }
