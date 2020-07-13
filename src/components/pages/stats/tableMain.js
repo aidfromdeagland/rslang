@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import { WordService } from '../../../services/wordServices';
 
-const Row = ({ maxNew, maxRight, total }) => (
+const Row = ({ maxNew, difficult, total }) => (
     <div className="row">
         <div>{maxNew}</div>
-        <div>{maxRight}</div>
+        <div>{difficult}</div>
         <div>{total}</div>
     </div>
 );
@@ -12,13 +12,64 @@ export class TableMain extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            data: [],
+        };
+    }
+
+    componentDidMount() {
+        this.loadDatatoStatistic();
+    }
+
+    loadDatatoStatistic = async () => {
+        const userWord = await WordService.getUserWords();
+        const difficultWords = await this.getDifficultWords();
+        const maxNewWords = await this.getMaxNewWords();
+
+        this.setState({
             data: [
                 {
-                    maxNew: null, maxRight: null, total: null,
+                    maxNew: maxNewWords, difficult: difficultWords, total: userWord.length,
                 },
 
             ],
-        };
+        });
+    }
+
+        getWordsForDay = async () => {
+            const arr = [];
+            const userWord = await WordService.getUserWords();
+            for (let i = 0; i < userWord.length; i += 1) {
+                const date = new Date(userWord[i].optional.debutDate);
+                const options = {
+                    day: 'numeric',
+                    month: 'long',
+                    hour12: false,
+                };
+                const dateFormat = date.toLocaleString('en', options);
+                arr.push(dateFormat);
+            }
+            const result = arr.reduce((acc, el) => {
+                acc[el] = (acc[el] || 0) + 1;
+                return acc;
+            }, {});
+            return result;
+        }
+
+    getMaxNewWords = async () => {
+        const words = await this.getWordsForDay();
+        const max = (Object.values(words));
+        return Math.max(...max);
+    }
+
+    getDifficultWords = async () => {
+        const allDifWords = [];
+        const userWord = await WordService.getUserWords();
+        for (let i = 0; i < userWord.length; i += 1) {
+            if (userWord[i].optional.isDifficult) {
+                allDifWords.push(userWord[i]);
+            }
+        }
+        return allDifWords.length;
     }
 
     render() {
@@ -34,7 +85,7 @@ export class TableMain extends Component {
             <div className="table">
                 <div className="table__header">
                     <div>Max new words a day</div>
-                    <div>Max right answers a day</div>
+                    <div>Difficult words</div>
                     <div>Total words you learned!</div>
 
                 </div>
@@ -45,9 +96,3 @@ export class TableMain extends Component {
         );
     }
 }
-
-TableMain.propTypes = {
-    maxNew: PropTypes.number.isRequired,
-    maxRight: PropTypes.number.isRequired,
-    total: PropTypes.number.isRequired,
-};

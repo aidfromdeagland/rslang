@@ -35,6 +35,12 @@ export const settingsDefault = {
 export const statisticsDefault = {
     learnedWords: 0,
     optional: {
+        audioCall: '[{"Date":null,"Correct":null,"Incorrect":null}]',
+        speakit: '[{"Date":null,"Correct":null,"Incorrect":null}]',
+        gamePuzzle: '[{"Date":null,"Correct":null,"Incorrect":null}]',
+        savannah: '[{"Date":null,"Correct":null,"Incorrect":null}]',
+        hangman: '[{"Date":null,"Correct":null,"Incorrect":null}]',
+        sprint: '[{"Date":null,"Correct":null,"Incorrect":null}]',
     },
 };
 

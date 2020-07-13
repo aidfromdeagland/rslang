@@ -12,6 +12,10 @@ export class SavannahStatistics extends Component {
         };
     }
 
+    componentDidMount() {
+        this.props.saveDataToStatistics();
+    }
+
     repeatGame = () => {
         this.setState({
             isRepeat: true,

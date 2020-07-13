@@ -54,6 +54,7 @@ export class SavannahStart extends Component {
 
     loadSettings = async () => {
         this.settings = await SettingService.get();
+        console.log(this.settings.optional.savannah);
         const settingsForGame = this.settings.optional.savannah
             ? JSON.parse(this.settings.optional.savannah)
             : JSON.parse(settingsDefault.optional.savannah);
