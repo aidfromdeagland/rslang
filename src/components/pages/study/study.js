@@ -8,8 +8,8 @@ import { SettingService } from '../../../services/settingServices';
 import { Spinner } from '../../shared/spinner';
 import { Progress } from './progress';
 
+const newWordsQuery = { userWord: null };
 const totalLearnedWordsQuery = { 'userWord.optional.isDeleted': false };
-const totalDifficultWordsQuery = { $and: [{ 'userWord.optional.isDeleted': false, 'userWord.optional.isDifficult': true }] };
 
 const audioPrefixMap = {
     showWordTranslate: 'audio',
@@ -59,10 +59,11 @@ export class Study extends Component {
     }
 
     getWords = async () => {
-        const { allowNewWords, allowLearnedWords, allowDifficultWords } = this.props.location;
-        const newWordsQuery = { userWord: null };
-        const todayMidnightDate = new Date(Date.now()).setHours(23, 59, 59, 999);
-        const learnedWordsDateLimitedQuery = { $and: [{ 'userWord.optional.isDeleted': false, 'userWord.optional.nextDate': { $lt: todayMidnightDate } }] };
+        const { allowNewWords, allowLearnedWords, onlyDifficultWords } = this.props.location;
+        const todayStartBorderDate = new Date(Date.now()).setHours(0, 0, 0, 1);
+        const todayEndBorderDate = new Date(Date.now()).setHours(23, 59, 59, 999);
+        const learnedWordsDateLimitedQuery = { $and: [{ 'userWord.optional.isDeleted': false, 'userWord.optional.nextDate': { $lt: todayEndBorderDate } }] };
+        const totalDifficultWordsDateLimitedQuery = { $and: [{ 'userWord.optional.isDeleted': false, 'userWord.optional.isDifficult': true, 'userWord.optional.nextDate': { $lt: todayEndBorderDate } }] };
 
         let newWordsforTraining = [];
         if (this.settings.newWords && allowNewWords) {
@@ -73,12 +74,12 @@ export class Study extends Component {
             newWordsforTraining = newWordsAggResponse[0].paginatedResults;
         }
         let learnedWordsForTraining = [];
-        if ((this.settings.totalWords - this.settings.newWords > 0) && allowLearnedWords) {
+        const learnedWordsQuantity = this.settings.totalWords - this.settings.newWords;
+        if (learnedWordsQuantity > 0 && allowLearnedWords) {
             let learnedWordsAggResponse;
-            const learnedWordsQuantity = this.settings.totalWords - this.settings.newWords;
-            if (allowDifficultWords) {
+            if (onlyDifficultWords) {
                 learnedWordsAggResponse = await WordService.getUserAggWords(
-                    '', totalDifficultWordsQuery, learnedWordsQuantity,
+                    '', totalDifficultWordsDateLimitedQuery, learnedWordsQuantity,
                 );
                 learnedWordsForTraining = learnedWordsAggResponse[0].paginatedResults;
             } else {
@@ -114,7 +115,7 @@ export class Study extends Component {
             });
         } else {
             this.props.history.push('/main');
-            alert('no words for training. change your settings');
+            alert('There are no words for training right now. Try to change your settings or train another category of words');
         }
     }
 
@@ -270,7 +271,7 @@ export class Study extends Component {
 
             WordService.putWord(this.actualCard.id, actualWordPutTemplate);
         } else {
-            const defaultWordPostTemplate = {
+            const defaultDifficultWordPostTemplate = {
                 optional: {
                     isDeleted: false,
                     isDifficult: true,
@@ -281,7 +282,7 @@ export class Study extends Component {
                 },
             };
 
-            WordService.postWord(this.actualCard.id, defaultWordPostTemplate);
+            WordService.postWord(this.actualCard.id, defaultDifficultWordPostTemplate);
         }
         this.goNextCard();
     }
@@ -366,12 +367,13 @@ export class Study extends Component {
         } = this.state;
         if (this.props.location.allowNewWords === undefined
             || this.props.location.allowLearnedWords === undefined
-            || this.props.location.allowDifficultWords === undefined) {
+            || this.props.location.onlyDifficultWords === undefined) {
             this.props.history.push('/main');
         }
 
         if (isLoadSettings && isLoadWords) {
-            const cardDifficultState = this.actualCard.userWord && this.actualCard.userWord.optional.isDifficult
+            const cardDifficultState = (this.actualCard.userWord
+                && this.actualCard.userWord.optional.isDifficult);
             return (
                 <div className="study-page">
                     <div className="card-container">
