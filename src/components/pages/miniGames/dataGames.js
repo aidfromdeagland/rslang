@@ -33,7 +33,7 @@ const dataGames = [
     },
     {
         title: 'Hangman',
-        link: '/hangman',
+        link: '/newHangman',
         imageSrc: `${hangmanImg}`,
     },
 ];

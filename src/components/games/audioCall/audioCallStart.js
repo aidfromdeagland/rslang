@@ -83,7 +83,7 @@ export class AudioCallStart extends Component {
             && this.state.repositoryState.load.loading.modeGame === MODE_GAME['All words'];
 
         return (
-            <div className="audio-call">
+            <div className="audio-call audio-call_start-page">
                 {this.state.isOpenModal && this.state.repositoryState
                     ? (
                         <ModalSettings
@@ -93,28 +93,30 @@ export class AudioCallStart extends Component {
                         />
                     ) : null}
                 <h1 className="audio-call__header">Audio Call</h1>
-                {isLevelModeGame
-                    && (
-                        <div className="audio-call__levels">
-                            <SimpleSelect
-                                key="group"
-                                values={createIncArray(GROUP_COUNT)}
-                                defaultValue={this.state.group}
-                                onChange={(v) => this.handleGroupChange(v)}
-                                title="level"
-                            />
-                            <SimpleSelect
-                                key="page"
-                                values={createIncArray(PAGE_COUNT)}
-                                defaultValue={this.state.page}
-                                onChange={(v) => this.handlePageChange(v)}
-                                title="round"
-                            />
-                        </div>
-                    )}
-                <span className="audio-call__description">Select the translation of the spoken word</span>
-                <span className="audio-call__train">Improves the perception of English speech by ear</span>
-                <span className="audio-call__train">Use keyboard to be faster! (1, 2, 3, 4, 5, Enter)</span>
+                <div className="audio-call__full-description">
+                    {isLevelModeGame
+                        && (
+                            <div className="audio-call__levels">
+                                <SimpleSelect
+                                    key="group"
+                                    values={createIncArray(GROUP_COUNT)}
+                                    defaultValue={this.state.group}
+                                    onChange={(v) => this.handleGroupChange(v)}
+                                    title="level"
+                                />
+                                <SimpleSelect
+                                    key="page"
+                                    values={createIncArray(PAGE_COUNT)}
+                                    defaultValue={this.state.page}
+                                    onChange={(v) => this.handlePageChange(v)}
+                                    title="round"
+                                />
+                            </div>
+                        )}
+                    <span className="audio-call__description">Select the translation of the spoken word.</span>
+                    <span className="audio-call__train">Improves the perception of English speech by ear.</span>
+                    <span className="audio-call__train">Use keyboard to be faster! (1, 2, 3, 4, 5, Enter).</span>
+                </div>
                 {
                     this.state.isLoading || !this.state.repositoryState
                         ? <Spinner />

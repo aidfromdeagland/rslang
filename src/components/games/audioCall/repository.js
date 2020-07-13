@@ -6,10 +6,35 @@ import {
     MEDIA_PREFIX_URL, totalLearnedWordsQuery,
     ALL_WORDS_COUNT, GROUP_WORDS_COUNT, GROUP_COUNT, PAGE_COUNT,
 } from '../../../constants/globalConstants';
-import { MAX_INDEX_QUEST_WORDS, MAX_INDEX_QUEST_WORDS_NOT_CORRECT, MODE_GAME } from './constants';
+import {
+    MAX_INDEX_QUEST_WORDS, MAX_INDEX_QUEST_WORDS_NOT_CORRECT,
+    MODE_GAME, MODE_GAME_LANG,
+} from './constants';
 import { levenshtein, getDifferentColor } from './utils';
+import { Speaker } from './speaker';
 
 export class Repository {
+    constructor(state, changeState, errorFunction) {
+        this.state = state || {
+            indexWord: 0,
+            currentSettings: undefined,
+            allWords: undefined, // все слова. Используются для формирования ошибочных вариантов
+            gameWords: undefined, // слова, которые будут заданы в процессе игры
+            loadedFunc: undefined,
+            step: undefined,
+            load: {
+                loading: {},
+                loaded: {},
+            },
+        };
+
+        this.changeState = changeState || (() => {});
+        this.errorFunction = errorFunction;
+
+        this.repositoryId = Date.now();
+        this.speaker = new Speaker();
+    }
+
     static async setNextGame(state) {
         const repositoryState = state;
         repositoryState.indexWord = 0;
@@ -38,26 +63,6 @@ export class Repository {
         const settings = await SettingService.get();
         settings.optional.audioCall = JSON.stringify(currentSettings);
         await SettingService.put(settings);
-    }
-
-    constructor(state, changeState, errorFunction) {
-        this.state = state || {
-            indexWord: 0,
-            currentSettings: undefined,
-            allWords: undefined, // все слова. Используются для формирования ошибочных вариантов
-            gameWords: undefined, // слова, которые будут заданы в процессе игры
-            loadedFunc: undefined,
-            step: undefined,
-            load: {
-                loading: {},
-                loaded: {},
-            },
-        };
-
-        this.changeState = changeState || (() => {});
-        this.errorFunction = errorFunction;
-
-        this.repositoryId = Date.now();
     }
 
     // #region Settings
@@ -109,29 +114,28 @@ export class Repository {
 
     getWordsForGame() {
         const word = this.getWord();
-        // const questKey = 'word';
-        // const answerKey = 'wordTranslate';
+        const answerKey = this.state.currentSettings.modeLangGame === MODE_GAME_LANG['English to russian']
+            ? 'wordTranslate'
+            : 'word';
 
-        // const textAnswer = word[answerKey];
-        // let gameWords = this.state.allWords.filter((w) => w[answerKey] !== textAnswer);
-        // gameWords = getUniqueByKey(gameWords, answerKey);
-        // gameWords = gameWords.sort((a, b) => levenshtein(a[answerKey], textAnswer)
-        //     - levenshtein(b[answerKey], textAnswer));
-        // gameWords = gameWords.slice(0, MAX_INDEX_QUEST_WORDS);
-        // gameWords.splice(randomInteger(MAX_INDEX_QUEST_WORDS_NOT_CORRECT), 0, word);
-
-        const { wordTranslate } = word;
-        let gameWords = this.state.allWords.filter((w) => w.wordTranslate !== wordTranslate);
-        gameWords = getUniqueByKey(gameWords, 'wordTranslate');
-        gameWords = gameWords.sort((a, b) => levenshtein(a.wordTranslate, wordTranslate)
-            - levenshtein(b.wordTranslate, wordTranslate));
+        const textAnswer = word[answerKey];
+        let gameWords = this.state.allWords.filter((w) => w[answerKey] !== textAnswer);
+        gameWords = getUniqueByKey(gameWords, answerKey);
+        gameWords = gameWords.sort((a, b) => levenshtein(a[answerKey], textAnswer)
+            - levenshtein(b[answerKey], textAnswer));
         gameWords = gameWords.slice(0, MAX_INDEX_QUEST_WORDS);
         gameWords.splice(randomInteger(MAX_INDEX_QUEST_WORDS_NOT_CORRECT), 0, word);
         return gameWords;
     }
 
     getAudio() {
-        return new Audio(MEDIA_PREFIX_URL + this.getWord().audio);
+        return this.state.currentSettings.modeLangGame === MODE_GAME_LANG['English to russian']
+            ? new Audio(MEDIA_PREFIX_URL + this.getWord().audio)
+            : {
+                play: () => {
+                    this.speaker.speak(this.getWord().wordTranslate);
+                },
+            };
     }
 
     getBackgroundProgress() {
