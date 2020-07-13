@@ -30,7 +30,6 @@ export class GamePuzzle extends Component {
             isCheckBtn: false,
             isContinueBtn: false,
             isDontKnowBtn: true,
-            // isResultBtn: false,
             isClickedDontKnow: false,
             isAutoPronunciation: true,
             isPicture: true,
@@ -93,30 +92,12 @@ export class GamePuzzle extends Component {
 
     putStatistic = () => {
         const gameStatistic = convertStatisticJson(this.gameStatistic);
-        // const gameStatistic = JSON.stringify(filterStatistic);
         this.statistic.optional.gamePuzzle = gameStatistic;
         StatisticService.put(this.statistic);
     }
 
-    addStatisticsData = (level, page) => {
-        const options = {
-            day: 'numeric',
-            month: 'long',
-            hour: 'numeric',
-            minute: 'numeric',
-            second: 'numeric',
-            hour12: false,
-        };
-        const date = new Date();
-        const dateString = date.toLocaleString('en', options);
-        const timeStamp = date.getTime();
-        const statisticsField = {
-            date: timeStamp,
-            group: level,
-            page,
-            incorrect: this.results.dontKnow.length,
-            correct: this.results.know.length,
-        };
+    addStatisticsData = () => {
+        const statisticsField = StatisticService.createGameStat(this.results.know.length, this.results.dontKnow.length);
         this.gameStatistic.push(statisticsField);
         this.putStatistic();
     }
@@ -143,7 +124,6 @@ export class GamePuzzle extends Component {
             this.allWords = this.getRandomData(userWords);
         }
         this.createDataForGame(wordCount);
-        // this.setState({ haveWords: true });
     }
 
     createDataForGame = (wordCount) => {
@@ -154,7 +134,6 @@ export class GamePuzzle extends Component {
         const {
             page,
         } = this.state;
-        // this.wordsForGameRound;
         if (isGameWithLevels) {
             this.wordsForGameRound = (page - 1) % 2 === 0
                 ? this.allWords.slice(0, 10)
@@ -270,7 +249,7 @@ export class GamePuzzle extends Component {
     showResults = () => {
         const { level, page } = this.state;
         this.setState({ isRoundEnd: true });
-        this.addStatisticsData(level, page);
+        this.addStatisticsData();
         if (level === 6 && page === 60) {
             this.putSettings(1, 1);
         }
@@ -360,47 +339,49 @@ export class GamePuzzle extends Component {
                                 />
                             </div>
                         </div>
-                        <div className="game-board">
-                            {isPicture && (
-                                <div className="image-container">
-                                    <img src={`https://raw.githubusercontent.com/aidfromdeagland/rslang-data/master/${image}`} alt="img" />
+                        <div className="puzzle-content">
+                            <div className="game-board">
+                                {isPicture && (
+                                    <div className="image-container">
+                                        <img src={`https://raw.githubusercontent.com/aidfromdeagland/rslang-data/master/${image}`} alt="img" />
+                                    </div>
+                                )}
+                                <div className="game-board__translation">
+                                    <span>{translateSentence}</span>
                                 </div>
-                            )}
-                            <div className="game-board__translation">
-                                <span>{translateSentence}</span>
-                            </div>
-                            {isNext ? (
-                                <GameBoardAction
-                                    sentenceForPuzzle={sentenceForPuzzle}
+                                {isNext ? (
+                                    <GameBoardAction
+                                        sentenceForPuzzle={sentenceForPuzzle}
+                                        correctSentence={sentence}
+                                        showCheck={this.showCheck}
+                                        showButton={this.showButton}
+                                        isClickedDontKnow={isClickedDontKnow}
+                                    />
+                                ) : ''}
+                                <ButtonsBlock
+                                    wordCount={wordCount}
+                                    isCheckBtn={isCheckBtn}
+                                    isContinueBtn={isContinueBtn}
+                                    isDontKnowBtn={isDontKnowBtn}
                                     correctSentence={sentence}
-                                    showCheck={this.showCheck}
                                     showButton={this.showButton}
-                                    isClickedDontKnow={isClickedDontKnow}
+                                    getNextWord={this.getNextWord}
+                                    clickDontKnow={this.clickDontKnow}
+                                    selectLevel={this.selectLevel}
+                                    level={level}
+                                    page={page}
+                                    audioSentence={audioSentence}
+                                    isAutoPronunciation={isAutoPronunciation}
+                                    addToResults={this.addToResults}
+                                    showResults={this.showResults}
+                                    isRoundEnd={isRoundEnd}
+                                    isGameWithUserWords={isGameWithUserWords}
+                                    wordForGameRound={this.wordsForGameRound[wordCount]}
                                 />
-                            ) : ''}
-                            <ButtonsBlock
-                                wordCount={wordCount}
-                                isCheckBtn={isCheckBtn}
-                                isContinueBtn={isContinueBtn}
-                                isDontKnowBtn={isDontKnowBtn}
-                                correctSentence={sentence}
-                                showButton={this.showButton}
-                                getNextWord={this.getNextWord}
-                                clickDontKnow={this.clickDontKnow}
-                                selectLevel={this.selectLevel}
-                                level={level}
-                                page={page}
-                                audioSentence={audioSentence}
-                                isAutoPronunciation={isAutoPronunciation}
-                                addToResults={this.addToResults}
-                                showResults={this.showResults}
-                                isRoundEnd={isRoundEnd}
-                                isGameWithUserWords={isGameWithUserWords}
-                                wordForGameRound={this.wordsForGameRound[wordCount]}
-                            />
-                        </div>
-                        <div className="progress-bar-game">
-                            <div className="progress-percent-game" style={{ width: `${(wordCount + 1) * 10}%` }} />
+                            </div>
+                            <div className="progress-bar-game">
+                                <div className="progress-percent-game" style={{ width: `${(wordCount + 1) * 10}%` }} />
+                            </div>
                         </div>
                     </div>
                 </div>

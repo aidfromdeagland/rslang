@@ -18,10 +18,6 @@ export class StartPage extends Component {
     }
 
     componentDidMount() {
-        // const userWords = WordService.getUserWords();
-        // if (userWords && userWords.length >= 9) {
-        //     this.setState(() => ({ haveUserWords: true }));
-        // }
         this.loadUserWords();
     }
 
@@ -65,7 +61,7 @@ export class StartPage extends Component {
                     <div className="description">
                         <p>Click on words, collect phrases.</p>
                         <br />
-                        <p>Words can be drag and drop. Select tooltips in the menu</p>
+                        <p>Words can be drag and drop. Select difficulty levels in the menu. If you have already learned 10 or more words, you can use them in the game mode with learned words</p>
                     </div>
                     <div className="start">
                         <Button
@@ -76,7 +72,7 @@ export class StartPage extends Component {
                         <Button
                             className={haveUserWords ? 'button btn-start' : 'button btn-start disabled'}
                             onClick={() => this.handleClick('isGameWithUserWords')}
-                            title="Play with your words"
+                            title="Play with learned words"
                             isDisabled={!haveUserWords}
                         />
                     </div>
