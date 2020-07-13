@@ -50,7 +50,7 @@ export class DifficultyEvaluation extends Component {
             <div className="difficulty-evaluation">
                 <Button title="easy" className="difficulty-button difficulty-button_easy" onClick={() => { this.handleCLick(0); }} />
                 <Button title="normal" className="difficulty-button difficulty-button_normal" onClick={() => { this.handleCLick(1); }} />
-                <Button title="difficult" className="difficulty-button difficulty-button_difficult" onClick={() => { this.handleCLick(2); }} />
+                <Button title="hard" className="difficulty-button difficulty-button_hard" onClick={() => { this.handleCLick(2); }} />
                 <Button
                     title="again"
                     className="difficulty-button difficulty-button_again"

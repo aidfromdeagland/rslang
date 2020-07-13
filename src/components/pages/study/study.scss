@@ -22,12 +22,20 @@
   }
   .card {
     width: 100%;
-    background-color: #faede7;
+    background: #faede7;
     box-shadow: 0 3px 0.5rem #d9d9d9;
     border-radius: 0.5rem;
     padding: 0 2.5rem;
     @media (max-width: 700px) {
       padding: 0 10px;
+    }
+
+    &_difficult {
+      background: repeating-linear-gradient(-45deg,
+        #faede7,
+        #faede7 10%,
+        #faad99 10%,
+        #faad99 20%);
     }
   }
 }
@@ -49,9 +57,10 @@
     display: flex;
     max-width: 300px;
     .card__image {
-      border-radius: 5px;
+      border-radius: 7px;
       height: 200px;
       width: auto;
+      border: 2px solid #092c70;
     }
   }
   .transcription {
@@ -83,9 +92,9 @@
 
 .input-container {
   position: relative;
-  color: #338c99;
+  color: green;
   .background {
-    background: #5196a67a;
+    background: #cccccc;
     border-radius: 5px;
     font-size: 27px;
     &.correct {
@@ -110,7 +119,7 @@
         opacity: 1;
       }
       100% {
-        opacity: 0.5;
+        opacity: 0.7;
       }
     }
   }
@@ -123,7 +132,7 @@
   background: transparent;
   border: 0 none;
   outline: none;
-  color: #338c99;
+  color: #000000;
   position: absolute;
   left: 0;
   top: 0;
@@ -190,18 +199,20 @@
   display: flex;
   justify-content: space-around;
   margin: 10px 0;
-  .delete-btn {
-    background: #af0001;
-    &:hover {
-      background: #da3d3dd7;
-    }
-  }
   .learn-btn {
     width: 180px;
     transition: all 0.3s;
+    box-shadow: 0 0 0 2px #f00002;
     &:disabled {
       opacity: 0.5;
       filter: grayscale(100%);
+    }
+  }
+  .delete-btn {
+    background: #af0001;
+    box-shadow: 0 0 0 2px #092c70;
+    &:hover {
+      background: #da3d3dd7;
     }
   }
   .button {

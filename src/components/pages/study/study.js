@@ -135,19 +135,18 @@ export class Study extends Component {
             wordImage: `https://raw.githubusercontent.com/aidfromdeagland/rslang-data/master/${this.actualCard.image}`,
             transcription: this.actualCard.transcription,
         };
-        if (this.context === 'showSentenceMeaning' || 'showSentenceExample') {
+        if (this.context === 'showSentenceMeaning' || this.context === 'showSentenceExample') {
             this.dataForCard.wordToCompare = this.dataForCard.context.match(tagPlusContentReg)[0].replace(/(<(\/?[^>]+)>)/g, '').trim();
         }
     };
 
     checkWord = () => {
-        const actualValue = this.prevValue.toLocaleLowerCase();
-        /* const studiedWord = this.dataForCard.word; */
+        const actualValue = this.prevValue.toLowerCase();
         const studiedWord = this.dataForCard.wordToCompare;
 
         const word = studiedWord.split('').map((letter, index) => (
             <span
-                className={letter === actualValue[index]
+                className={letter.toLowerCase() === actualValue[index]
                     ? 'correct-letter check-letter'
                     : 'incorrect-letter check-letter'}
                 key={index}
@@ -159,8 +158,7 @@ export class Study extends Component {
     }
 
     pushWordToEnd = () => {
-        this.words.push(this.words.splice(this.words[this.state.wordCount], 1)[0]);
-        this.state.wordCount = this.state.wordCount === 0 ? 0 : this.state.wordCount - 1;
+        this.words.push(this.words[this.state.wordCount]);
     }
 
     handleSubmit = (event) => {
@@ -168,9 +166,9 @@ export class Study extends Component {
             event.preventDefault();
         }
         const { valueInput } = this.state;
-        const actualValue = valueInput.toLocaleLowerCase();
+        const actualValue = valueInput.toLowerCase();
 
-        if (actualValue === this.dataForCard.wordToCompare.toLocaleLowerCase()) {
+        if (actualValue === this.dataForCard.wordToCompare.toLowerCase()) {
             if (!this.state.showEvaluation) {
                 if (this.state.isFirstTry) {
                     this.audioPlayer.src = this.dataForCard.audioContext;
@@ -181,7 +179,7 @@ export class Study extends Component {
                             if (!this.state.showEvaluation) {
                                 this.goNextCard();
                             }
-                        });
+                        }, { once: true });
                     }
                     console.log('GOOD TRY');
                 } else {
@@ -214,30 +212,28 @@ export class Study extends Component {
     }
 
     goNextCard = () => {
-        this.setState((prev) => ({
-            wordCount: prev.wordCount + 1,
-        }));
-        this.audioPlayer.pause();
-        this.createCard();
-        this.setState({
-            isCorrectWord: null,
-            valueInput: '',
-            isFirstTry: true,
-        });
+        if (this.state.wordCount < this.words.length - 1) {
+            this.state.wordCount += 1;
+            this.audioPlayer.pause();
+            this.createCard();
+            this.setState({
+                isCorrectWord: null,
+                valueInput: '',
+                isFirstTry: true,
+            });
+        } else {
+            alert('FINISH!');
+            this.props.history.push('/main');
+        }
     }
 
     handleEvaluate = () => {
-        if (this.state.wordCount < this.words.length - 1) {
-            if (this.settings.autoPronunciation) {
-                if (this.audioPlayer.ended) {
-                    this.goNextCard();
-                }
-            } else {
+        if (this.settings.autoPronunciation) {
+            if (this.audioPlayer.ended) {
                 this.goNextCard();
             }
         } else {
-            this.props.history.push('/main');
-            alert('FINISH / STATISTICS');
+            this.goNextCard();
         }
         this.setState((prev) => ({
             showEvaluation: false,
@@ -254,8 +250,76 @@ export class Study extends Component {
         }, 0);
     }
 
-    handleClickToDifficult = () => {
-        console.log(this.words[this.state.wordCount]);
+    handleToggleDifficultyStatus = () => {
+        const currentTimeStamp = Date.now();
+        if (this.actualCard.userWord) {
+            const {
+                isDeleted, isDifficult, debutDate, repeats,
+            } = this.actualCard.userWord.optional;
+
+            const actualWordPutTemplate = {
+                optional: {
+                    isDeleted,
+                    isDifficult: !isDifficult,
+                    debutDate,
+                    prevDate: currentTimeStamp,
+                    nextDate: currentTimeStamp,
+                    repeats,
+                },
+            };
+
+            WordService.putWord(this.actualCard.id, actualWordPutTemplate);
+        } else {
+            const defaultWordPostTemplate = {
+                optional: {
+                    isDeleted: false,
+                    isDifficult: true,
+                    debutDate: currentTimeStamp,
+                    prevDate: currentTimeStamp,
+                    nextDate: currentTimeStamp,
+                    repeats: 0,
+                },
+            };
+
+            WordService.postWord(this.actualCard.id, defaultWordPostTemplate);
+        }
+        this.goNextCard();
+    }
+
+    handleToggleDeleteStatus = () => {
+        const currentTimeStamp = Date.now();
+        if (this.actualCard.userWord) {
+            const {
+                isDeleted, isDifficult, debutDate, repeats,
+            } = this.actualCard.userWord.optional;
+
+            const actualWordPutTemplate = {
+                optional: {
+                    isDeleted: !isDeleted,
+                    isDifficult,
+                    debutDate,
+                    prevDate: currentTimeStamp,
+                    nextDate: currentTimeStamp,
+                    repeats,
+                },
+            };
+
+            WordService.putWord(this.actualCard.id, actualWordPutTemplate);
+        } else {
+            const defaultWordPostTemplate = {
+                optional: {
+                    isDeleted: false,
+                    isDifficult: true,
+                    debutDate: currentTimeStamp,
+                    prevDate: currentTimeStamp,
+                    nextDate: currentTimeStamp,
+                    repeats: 0,
+                },
+            };
+
+            WordService.postWord(this.actualCard.id, defaultWordPostTemplate);
+        }
+        this.goNextCard();
     }
 
     handleChange = (event) => {
@@ -307,17 +371,18 @@ export class Study extends Component {
         }
 
         if (isLoadSettings && isLoadWords) {
+            const cardDifficultState = this.actualCard.userWord && this.actualCard.userWord.optional.isDifficult
             return (
                 <div className="study-page">
                     <div className="card-container">
-                        <section className="card">
+                        <section className={cardDifficultState ? 'card card_difficult' : 'card'}>
                             <div className="hints-container">
                                 <div className="img-container">
                                     {this.settings.showWordImage
                                         && <img className="card__image" src={this.dataForCard.wordImage} alt="illustration" />}
                                 </div>
                                 <div className="transcription">
-                                    {this.settings.showTranscription
+                                    {this.settings.showWordTranscription
                                         && <span>{this.dataForCard.transcription}</span>}
                                 </div>
                                 <div className="sentence-translation">
@@ -350,7 +415,7 @@ export class Study extends Component {
                                         className="button delete-btn learn-btn"
                                         title="delete"
                                         isDisabled={showEvaluation}
-                                        onClick={() => { console.log('DELETED!', this.words); }}
+                                        onClick={this.handleToggleDeleteStatus}
                                     />
                                 )}
 
@@ -359,8 +424,8 @@ export class Study extends Component {
                                     <Button
                                         className="button hard-btn learn-btn"
                                         title="difficult"
-                                        isDisabled={showEvaluation}
-                                        onClick={() => { console.log('DIFFICULT!', this.words); }}
+                                        isDisabled={showEvaluation || cardDifficultState}
+                                        onClick={this.handleToggleDifficultyStatus}
                                     />
                                 )}
                                 {this.settings.showAnswerButton
