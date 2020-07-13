@@ -56,7 +56,6 @@ export class Chart extends Component {
                  ],
              },
          });
-         console.log(Object.values(wordObject));
      }
 
      getWordsForDay = async () => {
