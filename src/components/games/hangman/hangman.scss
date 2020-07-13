@@ -1,0 +1,209 @@
+.hangman {
+    color: #092c70;
+    margin: 0;
+    text-align: center;
+    align-items: center;
+    min-height: 100vh;
+    width: 100%;
+
+    &-start {
+        display: flex;
+        /*flex-direction: */
+        justify-content: space-between;
+        /*margin: 0 auto;*/
+        background-image: url("./../../../components/games/hangman/hangmanimg/simm_gal.jpg");
+        background-size: cover;
+        background-position: left;
+        min-height: calc(100vh - 100px);
+        text-align: center;
+        color: #ffff;
+
+        &-text {
+            /*display: flex;
+            flex-direction: column;*/
+            width: 40%;
+            padding-top: 3rem;
+            font-size: 2rem;
+            text-align: left;
+        }
+
+        &-custom {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 28%;
+
+
+
+        .hangman-start-btn {
+            width: 150px;
+            height: 50px;
+            margin-bottom: 45px;
+            margin-left: 35%;
+            font-family: "OpenSans", sans-serif;
+            font-size: 1.3rem;
+            background-color: #092c70;
+            color: #ffff;
+            border-radius: 7px;
+            cursor: pointer;
+
+        }
+    }
+    }
+
+
+    .dop-block{
+        width: 70px;
+        height: 30px;
+        margin-top: -20px;
+        display: flex;
+        margin-left: auto;
+        margin-right: 0;
+        justify-content: space-between;
+        /*margin-right: 100px;*/
+        /*text-align: right;*/
+        border: none;
+
+        .dop-block-el{
+            border: none;
+            /*width: 30px;
+            height: 30px;*/
+            /*border-radius: 5px;*/
+            opacity: .5;
+            cursor: pointer;
+        }
+
+        .dop-active {
+            border: none;
+            opacity: 1;
+        }
+    }
+
+    .wordtransl {
+        display: none;
+        font-size: 2rem;
+        font-weight: 700;
+
+    }
+
+    .wordtransl-active{
+        display: block;
+    }
+
+    .gallows {
+        width: 400px;
+        height: 500px;
+        margin: auto;
+        align-items: center;
+        background-color: lightgray;
+
+        .gallows-visible {
+            position: absolute;
+            visibility: visible;
+            padding-left: 0;
+            padding-top: 0;
+        }
+
+        .gallows-hidden {
+            visibility: hidden;
+        }
+    }
+
+    .word {
+        height: 50px;
+        margin-top: 30px;
+        display: flex;
+        justify-content: space-between;
+        text-align: center;
+        align-items: center;
+
+        .letter {
+            width: 70px;
+            margin-right: 10px;
+            border: 1px solid #092c70;
+            border-radius: 5px;
+            font-size: 2rem;
+            font-weight: 700;
+            color: white;
+            text-align: center;
+            padding-bottom: 10px;
+        }
+        .activ {
+            color: #092c70;
+        }
+        .word-true{
+            background-color: lightgreen;
+        }
+        .word-false{
+            background-color: rgb(182, 55, 55);
+        }
+
+    }
+
+    // .btn_block{
+    //     display: flex;
+    //     justify-content: center;
+    //     margin-right: 10px;
+
+        .btn-continue{
+            display: none;
+            width: 130px;
+            height: 35px;
+            color: #fff;
+            text-align: center;
+            align-items: center;
+            margin: auto;
+            margin-top: 20px;
+            padding-top: 10px;
+            font-family: "OpenSans", sans-serif;
+            background-color: #092c70;
+            border-radius: 7px;
+            cursor: pointer;
+        }
+        .btn-active{
+            display: block;
+        }
+
+
+    .hangmanstat {
+        color: #092c70;
+        margin: 0;
+        text-align: center;
+        align-items: center;
+        background-color: yellow;
+
+        .stat{
+            display:flex;
+            justify-content: space-between;
+
+            .stat-current
+            .stat-history {
+                height: 50px;
+                margin-top: 30px;
+                display: flex;
+                justify-content: space-between;
+                text-align: center;
+                align-items: center;
+                border: 1px solid  grey;
+            }
+        }
+
+        .btn-back{
+            width: 130px;
+            height: 35px;
+            color: #fff;
+            text-align: center;
+            align-items: center;
+            margin: auto;
+            margin-top: 20px;
+            padding-top: 10px;
+            font-family: "OpenSans", sans-serif;
+            background-color: #092c70;
+            border-radius: 7px;
+            cursor: pointer;
+        }
+
+    }
+
+
+}
