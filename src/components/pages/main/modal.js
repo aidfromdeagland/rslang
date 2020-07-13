@@ -31,6 +31,7 @@ export class ModalSettings extends Component {
                                 <h3>Additional settings</h3>
                                 <Checkbox text="word transcription" onChange={() => onchangeCheckbox('showWordTranscription')} isChecked={settings.showWordTranscription} />
                                 <Checkbox text="word illustration" onChange={() => onchangeCheckbox('showWordImage')} isChecked={settings.showWordImage} />
+                                <Checkbox text="evaluation buttons" onChange={() => onchangeCheckbox('showEvaluationButtons')} isChecked={settings.showEvaluationButtons} />
                                 <Checkbox text="answer button" onChange={() => onchangeCheckbox('showAnswerButton')} isChecked={settings.showAnswerButton} />
                                 <Checkbox text="difficult button" onChange={() => onchangeCheckbox('showDifficultButton')} isChecked={settings.showDifficultButton} />
                                 <Checkbox text="delete button" onChange={() => onchangeCheckbox('showDeleteButton')} isChecked={settings.showDeleteButton} />

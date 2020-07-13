@@ -10,13 +10,12 @@
 .about-team {
   max-width: 1020px;
   margin: auto;
-  font-size: 30px;
+  color: #092c70;
   h1 {
     text-align: center;
     font-family: "Literata-Bold", serif;
     font-size: 45px;
     line-height: 67px;
-    color: #092c70;
   }
   .team-container {
     display: flex;
@@ -26,20 +25,36 @@
       font-family: "Literata-Regular", serif;
       overflow: hidden;
       width: 300px;
+      padding: 10px;
       display: flex;
       align-items: center;
       flex-direction: column;
-      width: 280px;
       box-sizing: border-box;
-      padding: 40px 21px 15px 30px;
       background: #fff;
-      box-shadow: 5px 9px 30px 0 rgba(0, 0, 0, 0.19);
+      box-shadow: 5px 9px 30px 5px rgba(0, 0, 0, 0.3);
       margin: 4px;
       margin-bottom: 30px;
-      font-size: 25px;
+      font-size: 26px;
       border-radius: 5px;
-      .person-description {
-        margin-bottom: 30px;
+      transition: all 0.3s;
+      .person-responsibilities {
+        list-style: none;
+        align-self: flex-start;
+        margin-bottom: 20px;
+        padding-left: 26px;
+
+        .person-task {
+          position: relative;
+          &:before {
+            position: absolute;
+            left: -28px;
+            content: '';
+            width: 32px;
+            height: 24px;
+            background: url("../../../assets/icons/check-mark-styled.png") no-repeat center;
+            background-size: contain;
+          }
+        }
       }
       .person-photo-container {
         margin-bottom: 10px;
@@ -49,7 +64,6 @@
       }
       .person-name {
         font-size: 30px;
-        color: #000;
         text-align: left;
         letter-spacing: 0.027em;
         margin-bottom: 7px;
@@ -57,17 +71,46 @@
         font-weight: 700;
         line-height: 45px;
       }
+
+      &:hover {
+        transform: scale(1.02);
+        box-shadow: 5px 9px 30px 3px rgba(9, 44, 112, 0.9);
+      }
     }
   }
 }
 
 .github-link {
+  align-self: flex-start;
+  margin-top: auto;
   display: flex;
+  justify-content: flex-start;
   align-items: center;
+  text-decoration: none;
+  font-size: 22px;
+  font-weight: 700;
+  color: #092c70;
+
+  &:visited {
+    text-decoration: none;
+    color: #092c70;
+  }
+
+  &:hover {
+    text-decoration: underline;
+  }
+
   .github-icon {
-    background-image: url(../../../assets/icons/github.png);
+    margin: 5px;
+    background-image: url("../../../assets/icons/github-icon-blue.png");
+    background-position: center;;
     background-repeat: no-repeat;
-    height: 64px;
-    width: 64px;
+    background-size: contain;
+    height: 28px;
+    width: 28px;
+  }
+
+  &:hover .github-icon {
+    background-image: url("../../../assets/icons/github-icon-red.png");
   }
 }

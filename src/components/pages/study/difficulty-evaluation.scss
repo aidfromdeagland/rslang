@@ -8,19 +8,22 @@
   .difficulty-button {
     width: 130px;
     height: 30px;
-    background-color: #092c70;
+    border: 2px solid #092c70;
+    color: #000000;
 
     &_easy {
-      background-color: #00f102;
+      background-color: #339900;
     }
     &_normal {
-      background-color: #092c70;
+      background-color: #99cc33;
     }
-    &_difficult {
-      background-color: #e08d9d;
+    &_hard {
+      background-color: #ffcc00;
     }
     &_again {
-      background-color: #d35e27;
+      color: white;
+      background-color: #092c70;
+      border: 2px solid #f00002;
     }
   }
 }

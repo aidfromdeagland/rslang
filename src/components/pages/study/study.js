@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Redirect } from 'react-router-dom';
 import './study.scss';
 import next from '../../../assets/images/next-arrow.png';
 import { Button } from '../../shared/button';
@@ -24,6 +23,8 @@ const contextMap = {
     showSentenceExample: 'textExample',
 };
 
+const tagPlusContentReg = new RegExp('<b>(.*?)</b>|<i>(.*?)</i>');
+
 export class Study extends Component {
     constructor(props) {
         super(props);
@@ -38,9 +39,6 @@ export class Study extends Component {
             isLoadWords: false,
             isFirstTry: true,
             showEvaluation: false,
-            isSubmitable: true,
-            isAudioFinished: false,
-            redirected: false,
         };
 
         this.audioPlayer = new Audio();
@@ -61,7 +59,7 @@ export class Study extends Component {
     }
 
     getWords = async () => {
-        const { allowNewWords, allowLearnedWords, allowDifficultWords, } = this.props.location;
+        const { allowNewWords, allowLearnedWords, allowDifficultWords } = this.props.location;
         const newWordsQuery = { userWord: null };
         const todayMidnightDate = new Date(Date.now()).setHours(23, 59, 59, 999);
         const learnedWordsDateLimitedQuery = { $and: [{ 'userWord.optional.isDeleted': false, 'userWord.optional.nextDate': { $lt: todayMidnightDate } }] };
@@ -115,8 +113,8 @@ export class Study extends Component {
                 totalLearnedWordsQuantity: this.totalLearnedWordsQuantity,
             });
         } else {
+            this.props.history.push('/main');
             alert('no words for training. change your settings');
-            this.setState({ redirected: true });
         }
     }
 
@@ -128,6 +126,7 @@ export class Study extends Component {
         this.dataForCard = {
             context: this.actualCard[contextMap[this.context]],
             word: this.actualCard.word,
+            wordToCompare: this.actualCard.word,
             wordTranslate: this.actualCard.wordTranslate,
             audioContext: `https://raw.githubusercontent.com/aidfromdeagland/rslang-data/master/${this.actualCard[this.audioContext]}`,
             audioWord: `https://raw.githubusercontent.com/aidfromdeagland/rslang-data/master/${this.actualCard.audio}`,
@@ -136,15 +135,18 @@ export class Study extends Component {
             wordImage: `https://raw.githubusercontent.com/aidfromdeagland/rslang-data/master/${this.actualCard.image}`,
             transcription: this.actualCard.transcription,
         };
-    }
+        if (this.context === 'showSentenceMeaning' || this.context === 'showSentenceExample') {
+            this.dataForCard.wordToCompare = this.dataForCard.context.match(tagPlusContentReg)[0].replace(/(<(\/?[^>]+)>)/g, '').trim();
+        }
+    };
 
     checkWord = () => {
-        const actualValue = this.prevValue.toLocaleLowerCase();
-        const studiedWord = this.dataForCard.word;
+        const actualValue = this.prevValue.toLowerCase();
+        const studiedWord = this.dataForCard.wordToCompare;
 
         const word = studiedWord.split('').map((letter, index) => (
             <span
-                className={letter === actualValue[index]
+                className={letter.toLowerCase() === actualValue[index]
                     ? 'correct-letter check-letter'
                     : 'incorrect-letter check-letter'}
                 key={index}
@@ -155,7 +157,7 @@ export class Study extends Component {
         return word;
     }
 
-    pushWord = () => {
+    pushWordToEnd = () => {
         this.words.push(this.words[this.state.wordCount]);
     }
 
@@ -164,89 +166,160 @@ export class Study extends Component {
             event.preventDefault();
         }
         const { valueInput } = this.state;
-        const actualValue = valueInput.toLocaleLowerCase();
+        const actualValue = valueInput.toLowerCase();
 
-        if (this.state.isSubmitable) {
-            if (actualValue === this.dataForCard.word.toLocaleLowerCase()) {
+        if (actualValue === this.dataForCard.wordToCompare.toLowerCase()) {
+            if (!this.state.showEvaluation) {
                 if (this.state.isFirstTry) {
+                    this.audioPlayer.src = this.dataForCard.audioContext;
                     this.setState({ showEvaluation: true });
+                    if (this.settings.autoPronunciation) {
+                        this.audioPlayer.play();
+                        this.audioPlayer.addEventListener('ended', () => {
+                            if (!this.state.showEvaluation) {
+                                this.goNextCard();
+                            }
+                        }, { once: true });
+                    }
                     console.log('GOOD TRY');
                 } else {
-                    this.pushWord();
-                    console.log(this.words);
-                }
-                this.audioPlayer.src = this.dataForCard.audioContext;
-                this.audioPlayer.play();
-                this.setState({
-                    isCorrectWord: true,
-                    isSubmitable: false,
-                    isAudioFinished: false,
-                });
-
-                this.audioPlayer.addEventListener('ended', () => {
-                    if (this.state.showEvaluation === false) {
-                        if (this.state.isFirstTry) {
-                            this.setState((prev) => ({
-                                learnedWordsQuantity: prev.learnedWordsQuantity + 1,
-                                totalLearnedWordsQuantity: prev.totalLearnedWordsQuantity + 1,
-                            }));
-                        }
-                        if (this.state.wordCount < this.words.length - 1) {
-                            this.setState((prev) => ({
-                                wordCount: prev.wordCount + 1,
-                            }));
-                            this.createCard();
-                            this.setState({
-                                isCorrectWord: null,
-                                valueInput: '',
-                                isFirstTry: true,
-                                isSubmitable: true,
-                            });
-                        } else {
-                            alert('FINISH! / STATISTICS');
-                            this.setState({ redirected: true });
-                        }
+                    this.setState({
+                        isCorrectWord: true,
+                    });
+                    if (this.settings.autoPronunciation) {
+                        this.audioPlayer.src = this.dataForCard.audioContext;
+                        this.audioPlayer.play();
+                        this.audioPlayer.addEventListener('ended', () => {
+                            this.pushWordToEnd();
+                            this.goNextCard();
+                        }, { once: true });
+                    } else {
+                        this.pushWordToEnd();
+                        this.goNextCard();
                     }
-                    this.setState({ isAudioFinished: true });
-                }, { once: true });
-            } else {
-                this.audioPlayer.src = this.dataForCard.audioWord;
-                this.audioPlayer.play();
-                this.prevValue = valueInput;
-                this.setState({
-                    isCorrectWord: false,
-                    valueInput: '',
-                    isFirstTry: false,
-                });
+                }
             }
+        } else {
+            this.audioPlayer.src = this.dataForCard.audioWord;
+            this.audioPlayer.play();
+            this.prevValue = valueInput;
+            this.setState({
+                isCorrectWord: false,
+                valueInput: '',
+                isFirstTry: false,
+            });
+        }
+    }
+
+    goNextCard = () => {
+        if (this.state.wordCount < this.words.length - 1) {
+            this.state.wordCount += 1;
+            this.audioPlayer.pause();
+            this.createCard();
+            this.setState({
+                isCorrectWord: null,
+                valueInput: '',
+                isFirstTry: true,
+            });
+        } else {
+            alert('FINISH!');
+            this.props.history.push('/main');
         }
     }
 
     handleEvaluate = () => {
-        if (this.state.isAudioFinished) {
-            if (this.state.wordCount < this.words.length - 1) {
-                this.setState((prev) => ({
-                    wordCount: prev.wordCount + 1,
-                    learnedWordsQuantity: prev.learnedWordsQuantity + 1,
-                    totalLearnedWordsQuantity: prev.totalLearnedWordsQuantity + 1,
-                }));
-                this.createCard();
-                this.setState({
-                    isCorrectWord: null,
-                    valueInput: '',
-                    isFirstTry: true,
-                    isSubmitable: true,
-                });
-            } else {
-                alert('FINISH / STATISTICS');
-                this.setState({ redirected: true });
+        if (this.settings.autoPronunciation) {
+            if (this.audioPlayer.ended) {
+                this.goNextCard();
             }
+        } else {
+            this.goNextCard();
         }
-        this.setState({ showEvaluation: false });
+        this.setState((prev) => ({
+            showEvaluation: false,
+            learnedWordsQuantity: prev.learnedWordsQuantity + 1,
+            totalLearnedWordsQuantity: prev.totalLearnedWordsQuantity + 1,
+        }));
     }
 
-    handleClickToDifficult = () => {
-        console.log(this.words[this.state.wordCount]);
+    handleRepeatEvaluate = () => {
+        setTimeout(() => {
+            this.pushWordToEnd();
+            this.goNextCard();
+            this.setState({ showEvaluation: false });
+        }, 0);
+    }
+
+    handleToggleDifficultyStatus = () => {
+        const currentTimeStamp = Date.now();
+        if (this.actualCard.userWord) {
+            const {
+                isDeleted, isDifficult, debutDate, repeats,
+            } = this.actualCard.userWord.optional;
+
+            const actualWordPutTemplate = {
+                optional: {
+                    isDeleted,
+                    isDifficult: !isDifficult,
+                    debutDate,
+                    prevDate: currentTimeStamp,
+                    nextDate: currentTimeStamp,
+                    repeats,
+                },
+            };
+
+            WordService.putWord(this.actualCard.id, actualWordPutTemplate);
+        } else {
+            const defaultWordPostTemplate = {
+                optional: {
+                    isDeleted: false,
+                    isDifficult: true,
+                    debutDate: currentTimeStamp,
+                    prevDate: currentTimeStamp,
+                    nextDate: currentTimeStamp,
+                    repeats: 0,
+                },
+            };
+
+            WordService.postWord(this.actualCard.id, defaultWordPostTemplate);
+        }
+        this.goNextCard();
+    }
+
+    handleToggleDeleteStatus = () => {
+        const currentTimeStamp = Date.now();
+        if (this.actualCard.userWord) {
+            const {
+                isDeleted, isDifficult, debutDate, repeats,
+            } = this.actualCard.userWord.optional;
+
+            const actualWordPutTemplate = {
+                optional: {
+                    isDeleted: !isDeleted,
+                    isDifficult,
+                    debutDate,
+                    prevDate: currentTimeStamp,
+                    nextDate: currentTimeStamp,
+                    repeats,
+                },
+            };
+
+            WordService.putWord(this.actualCard.id, actualWordPutTemplate);
+        } else {
+            const defaultWordPostTemplate = {
+                optional: {
+                    isDeleted: false,
+                    isDifficult: true,
+                    debutDate: currentTimeStamp,
+                    prevDate: currentTimeStamp,
+                    nextDate: currentTimeStamp,
+                    repeats: 0,
+                },
+            };
+
+            WordService.postWord(this.actualCard.id, defaultWordPostTemplate);
+        }
+        this.goNextCard();
     }
 
     handleChange = (event) => {
@@ -258,7 +331,7 @@ export class Study extends Component {
 
     handleClickShowAnswer = () => {
         this.setState({
-            valueInput: this.dataForCard.word,
+            valueInput: this.dataForCard.wordToCompare,
             isFirstTry: false,
         });
     }
@@ -288,28 +361,28 @@ export class Study extends Component {
 
     render() {
         const {
-            isLoadSettings, isLoadWords, valueInput, isCorrectWord,
-            showEvaluation, learnedWordsQuantity, needToLearnWordsQuantity,
-            totalLearnedWordsQuantity, redirected,
+            isLoadSettings, isLoadWords, valueInput, isCorrectWord, showEvaluation,
+            learnedWordsQuantity, needToLearnWordsQuantity, totalLearnedWordsQuantity,
         } = this.state;
-        if (redirected
-            || (this.props.location.allowNewWords === undefined
-            || this.props.location.allowLearnedWords === undefined)) {
-            return <Redirect to="/main" />;
+        if (this.props.location.allowNewWords === undefined
+            || this.props.location.allowLearnedWords === undefined
+            || this.props.location.allowDifficultWords === undefined) {
+            this.props.history.push('/main');
         }
 
         if (isLoadSettings && isLoadWords) {
+            const cardDifficultState = this.actualCard.userWord && this.actualCard.userWord.optional.isDifficult
             return (
                 <div className="study-page">
                     <div className="card-container">
-                        <section className="card">
+                        <section className={cardDifficultState ? 'card card_difficult' : 'card'}>
                             <div className="hints-container">
                                 <div className="img-container">
                                     {this.settings.showWordImage
-                                        && <img src={this.dataForCard.wordImage} alt="exampleImg" />}
+                                        && <img className="card__image" src={this.dataForCard.wordImage} alt="illustration" />}
                                 </div>
                                 <div className="transcription">
-                                    {this.settings.showTranscription
+                                    {this.settings.showWordTranscription
                                         && <span>{this.dataForCard.transcription}</span>}
                                 </div>
                                 <div className="sentence-translation">
@@ -320,7 +393,7 @@ export class Study extends Component {
                                 <div className="card-input">
                                     <Answer
                                         context={this.dataForCard.context}
-                                        word={this.dataForCard.word}
+                                        word={this.dataForCard.wordToCompare}
                                         wordAudio={this.dataForCard.audioWord}
                                         contextAudio={this.dataForCard.audioContext}
                                         checkWord={this.checkWord}
@@ -330,29 +403,44 @@ export class Study extends Component {
                                         isCorrectWord={isCorrectWord}
                                         showEvaluation={showEvaluation}
                                         handleEvaluate={this.handleEvaluate}
-                                        pushWord={this.pushWord}
+                                        handleRepeatEvaluate={this.handleRepeatEvaluate}
                                         currentWord={this.words[this.state.wordCount]}
                                     />
                                 </div>
                             </div>
                             <div className="buttons-block">
                                 {this.settings.showDeleteButton
-                                && <Button className="button delete-btn learn-btn" title="delete" />}
+                                && (
+                                    <Button
+                                        className="button delete-btn learn-btn"
+                                        title="delete"
+                                        isDisabled={showEvaluation}
+                                        onClick={this.handleToggleDeleteStatus}
+                                    />
+                                )}
 
                                 {this.settings.showDifficultButton
-                                && <Button className="button hard-btn learn-btn" title="difficult" />}
+                                && (
+                                    <Button
+                                        className="button hard-btn learn-btn"
+                                        title="difficult"
+                                        isDisabled={showEvaluation || cardDifficultState}
+                                        onClick={this.handleToggleDifficultyStatus}
+                                    />
+                                )}
                                 {this.settings.showAnswerButton
                                 && (
                                     <Button
                                         className="button answer-btn learn-btn"
-                                        title="Show Answer"
+                                        title="answer"
                                         onClick={this.handleClickShowAnswer}
+                                        isDisabled={showEvaluation}
                                     />
                                 )}
                             </div>
                         </section>
                         <div className="navigate-next">
-                            <Button className="btn-next-card" onClick={(e) => this.handleClickNext(e)}>
+                            <Button className="btn-next-card" onClick={(e) => this.handleClickNext(e)} isDisabled={showEvaluation}>
                                 <img src={next} alt="next" />
                             </Button>
                         </div>
