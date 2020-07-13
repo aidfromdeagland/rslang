@@ -12,8 +12,6 @@ import soundCorrect from '../../../assets/audio/correct.mp3';
 import soundError from '../../../assets/audio/error.mp3';
 import { SettingService } from '../../../services/settingServices';
 import { StatisticService } from '../../../services/statisticServices';
-import { convertStatisticJson } from '../../../utils/utils';
-
 import './savannah.scss';
 
 export class SavannahGame extends Component {
@@ -155,7 +153,7 @@ export class SavannahGame extends Component {
 
     getWrongWords = async () => {
         const { group } = this.props;
-        const data = await WordService.getUserAggWords(group, '', 3600);
+        const data = await WordService.getUserAggWords(group, '', 70);
         return data[0].paginatedResults;
     }
 
@@ -183,10 +181,22 @@ export class SavannahGame extends Component {
     }
 
     getNextPage = () => {
-        const { page, getNextPage } = this.props;
+        const { page, group, getNextPage } = this.props;
         const { wordInx } = this.state;
-        if (wordInx > 3) {
-            getNextPage(page + 1);
+        if (wordInx > 19 && page <= 29) {
+            getNextPage((page + 1), group);
+            this.setState({
+                wordInx: 0,
+            });
+        }
+        if (wordInx > 19 && page === 29 && group < 5) {
+            getNextPage(0, (group + 1));
+            this.setState({
+                wordInx: 0,
+            });
+        }
+        if (wordInx > 19 && page === 29 && group === 5) {
+            getNextPage(0, group);
             this.setState({
                 wordInx: 0,
             });
@@ -215,12 +225,12 @@ export class SavannahGame extends Component {
 
     showRightCard = (card) => {
         this.setState({ isCorrect: card });
-        setTimeout(() => { this.setState({ isCorrect: null }); }, 700);
+        setTimeout(() => { this.setState({ isCorrect: null }); }, 1000);
     }
 
     showWrongCard = (card) => {
         this.setState({ isWrong: card });
-        setTimeout(() => { this.setState({ isWrong: null }); }, 700);
+        setTimeout(() => { this.setState({ isWrong: null }); }, 1000);
     }
 
     getClassName = (i) => {
@@ -234,7 +244,7 @@ export class SavannahGame extends Component {
         return 'savannah__cards-card';
     }
 
-    getRandomIndex = () => Math.floor(Math.random() * (99 - 0)) + 0;
+    getRandomIndex = () => Math.floor(Math.random() * (69 - 0)) + 0;
 
     getNewCards = async () => {
         const { wordInx } = this.state;

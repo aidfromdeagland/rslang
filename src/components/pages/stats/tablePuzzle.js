@@ -49,9 +49,7 @@ export class TablePuzzle extends Component {
          ));
 
          return (
-
              <div className="table">
-
                  <div className="table__header">
                      <div>Last Game</div>
                      <div>Correct Answers</div>
@@ -59,7 +57,7 @@ export class TablePuzzle extends Component {
                      <div>% success</div>
 
                  </div>
-                 <div classsName="body">
+                 <div>
                      {rows}
                  </div>
              </div>
