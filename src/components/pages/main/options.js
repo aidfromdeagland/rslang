@@ -35,6 +35,7 @@ export class Options extends Component {
                         pathname: '/main/study',
                         allowNewWords: true,
                         allowLearnedWords: true,
+                        allowDifficultWords: false,
                     }}
                     >
                         <Button className="button btn-start" title="START" />
@@ -46,6 +47,7 @@ export class Options extends Component {
                         pathname: '/main/study',
                         allowNewWords: true,
                         allowLearnedWords: false,
+                        allowDifficultWords: false,
                     }}
                     >
                         <Button className="button" title="new words" />
@@ -54,6 +56,7 @@ export class Options extends Component {
                         pathname: '/main/study',
                         allowNewWords: false,
                         allowLearnedWords: true,
+                        allowDifficultWords: false,
                     }}
                     >
                         <Button className="button" title="learned words" />
