@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Redirect } from 'react-router-dom';
 import './study.scss';
 import next from '../../../assets/images/next-arrow.png';
 import { Button } from '../../shared/button';
@@ -8,6 +7,9 @@ import { WordService } from '../../../services/wordServices';
 import { SettingService } from '../../../services/settingServices';
 import { Spinner } from '../../shared/spinner';
 import { Progress } from './progress';
+
+const totalLearnedWordsQuery = { 'userWord.optional.isDeleted': false };
+const totalDifficultWordsQuery = { $and: [{ 'userWord.optional.isDeleted': false, 'userWord.optional.isDifficult': true }] };
 
 const audioPrefixMap = {
     showWordTranslate: 'audio',
@@ -20,6 +22,8 @@ const contextMap = {
     showSentenceMeaning: 'textMeaning',
     showSentenceExample: 'textExample',
 };
+
+const tagPlusContentReg = new RegExp('<b>(.*?)</b>|<i>(.*?)</i>');
 
 export class Study extends Component {
     constructor(props) {
@@ -35,9 +39,6 @@ export class Study extends Component {
             isLoadWords: false,
             isFirstTry: true,
             showEvaluation: false,
-            isSubmitable: true,
-            isAudioFinished: false,
-            redirected: false,
         };
 
         this.audioPlayer = new Audio();
@@ -53,56 +54,67 @@ export class Study extends Component {
 
     getSettings = async () => {
         const settings = await SettingService.get();
-        this.settings = settings.optional;
-        console.log(this.settings);
+        const settingsToWork = settings.optional;
+        return settingsToWork;
     }
 
     getWords = async () => {
+        const { allowNewWords, allowLearnedWords, allowDifficultWords } = this.props.location;
         const newWordsQuery = { userWord: null };
-        const totalLearnedWordsQuery = { 'userWord.optional.isDeleted': false };
         const todayMidnightDate = new Date(Date.now()).setHours(23, 59, 59, 999);
         const learnedWordsDateLimitedQuery = { $and: [{ 'userWord.optional.isDeleted': false, 'userWord.optional.nextDate': { $lt: todayMidnightDate } }] };
 
-        this.newWordsforTraining = [];
-        if (this.settings.newWords) {
+        let newWordsforTraining = [];
+        if (this.settings.newWords && allowNewWords) {
             const newWordsQuantity = this.settings.newWords;
             const newWordsAggResponse = await WordService.getUserAggWords(
                 '', newWordsQuery, newWordsQuantity,
             );
-            this.newWordsforTraining = newWordsAggResponse[0].paginatedResults;
+            newWordsforTraining = newWordsAggResponse[0].paginatedResults;
         }
-        this.learnedWordsForTraining = [];
-        if (this.settings.totalWords - this.settings.newWords > 0) {
+        let learnedWordsForTraining = [];
+        if ((this.settings.totalWords - this.settings.newWords > 0) && allowLearnedWords) {
+            let learnedWordsAggResponse;
             const learnedWordsQuantity = this.settings.totalWords - this.settings.newWords;
-            const learnedWordsAggResponse = await WordService.getUserAggWords(
-                '', learnedWordsDateLimitedQuery, learnedWordsQuantity,
-            );
-            this.learnedWordsForTraining = learnedWordsAggResponse[0].paginatedResults;
+            if (allowDifficultWords) {
+                learnedWordsAggResponse = await WordService.getUserAggWords(
+                    '', totalDifficultWordsQuery, learnedWordsQuantity,
+                );
+                learnedWordsForTraining = learnedWordsAggResponse[0].paginatedResults;
+            } else {
+                learnedWordsAggResponse = await WordService.getUserAggWords(
+                    '', learnedWordsDateLimitedQuery, learnedWordsQuantity,
+                );
+                learnedWordsForTraining = learnedWordsAggResponse[0].paginatedResults;
+            }
         }
 
-        this.words = this.newWordsforTraining.concat(this.learnedWordsForTraining);
-        console.log(this.words);
+        return newWordsforTraining.concat(learnedWordsForTraining);
+    }
 
+    getTotalWordsQuantity = async () => {
         const totalLearnedWordsAggResponse = await WordService.getUserAggWords('', totalLearnedWordsQuery, 1);
-        const totalLearnedWords = totalLearnedWordsAggResponse[0].totalCount.length
+        return totalLearnedWordsAggResponse[0].totalCount.length
             ? totalLearnedWordsAggResponse[0].totalCount[0].count
             : 0;
-        this.setState({ totalLearnedWordsQuantity: totalLearnedWords });
     }
 
     startTraining = async () => {
-        await this.getSettings();
-        await this.getWords();
+        this.settings = await this.getSettings();
+        const [words, totalLearnedWordsQuantity] = await Promise.all([this.getWords(), this.getTotalWordsQuantity()]);
+        this.words = words;
+        this.totalLearnedWordsQuantity = totalLearnedWordsQuantity;
         if (this.words.length) {
             this.createCard();
             this.setState({
                 isLoadWords: true,
                 isLoadSettings: true,
                 needToLearnWordsQuantity: this.words.length,
+                totalLearnedWordsQuantity: this.totalLearnedWordsQuantity,
             });
         } else {
+            this.props.history.push('/main');
             alert('no words for training. change your settings');
-            this.setState({ redirected: true });
         }
     }
 
@@ -114,6 +126,7 @@ export class Study extends Component {
         this.dataForCard = {
             context: this.actualCard[contextMap[this.context]],
             word: this.actualCard.word,
+            wordToCompare: this.actualCard.word,
             wordTranslate: this.actualCard.wordTranslate,
             audioContext: `https://raw.githubusercontent.com/aidfromdeagland/rslang-data/master/${this.actualCard[this.audioContext]}`,
             audioWord: `https://raw.githubusercontent.com/aidfromdeagland/rslang-data/master/${this.actualCard.audio}`,
@@ -122,15 +135,18 @@ export class Study extends Component {
             wordImage: `https://raw.githubusercontent.com/aidfromdeagland/rslang-data/master/${this.actualCard.image}`,
             transcription: this.actualCard.transcription,
         };
-    }
+        if (this.context === 'showSentenceMeaning' || this.context === 'showSentenceExample') {
+            this.dataForCard.wordToCompare = this.dataForCard.context.match(tagPlusContentReg)[0].replace(/(<(\/?[^>]+)>)/g, '').trim();
+        }
+    };
 
     checkWord = () => {
-        const actualValue = this.prevValue.toLocaleLowerCase();
-        const studiedWord = this.dataForCard.word;
+        const actualValue = this.prevValue.toLowerCase();
+        const studiedWord = this.dataForCard.wordToCompare;
 
         const word = studiedWord.split('').map((letter, index) => (
             <span
-                className={letter === actualValue[index]
+                className={letter.toLowerCase() === actualValue[index]
                     ? 'correct-letter check-letter'
                     : 'incorrect-letter check-letter'}
                 key={index}
@@ -141,94 +157,169 @@ export class Study extends Component {
         return word;
     }
 
+    pushWordToEnd = () => {
+        this.words.push(this.words[this.state.wordCount]);
+    }
+
     handleSubmit = (event) => {
         if (event) {
             event.preventDefault();
         }
         const { valueInput } = this.state;
-        const actualValue = valueInput.toLocaleLowerCase();
+        const actualValue = valueInput.toLowerCase();
 
-        if (this.state.isSubmitable) {
-            if (actualValue === this.dataForCard.word.toLocaleLowerCase()) {
+        if (actualValue === this.dataForCard.wordToCompare.toLowerCase()) {
+            if (!this.state.showEvaluation) {
                 if (this.state.isFirstTry) {
+                    this.audioPlayer.src = this.dataForCard.audioContext;
                     this.setState({ showEvaluation: true });
+                    if (this.settings.autoPronunciation) {
+                        this.audioPlayer.play();
+                        this.audioPlayer.addEventListener('ended', () => {
+                            if (!this.state.showEvaluation) {
+                                this.goNextCard();
+                            }
+                        }, { once: true });
+                    }
                     console.log('GOOD TRY');
                 } else {
-                    this.words.push(this.words[this.state.wordCount]);
-                    console.log(this.words);
-                }
-                this.audioPlayer.src = this.dataForCard.audioContext;
-                this.audioPlayer.play();
-                this.setState({
-                    isCorrectWord: true,
-                    isSubmitable: false,
-                    isAudioFinished: false,
-                });
-
-                this.audioPlayer.addEventListener('ended', () => {
-                    if (this.state.showEvaluation === false) {
-                        if (this.state.isFirstTry) {
-                            this.setState((prev) => ({
-                                learnedWordsQuantity: prev.learnedWordsQuantity + 1,
-                                totalLearnedWordsQuantity: prev.totalLearnedWordsQuantity + 1,
-                            }));
-                        }
-                        if (this.state.wordCount < this.words.length - 1) {
-                            this.setState((prev) => ({
-                                wordCount: prev.wordCount + 1,
-                            }));
-                            this.createCard();
-                            this.setState({
-                                isCorrectWord: null,
-                                valueInput: '',
-                                isFirstTry: true,
-                                isSubmitable: true,
-                            });
-                        } else {
-                            alert('FINISH! / STATISTICS');
-                            this.setState({ redirected: true });
-                        }
+                    this.setState({
+                        isCorrectWord: true,
+                    });
+                    if (this.settings.autoPronunciation) {
+                        this.audioPlayer.src = this.dataForCard.audioContext;
+                        this.audioPlayer.play();
+                        this.audioPlayer.addEventListener('ended', () => {
+                            this.pushWordToEnd();
+                            this.goNextCard();
+                        }, { once: true });
+                    } else {
+                        this.pushWordToEnd();
+                        this.goNextCard();
                     }
-                    this.setState({ isAudioFinished: true });
-                }, { once: true });
-            } else {
-                this.audioPlayer.src = this.dataForCard.audioWord;
-                this.audioPlayer.play();
-                this.prevValue = valueInput;
-                this.setState({
-                    isCorrectWord: false,
-                    valueInput: '',
-                    isFirstTry: false,
-                });
+                }
             }
+        } else {
+            this.audioPlayer.src = this.dataForCard.audioWord;
+            this.audioPlayer.play();
+            this.prevValue = valueInput;
+            this.setState({
+                isCorrectWord: false,
+                valueInput: '',
+                isFirstTry: false,
+            });
+        }
+    }
+
+    goNextCard = () => {
+        if (this.state.wordCount < this.words.length - 1) {
+            this.state.wordCount += 1;
+            this.audioPlayer.pause();
+            this.createCard();
+            this.setState({
+                isCorrectWord: null,
+                valueInput: '',
+                isFirstTry: true,
+            });
+        } else {
+            alert('FINISH!');
+            this.props.history.push('/main');
         }
     }
 
     handleEvaluate = () => {
-        if (this.state.isAudioFinished) {
-            if (this.state.wordCount < this.words.length - 1) {
-                this.setState((prev) => ({
-                    wordCount: prev.wordCount + 1,
-                    learnedWordsQuantity: prev.learnedWordsQuantity + 1,
-                    totalLearnedWordsQuantity: prev.totalLearnedWordsQuantity + 1,
-                }));
-                this.createCard();
-                this.setState({
-                    isCorrectWord: null,
-                    valueInput: '',
-                    isFirstTry: true,
-                    isSubmitable: true,
-                });
-            } else {
-                alert('FINISH / STATISTICS');
-                this.setState({ redirected: true });
+        if (this.settings.autoPronunciation) {
+            if (this.audioPlayer.ended) {
+                this.goNextCard();
             }
+        } else {
+            this.goNextCard();
         }
-        this.setState({ showEvaluation: false });
+        this.setState((prev) => ({
+            showEvaluation: false,
+            learnedWordsQuantity: prev.learnedWordsQuantity + 1,
+            totalLearnedWordsQuantity: prev.totalLearnedWordsQuantity + 1,
+        }));
     }
 
-    handleClickToDifficult = () => {
-        console.log(this.words[this.state.wordCount]);
+    handleRepeatEvaluate = () => {
+        setTimeout(() => {
+            this.pushWordToEnd();
+            this.goNextCard();
+            this.setState({ showEvaluation: false });
+        }, 0);
+    }
+
+    handleToggleDifficultyStatus = () => {
+        const currentTimeStamp = Date.now();
+        if (this.actualCard.userWord) {
+            const {
+                isDeleted, isDifficult, debutDate, repeats,
+            } = this.actualCard.userWord.optional;
+
+            const actualWordPutTemplate = {
+                optional: {
+                    isDeleted,
+                    isDifficult: !isDifficult,
+                    debutDate,
+                    prevDate: currentTimeStamp,
+                    nextDate: currentTimeStamp,
+                    repeats,
+                },
+            };
+
+            WordService.putWord(this.actualCard.id, actualWordPutTemplate);
+        } else {
+            const defaultWordPostTemplate = {
+                optional: {
+                    isDeleted: false,
+                    isDifficult: true,
+                    debutDate: currentTimeStamp,
+                    prevDate: currentTimeStamp,
+                    nextDate: currentTimeStamp,
+                    repeats: 0,
+                },
+            };
+
+            WordService.postWord(this.actualCard.id, defaultWordPostTemplate);
+        }
+        this.goNextCard();
+    }
+
+    handleToggleDeleteStatus = () => {
+        const currentTimeStamp = Date.now();
+        if (this.actualCard.userWord) {
+            const {
+                isDeleted, isDifficult, debutDate, repeats,
+            } = this.actualCard.userWord.optional;
+
+            const actualWordPutTemplate = {
+                optional: {
+                    isDeleted: !isDeleted,
+                    isDifficult,
+                    debutDate,
+                    prevDate: currentTimeStamp,
+                    nextDate: currentTimeStamp,
+                    repeats,
+                },
+            };
+
+            WordService.putWord(this.actualCard.id, actualWordPutTemplate);
+        } else {
+            const defaultWordPostTemplate = {
+                optional: {
+                    isDeleted: false,
+                    isDifficult: true,
+                    debutDate: currentTimeStamp,
+                    prevDate: currentTimeStamp,
+                    nextDate: currentTimeStamp,
+                    repeats: 0,
+                },
+            };
+
+            WordService.postWord(this.actualCard.id, defaultWordPostTemplate);
+        }
+        this.goNextCard();
     }
 
     handleChange = (event) => {
@@ -240,7 +331,7 @@ export class Study extends Component {
 
     handleClickShowAnswer = () => {
         this.setState({
-            valueInput: this.dataForCard.word,
+            valueInput: this.dataForCard.wordToCompare,
             isFirstTry: false,
         });
     }
@@ -270,25 +361,28 @@ export class Study extends Component {
 
     render() {
         const {
-            isLoadSettings, isLoadWords, valueInput, isCorrectWord,
-            showEvaluation, learnedWordsQuantity, needToLearnWordsQuantity,
-            totalLearnedWordsQuantity, redirected,
+            isLoadSettings, isLoadWords, valueInput, isCorrectWord, showEvaluation,
+            learnedWordsQuantity, needToLearnWordsQuantity, totalLearnedWordsQuantity,
         } = this.state;
-        if (redirected) {
-            return <Redirect to="/main" />;
+        if (this.props.location.allowNewWords === undefined
+            || this.props.location.allowLearnedWords === undefined
+            || this.props.location.allowDifficultWords === undefined) {
+            this.props.history.push('/main');
         }
+
         if (isLoadSettings && isLoadWords) {
+            const cardDifficultState = this.actualCard.userWord && this.actualCard.userWord.optional.isDifficult
             return (
                 <div className="study-page">
                     <div className="card-container">
-                        <section className="card">
+                        <section className={cardDifficultState ? 'card card_difficult' : 'card'}>
                             <div className="hints-container">
                                 <div className="img-container">
-                                    {this.settings.showPicture
-                                        && <img src={this.dataForCard.wordImage} alt="exampleImg" />}
+                                    {this.settings.showWordImage
+                                        && <img className="card__image" src={this.dataForCard.wordImage} alt="illustration" />}
                                 </div>
                                 <div className="transcription">
-                                    {this.settings.showTranscription
+                                    {this.settings.showWordTranscription
                                         && <span>{this.dataForCard.transcription}</span>}
                                 </div>
                                 <div className="sentence-translation">
@@ -299,7 +393,7 @@ export class Study extends Component {
                                 <div className="card-input">
                                     <Answer
                                         context={this.dataForCard.context}
-                                        word={this.dataForCard.word}
+                                        word={this.dataForCard.wordToCompare}
                                         wordAudio={this.dataForCard.audioWord}
                                         contextAudio={this.dataForCard.audioContext}
                                         checkWord={this.checkWord}
@@ -309,18 +403,44 @@ export class Study extends Component {
                                         isCorrectWord={isCorrectWord}
                                         showEvaluation={showEvaluation}
                                         handleEvaluate={this.handleEvaluate}
+                                        handleRepeatEvaluate={this.handleRepeatEvaluate}
                                         currentWord={this.words[this.state.wordCount]}
                                     />
                                 </div>
                             </div>
                             <div className="buttons-block">
-                                <Button className="button delete-btn learn-btn" title="delete" />
-                                <Button className="button hard-btn learn-btn" title="difficult" />
-                                <Button className="button answer-btn learn-btn" title="Show Answer" onClick={this.handleClickShowAnswer} />
+                                {this.settings.showDeleteButton
+                                && (
+                                    <Button
+                                        className="button delete-btn learn-btn"
+                                        title="delete"
+                                        isDisabled={showEvaluation}
+                                        onClick={this.handleToggleDeleteStatus}
+                                    />
+                                )}
+
+                                {this.settings.showDifficultButton
+                                && (
+                                    <Button
+                                        className="button hard-btn learn-btn"
+                                        title="difficult"
+                                        isDisabled={showEvaluation || cardDifficultState}
+                                        onClick={this.handleToggleDifficultyStatus}
+                                    />
+                                )}
+                                {this.settings.showAnswerButton
+                                && (
+                                    <Button
+                                        className="button answer-btn learn-btn"
+                                        title="answer"
+                                        onClick={this.handleClickShowAnswer}
+                                        isDisabled={showEvaluation}
+                                    />
+                                )}
                             </div>
                         </section>
                         <div className="navigate-next">
-                            <Button className="btn-next-card" onClick={(e) => this.handleClickNext(e)}>
+                            <Button className="btn-next-card" onClick={(e) => this.handleClickNext(e)} isDisabled={showEvaluation}>
                                 <img src={next} alt="next" />
                             </Button>
                         </div>

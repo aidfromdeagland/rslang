@@ -3,7 +3,8 @@ import { shuffle, randomInteger, getUniqueByKey } from '../../../utils/utils';
 import { WordService } from '../../../services/wordServices';
 import { SettingService } from '../../../services/settingServices';
 import {
-    MEDIA_PREFIX_URL, ALL_WORDS_COUNT, GROUP_WORDS_COUNT, GROUP_COUNT, PAGE_COUNT,
+    MEDIA_PREFIX_URL, totalLearnedWordsQuery,
+    ALL_WORDS_COUNT, GROUP_WORDS_COUNT, GROUP_COUNT, PAGE_COUNT,
 } from '../../../constants/globalConstants';
 import { MAX_INDEX_QUEST_WORDS, MAX_INDEX_QUEST_WORDS_NOT_CORRECT, MODE_GAME } from './constants';
 import { levenshtein, getDifferentColor } from './utils';
@@ -39,11 +40,10 @@ export class Repository {
         await SettingService.put(settings);
     }
 
-    constructor(state, changeState) {
+    constructor(state, changeState, errorFunction) {
         this.state = state || {
             indexWord: 0,
-            currentSettings: undefined, // '{"wordCount":n,"group":n,"page":n,
-            // "colorStart":{"r":n,"g":n,"b":n},"colorEnd":{"r":n,"g":n,"b":n}}',
+            currentSettings: undefined,
             allWords: undefined, // все слова. Используются для формирования ошибочных вариантов
             gameWords: undefined, // слова, которые будут заданы в процессе игры
             loadedFunc: undefined,
@@ -55,6 +55,7 @@ export class Repository {
         };
 
         this.changeState = changeState || (() => {});
+        this.errorFunction = errorFunction;
 
         this.repositoryId = Date.now();
     }
@@ -108,6 +109,17 @@ export class Repository {
 
     getWordsForGame() {
         const word = this.getWord();
+        // const questKey = 'word';
+        // const answerKey = 'wordTranslate';
+
+        // const textAnswer = word[answerKey];
+        // let gameWords = this.state.allWords.filter((w) => w[answerKey] !== textAnswer);
+        // gameWords = getUniqueByKey(gameWords, answerKey);
+        // gameWords = gameWords.sort((a, b) => levenshtein(a[answerKey], textAnswer)
+        //     - levenshtein(b[answerKey], textAnswer));
+        // gameWords = gameWords.slice(0, MAX_INDEX_QUEST_WORDS);
+        // gameWords.splice(randomInteger(MAX_INDEX_QUEST_WORDS_NOT_CORRECT), 0, word);
+
         const { wordTranslate } = word;
         let gameWords = this.state.allWords.filter((w) => w.wordTranslate !== wordTranslate);
         gameWords = getUniqueByKey(gameWords, 'wordTranslate');
@@ -226,7 +238,7 @@ export class Repository {
         this.state.load.loading = {
             wordCount, modeGame: MODE_GAME['User words'], repositoryId: this.repositoryId,
         };
-        const userWords = await WordService.getUserAggWords('', { userWord: { $exists: true } }, GROUP_WORDS_COUNT);
+        const userWords = await WordService.getUserAggWords('', totalLearnedWordsQuery, ALL_WORDS_COUNT);
         if (userWords[0].paginatedResults.length >= wordCount) {
             this.changeState();
 
@@ -239,7 +251,7 @@ export class Repository {
                 wordCount, modeGame: MODE_GAME['User words'], repositoryId: this.repositoryId,
             };
         } else {
-            // words are not enough for a user words game
+            this.errorFunction('Words are not enough for a user words game', false);
             await this.loadLevelWords();
         }
     }
