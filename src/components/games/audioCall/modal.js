@@ -5,6 +5,7 @@ import './modal.scss';
 import { Button } from '../../shared/button';
 import { MODE_GAME, MODE_GAME_LANG } from './constants';
 import { rgbToHex, hexToRgb, getKeyByValue } from './utils';
+import { settingsDefault } from '../../../constants/globalConstants';
 
 export class ModalSettings extends Component {
     constructor(props) {
@@ -50,6 +51,19 @@ export class ModalSettings extends Component {
             wordCount: Number(wordCount),
             modeGame: MODE_GAME[modeGame],
             modeLangGame: MODE_GAME_LANG[modeLangGame],
+        });
+    }
+
+    handleReset() {
+        const {
+            colorEnd, colorStart, wordCount, modeGame, modeLangGame,
+        } = JSON.parse(settingsDefault.optional.audioCall);
+        this.setState({
+            colorEnd: rgbToHex(colorEnd),
+            colorStart: rgbToHex(colorStart),
+            wordCount,
+            modeGame: getKeyByValue(MODE_GAME, modeGame),
+            modeLangGame: getKeyByValue(MODE_GAME_LANG, modeLangGame),
         });
     }
 
@@ -118,7 +132,10 @@ export class ModalSettings extends Component {
                                 />
                             </label>
                         </div>
-                        <Button className="close-modal-ok button" onClick={() => this.handleOk()} title="OK" />
+                        <div className="modal-buttons">
+                            <Button className="close-modal-ok button" onClick={() => this.handleOk()} title="OK" />
+                            <Button className="modal-reset button" onClick={() => this.handleReset()} toolTip="To set the default settings" title="reset" />
+                        </div>
                     </div>
                 </div>
             </div>
