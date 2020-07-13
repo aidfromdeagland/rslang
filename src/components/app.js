@@ -17,7 +17,7 @@ import { EnglishPuzzle } from './games/englishPuzzle/englishPuzzle';
 import { Savannah } from './games/savannah/savannah';
 import { AudioCall } from './games/audioCall/audioCall';
 import { Sprint } from './games/sprint/sprint';
-import { Hangman } from './games/hangman/hangman';
+import { Hangman } from './games/newHangman/hangman';
 import { Footer } from './footer/footer';
 import { Study } from './pages/study/study';
 import { Table } from './pages/stats/table';
@@ -81,7 +81,7 @@ export class App extends Component {
                                         <Route path="/mini-games/sprint">
                                             <Sprint />
                                         </Route>
-                                        <Route path="/mini-games/hangman">
+                                        <Route path="/mini-games/newHangman">
                                             <Hangman />
                                         </Route>
                                         <Route exact path="/main">

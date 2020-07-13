@@ -32,8 +32,8 @@
             flex-direction: column;
             justify-content: space-between;
             width: 28%;
-           
-        
+
+
 
         .hangman-start-btn {
             width: 150px;
@@ -46,7 +46,7 @@
             color: #ffff;
             border-radius: 7px;
             cursor: pointer;
-            
+
         }
     }
     }
@@ -83,7 +83,7 @@
         display: none;
         font-size: 2rem;
         font-weight: 700;
-        
+
     }
 
     .wordtransl-active{
@@ -137,7 +137,7 @@
         .word-false{
             background-color: rgb(182, 55, 55);
         }
-        
+
     }
 
     // .btn_block{
@@ -171,11 +171,11 @@
         text-align: center;
         align-items: center;
         background-color: yellow;
-    
+
         .stat{
             display:flex;
             justify-content: space-between;
-    
+
             .stat-current
             .stat-history {
                 height: 50px;
@@ -187,7 +187,7 @@
                 border: 1px solid  grey;
             }
         }
-    
+
         .btn-back{
             width: 130px;
             height: 35px;
@@ -202,8 +202,8 @@
             border-radius: 7px;
             cursor: pointer;
         }
-    
-    }    
-        
 
-}    
+    }
+
+
+}

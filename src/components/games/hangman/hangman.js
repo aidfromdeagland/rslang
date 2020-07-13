@@ -17,12 +17,12 @@ export class Hangman extends Component {
         this.handleStart = this.handleStart.bind(this);
         this.handleLevel = this.handleLevel.bind(this);
         this.handlePage = this.handlePage.bind(this);
-    } 
+    }
 
     componentDidMount() {
         //this.dataInit(1);
         //document.addEventListener('keydown', this.listenerletter, false);
-        
+
     }
 
     handleStart() {
@@ -36,9 +36,9 @@ export class Hangman extends Component {
     handlePage(value){
         this.setState({page: value});
     }
-   
+
     render() {
- 
+
         if (this.state.isStart) {
             return (
                 <HangmanGame
@@ -50,7 +50,7 @@ export class Hangman extends Component {
         return (
             <div className="hangman-start">
                 <div className="hangman-start-text">
-                    <div>Welcome to the scaffold.</div>      
+                    <div>Welcome to the scaffold.</div>
                     <div>Pointing letters, guess the word</div>
                     <div>or go to the gallows!</div>
                 </div>
@@ -59,17 +59,15 @@ export class Hangman extends Component {
                         level={this.state.level}
                         handleLevel={this.handleLevel}
                         page={this.state.page}
-                        handlePage={this.handlePage} 
-                    /> 
+                        handlePage={this.handlePage}
+                    />
                     <Button className="hangman-start-btn"
                      onClick={this.handleStart}
                      title="Start"
-                    /> 
+                    />
                 </div>
-               
+
             </div>
         );
     }
 }
-
-
