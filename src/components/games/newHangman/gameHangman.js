@@ -520,9 +520,7 @@ export class GameHangman extends Component {
                                 {ALPHABET.map((letter, index) => {
                                     return (
                                         <span
-                                            // role="button"
                                             key={index}
-                                            // tabIndex={0}
                                             className={
                                                 (() => {
                                                     if (correctLetters.includes(letter.toLowerCase())
