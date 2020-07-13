@@ -36,10 +36,11 @@ export class TableSavannah extends Component {
          this.setState({
              data,
          });
+         console.log(data.slice(1));
      }
 
      render() {
-         const { data } = this.state;
+         const data = this.state.data.slice(1);
          const rows = data.map((rowData, index) => (
              <Row
                  key={index}
@@ -65,7 +66,3 @@ export class TableSavannah extends Component {
          );
      }
 }
-
-TableSavannah.propTypes = {
-    loadStatistics: PropTypes.func.isRequired,
-};

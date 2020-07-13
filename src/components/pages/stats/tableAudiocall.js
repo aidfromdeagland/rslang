@@ -39,7 +39,7 @@ export class TableAudiocall extends Component {
      }
 
      render() {
-         const { data } = this.state;
+         const data = this.state.data.slice(1);
          const rows = data.map((rowData, index) => (
              <Row
                  key={index}
