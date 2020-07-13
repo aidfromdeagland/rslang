@@ -13,7 +13,7 @@ export class SavannahStart extends Component {
         super(props);
         this.state = {
             isStart: false,
-            mode: 'levelWords',
+            mode: 'userWords',
             isAvailableUserWords: true,
         };
     }
@@ -48,8 +48,11 @@ export class SavannahStart extends Component {
          });
      }
 
-     getNextPage = (value) => {
-         this.setState({ page: value });
+     getNextPage = (value1, value2) => {
+         this.setState({
+             page: value1,
+             group: value2,
+         });
      }
 
     loadSettings = async () => {

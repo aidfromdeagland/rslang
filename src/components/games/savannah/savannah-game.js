@@ -181,10 +181,22 @@ export class SavannahGame extends Component {
     }
 
     getNextPage = () => {
-        const { page, getNextPage } = this.props;
+        const { page, group, getNextPage } = this.props;
         const { wordInx } = this.state;
-        if (wordInx > 3) {
-            getNextPage(page + 1);
+        if (wordInx > 19 && page <= 29) {
+            getNextPage((page + 1), group);
+            this.setState({
+                wordInx: 0,
+            });
+        }
+        if (wordInx > 19 && page === 29 && group < 5) {
+            getNextPage(0, (group + 1));
+            this.setState({
+                wordInx: 0,
+            });
+        }
+        if (wordInx > 19 && page === 29 && group === 5) {
+            getNextPage(0, group);
             this.setState({
                 wordInx: 0,
             });

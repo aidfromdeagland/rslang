@@ -209,7 +209,7 @@ $btn-hover-color: #0f4ab4;
         margin: 15rem auto;
         display: flex;
         align-items: center;
-        justify-content: space-around;
+        justify-content: space-between;
         text-align: center;
         flex: none;
         color: $text-color;
@@ -379,7 +379,7 @@ $btn-hover-color: #0f4ab4;
     }
 
     .card-bottom {
-        top: 40rem;
+        top: 35rem;
         color: $secondary-color;
         transition: all 7s linear;
     }
