@@ -26,14 +26,14 @@
     margin-bottom: 20px;
     font-weight: 700;
     color: #000000;
-    text-shadow: 1px 1px 4px #ffffff, 1px 1px 4px #ffffff;
+    text-shadow: 1px 1px 4px #bf0707, 1px 1px 4px #ad1616;;
   }
   .speakit-description {
     color: #000000;
     margin-bottom: 20px;
     font-size: 3rem;
     font-weight: 400;
-    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.6));
+    background: linear-gradient(to bottom, rgba(183, 46, 46, 0.8), rgba(255, 255, 255, 0.6));
     p {
       text-align: center;
       margin: 0;
@@ -55,6 +55,9 @@
     border: 1px solid #999999;
     background-color: #cccccc;
     color: #666666;
+  }
+  button {
+    width: auto;
   }
 }
 

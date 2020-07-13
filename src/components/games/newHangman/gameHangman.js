@@ -2,14 +2,6 @@
 
 import React, { Component } from 'react';
 import './startPage.scss';
-import gal0 from '../../../assets/images/hangman/gal0.png';
-import gal1 from '../../../assets/images/hangman/gal1.png';
-import gal2 from '../../../assets/images/hangman/gal2.png';
-import gal3 from '../../../assets/images/hangman/gal3.png';
-import gal4 from '../../../assets/images/hangman/gal4.png';
-import gal5 from '../../../assets/images/hangman/gal5.png';
-import gal6 from '../../../assets/images/hangman/gal6.png';
-// import { Dropdown } from './dropdown/dropDown';
 import { WordService } from '../../../services/wordServices';
 import { Spinner } from '../../shared/spinner';
 import { ModalResult } from './modalResults/modalResult';
@@ -78,13 +70,6 @@ export class GameHangman extends Component {
         }
     }
 
-    // componentWillUnmount() {
-    //     recognition.stop();
-    //     recognition.onend = () => {
-    //         recognition.stop();
-    //     };
-    // }
-
     loadSettings = async () => {
         this.settings = await SettingService.get();
         const settingsForGame = this.settings.optional.hangman
@@ -113,7 +98,6 @@ export class GameHangman extends Component {
         this.gameStatistic = this.statistic.optional.hangman
             ? JSON.parse(this.statistic.optional.hangman)
             : [];
-        console.log(this.statistic)
     }
 
     putStatistic = () => {
@@ -149,7 +133,6 @@ export class GameHangman extends Component {
             this.allWords = this.getRandomData(userWords);
         }
         this.createDataForGame();
-        // this.setState({ haveWords: true });
     }
 
     createDataForGame = () => {
@@ -161,7 +144,6 @@ export class GameHangman extends Component {
             page,
             wordCount,
         } = this.state;
-        // let dataForGameRound;
         if (isGameWithLevels) {
             this.dataForGameRound = (page - 1) % 2 === 0
                 ? this.allWords.slice(0, 10)
@@ -483,101 +465,103 @@ export class GameHangman extends Component {
                             onChange={() => this.checkBoxHandle('isAutoPronunciation')}
                         />
                     </div>
-                    <div className="hangman-content">
-                        <span className="word-task">{dataForGame.wordTranslate}</span>
-                        <div className="main-image-container">
-                            <img src={IMAGES_GAL[wrongCount]} alt="some" />
-                        </div>
-                        <div className="game-word">
-                            {dataForGame.word.split('').map((letter, index) => {
-                                if (correctLetters.includes(letter.toLowerCase())
-                                    || correctLetters.includes(letter.toUpperCase())) {
+                    <div className="hangman-content_container">
+                        <div className="hangman-content">
+                            <span className="word-task">{dataForGame.wordTranslate}</span>
+                            <div className="main-image-container">
+                                <img src={IMAGES_GAL[wrongCount]} alt="some" />
+                            </div>
+                            <div className="game-word">
+                                {dataForGame.word.split('').map((letter, index) => {
+                                    if (correctLetters.includes(letter.toLowerCase())
+                                        || correctLetters.includes(letter.toUpperCase())) {
+                                        return (
+                                            <span
+                                                key={index}
+                                            >
+                                                {letter.toUpperCase()}
+                                            </span>
+                                        );
+                                    }
+                                    return (<span key={index}>&nbsp;</span>);
+                                })}
+                            </div>
+                            {!showWordResult && <div className="game-hint">Choose the letter</div>}
+
+                            {
+                                (() => {
+                                    if (showWordResult) {
+                                        return (
+                                            <div className={isRightWord ? 'game-over game-over-correct' : 'game-over game-over-incorrect'}>
+                                                <span
+                                                    className={isRightWord ? 'game-over_result correct-result' : 'game-over_result incorrect-result'}
+                                                >
+                                                    {isRightWord ? 'Correct' : 'Sorry, you lost.'}
+                                                </span>
+                                                Correct word:
+                                                <span
+                                                    className="correct-word"
+                                                >
+                                                    {dataForGame.word}
+                                                </span>
+                                                <Button
+                                                    className="button"
+                                                    title="Continue"
+                                                    onClick={() => this.handleContinue(wordCount)}
+                                                />
+                                            </div>
+                                        );
+                                    }
+                                    return null;
+                                })()
+                            }
+
+                            <div className="keypad-container">
+                                {ALPHABET.map((letter, index) => {
                                     return (
                                         <span
+                                            // role="button"
                                             key={index}
+                                            // tabIndex={0}
+                                            className={
+                                                (() => {
+                                                    if (correctLetters.includes(letter.toLowerCase())
+                                                        || correctLetters.includes(letter.toUpperCase())) {
+                                                        return 'knob knob-letter knob-right';
+                                                    }
+                                                    if (inCorrectLetters.includes(letter.toLowerCase())
+                                                        || inCorrectLetters.includes(letter.toUpperCase())) {
+                                                        return 'knob knob-letter knob-wrong';
+                                                    }
+                                                    return 'knob knob-letter';
+                                                })()
+
+                                            }
+                                            onClick={() => this.handleCheckLetter(letter)}
                                         >
-                                            {letter.toUpperCase()}
+                                            {letter}
                                         </span>
                                     );
-                                }
-                                return (<span key={index}>&nbsp;</span>);
-                            })}
-                        </div>
-                        {!showWordResult && <div className="game-hint">Choose the letter</div>}
-
-                        {
-                            (() => {
-                                if (showWordResult) {
-                                    return (
-                                        <div className={isRightWord ? 'game-over game-over-correct' : 'game-over game-over-incorrect'}>
-                                            <span
-                                                className={isRightWord ? 'game-over_result correct-result' : 'game-over_result incorrect-result'}
-                                            >
-                                                {isRightWord ? 'Correct' : 'Sorry, you lost.'}
-                                            </span>
-                                            Correct word:
-                                            <span
-                                                className="correct-word"
-                                            >
-                                                {dataForGame.word}
-                                            </span>
-                                            <Button
-                                                className="button"
-                                                title="Continue"
-                                                onClick={() => this.handleContinue(wordCount)}
-                                            />
-                                        </div>
-                                    );
-                                }
-                                return null;
-                            })()
-                        }
-
-                        <div className="keypad-container">
-                            {ALPHABET.map((letter, index) => {
-                                return (
-                                    <span
-                                        role="button"
-                                        key={index}
-                                        tabIndex={0}
-                                        className={
-                                            (() => {
-                                                if (correctLetters.includes(letter.toLowerCase())
-                                                    || correctLetters.includes(letter.toUpperCase())) {
-                                                    return 'knob knob-letter knob-right';
-                                                }
-                                                if (inCorrectLetters.includes(letter.toLowerCase())
-                                                    || inCorrectLetters.includes(letter.toUpperCase())) {
-                                                    return 'knob knob-letter knob-wrong';
-                                                }
-                                                return 'knob knob-letter';
-                                            })()
-
-                                        }
-                                        onClick={() => this.handleCheckLetter(letter)}
-                                    >
-                                        {letter}
-                                    </span>
-                                );
-                            })}
-                        </div>
-                        <div className="progress-bar-game">
-                            <div className="progress-percent-game" style={{ width: `${(wordCount + 1) * 10}%` }} />
-                        </div>
-                        <div className="buttons-block">
-                            {!showWordResult && (
+                                })}
+                            </div>
+                            <div className="progress-bar-game">
+                                <div className="progress-percent-game" style={{ width: `${(wordCount + 1) * 10}%` }} />
+                            </div>
+                            <div className="buttons-block">
+                                {!showWordResult && (
+                                    <Button
+                                        className="button"
+                                        title="Don't know"
+                                        onClick={this.handleDontKnow}
+                                    />
+                                )}
                                 <Button
-                                    className="button"
-                                    title="Don't know"
-                                    onClick={this.handleDontKnow}
+                                    className={isPlayingAudio ? 'dynamic-btn playing' : 'dynamic-btn'}
+                                    onClick={() => this.handlePlayAudio(`https://raw.githubusercontent.com/aidfromdeagland/rslang-data/master/${dataForGame.wordAudio}`)}
                                 />
-                            )}
-                            <Button
-                                className={isPlayingAudio ? 'dynamic-btn playing' : 'dynamic-btn'}
-                                onClick={() => this.handlePlayAudio(`https://raw.githubusercontent.com/aidfromdeagland/rslang-data/master/${dataForGame.wordAudio}`)}
-                            />
-                        </div>
+                            </div>
 
+                        </div>
                     </div>
                 </div>
             );

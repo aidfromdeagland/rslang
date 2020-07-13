@@ -59,9 +59,9 @@ export class StartPage extends Component {
                 <div id="start-page">
                     <div className="speakit-title">Hangman</div>
                     <div className="speakit-description">
-                        <p>Click on the words to hear their sound</p>
+                        <p>Guess the hidden word in English by selecting the letters of which it consists.</p>
                         <br />
-                        <p>Press the button and say the words to check your pronunciation</p>
+                        <p>If you have already learned 10 or more words, you can use them in the game mode with learned words</p>
                     </div>
                     <div className="speakit-start">
                         <Button
@@ -72,7 +72,7 @@ export class StartPage extends Component {
                         <Button
                             className={haveUserWords ? 'button btn-start' : 'button btn-start disabled'}
                             onClick={() => this.handleClick('isGameWithUserWords')}
-                            title="Play with your words"
+                            title="Play with learned words"
                             isDisabled={!haveUserWords}
                         />
                     </div>
