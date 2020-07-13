@@ -14,12 +14,6 @@ import { convertStatisticJson } from '../../../utils/utils';
 import { StatisticService } from '../../../services/statisticServices';
 import { Spinner } from '../../shared/spinner';
 
-// TODO Не реализовано (этот текст впоследствии обязательно удалю):
-// * --переводы слов, из которых выбирается нужный, относятся к одной части речи
-// Доп функционал:
-// * сбросить на настройки по умолчанию
-// * сбросить статистику игры
-// * искать английские слова по произнесённому русскому
 export class AudioCall extends Component {
     constructor(props) {
         super(props);
@@ -122,6 +116,7 @@ export class AudioCall extends Component {
                 <AudioCallResult
                     gameResult={this.state.gameResult}
                     nextGame={() => this.nextGame()}
+                    modeLangGame={this.state.repositoryState.currentSettings.modeLangGame}
                 />
             );
         }

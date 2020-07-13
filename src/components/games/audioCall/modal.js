@@ -3,20 +3,21 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import './modal.scss';
 import { Button } from '../../shared/button';
-import { MODE_GAME } from './constants';
+import { MODE_GAME, MODE_GAME_LANG } from './constants';
 import { rgbToHex, hexToRgb, getKeyByValue } from './utils';
 
 export class ModalSettings extends Component {
     constructor(props) {
         super(props);
         const {
-            colorEnd, colorStart, wordCount, modeGame,
+            colorEnd, colorStart, wordCount, modeGame, modeLangGame,
         } = props.currentSettings;
         this.state = {
             colorEnd: rgbToHex(colorEnd),
             colorStart: rgbToHex(colorStart),
             wordCount,
             modeGame: getKeyByValue(MODE_GAME, modeGame),
+            modeLangGame: getKeyByValue(MODE_GAME_LANG, modeLangGame),
         };
     }
 
@@ -41,19 +42,20 @@ export class ModalSettings extends Component {
 
     handleOk() {
         const {
-            colorEnd, colorStart, wordCount, modeGame,
+            colorEnd, colorStart, wordCount, modeGame, modeLangGame,
         } = this.state;
         this.props.ok({
             colorEnd: hexToRgb(colorEnd),
             colorStart: hexToRgb(colorStart),
             wordCount: Number(wordCount),
             modeGame: MODE_GAME[modeGame],
+            modeLangGame: MODE_GAME_LANG[modeLangGame],
         });
     }
 
     render() {
         const {
-            colorEnd, colorStart, wordCount, modeGame,
+            colorEnd, colorStart, wordCount, modeGame, modeLangGame,
         } = this.state;
         return (
             <div id="openModal" className="modal">
@@ -72,6 +74,17 @@ export class ModalSettings extends Component {
                                     onChange={(e) => this.handlePropertyChange(e.target)}
                                 >
                                     {Object.keys(MODE_GAME)
+                                        .map((o) => <option key={o}>{o}</option>)}
+                                </select>
+                            </label>
+                            <label className="modal-body__prop" htmlFor="mode">
+                                Translate game:
+                                <select
+                                    value={modeLangGame}
+                                    name="modeLangGame"
+                                    onChange={(e) => this.handlePropertyChange(e.target)}
+                                >
+                                    {Object.keys(MODE_GAME_LANG)
                                         .map((o) => <option key={o}>{o}</option>)}
                                 </select>
                             </label>
@@ -127,6 +140,7 @@ ModalSettings.propTypes = {
         }).isRequired,
         wordCount: PropTypes.number.isRequired,
         modeGame: PropTypes.number.isRequired,
+        modeLangGame: PropTypes.number.isRequired,
     }).isRequired,
     ok: PropTypes.func.isRequired,
     close: PropTypes.func.isRequired,
