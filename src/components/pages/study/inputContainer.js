@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 export class InputContainer extends Component {
     render() {
         const {
-            isCorrectWord, word, valueInput, checkWord, handleSubmit, handleChange,
+            isCorrectWord, word, valueInput, checkWord, handleSubmit, handleChange, showEvaluation,
         } = this.props;
         return (
             <span className="input-container">
@@ -21,6 +21,7 @@ export class InputContainer extends Component {
                         autoFocus={true}
                         value={valueInput}
                         onChange={(e) => handleChange(e)}
+                        readOnly={showEvaluation}
                     />
                 </form>
             </span>

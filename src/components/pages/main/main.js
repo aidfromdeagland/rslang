@@ -67,7 +67,7 @@ export class Main extends Component {
     handleInput = (property, operation) => {
         const { settings: { optional } } = this.state;
         let wordsQuantity = parseInt(optional[property], 10);
-        if (operation === '+' && wordsQuantity < 30) {
+        if (operation === '+' && wordsQuantity < 50) {
             wordsQuantity += 5;
             this.setState((prev) => (
                 {

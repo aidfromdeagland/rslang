@@ -51,7 +51,7 @@ export class App extends Component {
     render() {
         const { isAuth, isChecking, message } = this.state;
         if (isChecking) {
-            return (<Spinner />);
+            return <Spinner optionalClassName="spinner_centered" />;
         }
 
         return (

@@ -42,13 +42,13 @@ export class ModalSettings extends Component {
                                 <div className="number-words">
                                     <span>new words</span>
                                     <Button title="+" onClick={() => onChangeInput('newWords', '+')} className="counter-control counter-control_plus" />
-                                    <input type="number" min="0" max="30" name="numberLearnWord" value={settings.newWords} readOnly />
+                                    <input type="number" min="0" max="50" name="numberLearnWord" value={settings.newWords} readOnly />
                                     <Button title="-" onClick={() => onChangeInput('newWords', '-')} className="counter-control counter-control_minus" />
                                 </div>
                                 <div className="number-cards">
                                     <span>total words </span>
                                     <Button title="+" onClick={() => onChangeInput('totalWords', '+')} className="counter-control counter-control_plus" />
-                                    <input type="number" min="0" max="30" name="numberLearnCards" value={settings.totalWords} readOnly />
+                                    <input type="number" min="0" max="50" name="numberLearnCards" value={settings.totalWords} readOnly />
                                     <Button title="-" onClick={() => onChangeInput('totalWords', '-')} className="counter-control counter-control_minus" />
                                 </div>
                             </div>

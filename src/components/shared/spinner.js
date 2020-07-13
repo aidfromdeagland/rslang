@@ -3,8 +3,9 @@ import './spinner.scss';
 
 export class Spinner extends Component {
     render() {
+        const { optionalClassName } = this.props;
         return (
-            <div className="spinner"></div>
+            <div className={optionalClassName ? `spinner ${optionalClassName}` : 'spinner'} />
         );
     }
 }

@@ -94,7 +94,8 @@
   position: relative;
   color: green;
   .background {
-    background: #cccccc;
+    background: #ffffff;
+    border: 1px solid #cccccc;
     border-radius: 5px;
     font-size: 27px;
     &.correct {
@@ -102,6 +103,7 @@
     }
   }
   .word-container {
+    padding: 1px 2px;
     position: absolute;
     left: 0;
     top: 0;
@@ -113,6 +115,10 @@
     }
     .incorrect-letter {
       color: #f00002;
+    }
+
+    .warning-letter {
+      color: #f07002;
     }
     @keyframes show {
       0% {

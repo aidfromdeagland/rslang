@@ -7,6 +7,7 @@ import { WordService } from '../../../services/wordServices';
 import { SettingService } from '../../../services/settingServices';
 import { Spinner } from '../../shared/spinner';
 import { Progress } from './progress';
+import { randomInteger, shuffle } from '../../../utils/utils';
 
 const newWordsQuery = { userWord: null };
 const totalLearnedWordsQuery = { 'userWord.optional.isDeleted': false };
@@ -42,6 +43,14 @@ export class Study extends Component {
         };
 
         this.audioPlayer = new Audio();
+        this.stats = {
+            cardsLearned: 0,
+            correctAnswers: 0,
+            incorrectAnswers: 0,
+            newWords: 0,
+            currentStreak: 0,
+            longestStreak: 0,
+        };
     }
 
     componentDidMount() {
@@ -60,7 +69,6 @@ export class Study extends Component {
 
     getWords = async () => {
         const { allowNewWords, allowLearnedWords, onlyDifficultWords } = this.props.location;
-        const todayStartBorderDate = new Date(Date.now()).setHours(0, 0, 0, 1);
         const todayEndBorderDate = new Date(Date.now()).setHours(23, 59, 59, 999);
         const learnedWordsDateLimitedQuery = { $and: [{ 'userWord.optional.isDeleted': false, 'userWord.optional.nextDate': { $lt: todayEndBorderDate } }] };
         const totalDifficultWordsDateLimitedQuery = { $and: [{ 'userWord.optional.isDeleted': false, 'userWord.optional.isDifficult': true, 'userWord.optional.nextDate': { $lt: todayEndBorderDate } }] };
@@ -72,6 +80,7 @@ export class Study extends Component {
                 '', newWordsQuery, newWordsQuantity,
             );
             newWordsforTraining = newWordsAggResponse[0].paginatedResults;
+            this.stats.newWords = newWordsforTraining.length;
         }
         let learnedWordsForTraining = [];
         const learnedWordsQuantity = this.settings.totalWords - this.settings.newWords;
@@ -90,7 +99,9 @@ export class Study extends Component {
             }
         }
 
-        return newWordsforTraining.concat(learnedWordsForTraining);
+        const wordsForTraining = newWordsforTraining.concat(learnedWordsForTraining);
+        this.stats.cardsLearned = wordsForTraining.length;
+        return wordsForTraining;
     }
 
     getTotalWordsQuantity = async () => {
@@ -103,7 +114,7 @@ export class Study extends Component {
     startTraining = async () => {
         this.settings = await this.getSettings();
         const [words, totalLearnedWordsQuantity] = await Promise.all([this.getWords(), this.getTotalWordsQuantity()]);
-        this.words = words;
+        this.words = shuffle(words);
         this.totalLearnedWordsQuantity = totalLearnedWordsQuantity;
         if (this.words.length) {
             this.createCard();
@@ -114,8 +125,8 @@ export class Study extends Component {
                 totalLearnedWordsQuantity: this.totalLearnedWordsQuantity,
             });
         } else {
-            this.props.history.push('/main');
             alert('There are no words for training right now. Try to change your settings or train another category of words');
+            this.props.history.push('/main');
         }
     }
 
@@ -145,11 +156,17 @@ export class Study extends Component {
         const actualValue = this.prevValue.toLowerCase();
         const studiedWord = this.dataForCard.wordToCompare;
 
+        const errorSymbolQuantity = studiedWord.split('').filter((letter, index) => letter.toLowerCase() !== actualValue[index]).length;
+        const totalSymbolQuantity = studiedWord.length;
+        const classNameForIncorrect = errorSymbolQuantity / totalSymbolQuantity <= 0.2
+            ? 'warning-letter check-letter'
+            : 'incorrect-letter check-letter';
+
         const word = studiedWord.split('').map((letter, index) => (
             <span
                 className={letter.toLowerCase() === actualValue[index]
                     ? 'correct-letter check-letter'
-                    : 'incorrect-letter check-letter'}
+                    : classNameForIncorrect}
                 key={index}
             >
                 {letter}
@@ -170,6 +187,11 @@ export class Study extends Component {
         const actualValue = valueInput.toLowerCase();
 
         if (actualValue === this.dataForCard.wordToCompare.toLowerCase()) {
+            this.stats.correctAnswers += 1;
+            this.stats.currentStreak += 1;
+            if (this.stats.currentStreak > this.stats.longestStreak) {
+                this.stats.longestStreak = this.stats.currentStreak;
+            }
             if (!this.state.showEvaluation) {
                 if (this.state.isFirstTry) {
                     this.audioPlayer.src = this.dataForCard.audioContext;
@@ -182,7 +204,6 @@ export class Study extends Component {
                             }
                         }, { once: true });
                     }
-                    console.log('GOOD TRY');
                 } else {
                     this.setState({
                         isCorrectWord: true,
@@ -201,6 +222,8 @@ export class Study extends Component {
                 }
             }
         } else {
+            this.stats.incorrectAnswers += 1;
+            this.stats.currentStreak = 0;
             this.audioPlayer.src = this.dataForCard.audioWord;
             this.audioPlayer.play();
             this.prevValue = valueInput;
@@ -224,7 +247,10 @@ export class Study extends Component {
             });
         } else {
             alert('FINISH!');
-            this.props.history.push('/main');
+            console.log(this.stats);
+            setTimeout(() => {
+                this.props.history.push('/main');
+            }, 1000);
         }
     }
 
@@ -309,8 +335,8 @@ export class Study extends Component {
         } else {
             const defaultWordPostTemplate = {
                 optional: {
-                    isDeleted: false,
-                    isDifficult: true,
+                    isDeleted: true,
+                    isDifficult: false,
                     debutDate: currentTimeStamp,
                     prevDate: currentTimeStamp,
                     nextDate: currentTimeStamp,
@@ -455,6 +481,6 @@ export class Study extends Component {
                 </div>
             );
         }
-        return <Spinner />;
+        return <Spinner optionalClassName="spinner_centered" />;
     }
 }

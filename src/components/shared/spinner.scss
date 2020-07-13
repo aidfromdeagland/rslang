@@ -36,3 +36,10 @@
 .spinner--steps2 {
   animation: anim-rotate 1s infinite steps(12);
 }
+
+.spinner_centered {
+  position: fixed;
+  left: 50vw;
+  top: 50vh;
+  transform: translate(-50%, -50%);
+}
