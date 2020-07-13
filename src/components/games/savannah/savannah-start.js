@@ -13,7 +13,7 @@ export class SavannahStart extends Component {
         super(props);
         this.state = {
             isStart: false,
-            mode: 'userWords',
+            mode: 'levelWords',
             isAvailableUserWords: true,
         };
     }
@@ -49,14 +49,11 @@ export class SavannahStart extends Component {
      }
 
      getNextPage = (value) => {
-         this.setState({
-             page: value,
-         });
+         this.setState({ page: value });
      }
 
     loadSettings = async () => {
         this.settings = await SettingService.get();
-        console.log(this.settings.optional.savannah);
         const settingsForGame = this.settings.optional.savannah
             ? JSON.parse(this.settings.optional.savannah)
             : JSON.parse(settingsDefault.optional.savannah);

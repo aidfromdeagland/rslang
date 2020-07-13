@@ -25,10 +25,8 @@ export class SelectRound extends Component {
                 <select
                     value={this.props.page}
                     onChange={(e) => this.handleChange(e)}
-
                 >
-                    {values.map((i) => <option key={i}>{i + 1}</option>)}
-
+                    {values.map((i) => <option key={i} value={i}>{i + 1}</option>)}
                 </select>
             </div>
         );
