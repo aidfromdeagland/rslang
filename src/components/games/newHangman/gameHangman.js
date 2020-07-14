@@ -37,12 +37,6 @@ export class GameHangman extends Component {
             isNext: true,
             isPlayingAudio: false,
             isAutoPronunciation: true,
-
-            isGameModeTrain: true,
-            isClickedCard: false,
-            indexClickedCard: null,
-            totalSpokenWords: 0,
-            correctWords: [],
             isRoundEnd: false,
             wordCount: 0,
         };
@@ -76,6 +70,22 @@ export class GameHangman extends Component {
     }
 
     keyBoardHandler = (event) => {
+        const {
+            showWordResult,
+            isRoundEnd,
+        } = this.state;
+        if (isRoundEnd) {
+            if (event.key === 'Enter') {
+                this.handleByNextRound();
+            }
+            return;
+        }
+        if (showWordResult) {
+            if (event.key === 'Enter') {
+                this.handleContinue();
+            }
+            return;
+        }
         this.keyHandler(event);
     }
 
@@ -523,7 +533,7 @@ export class GameHangman extends Component {
                                                 <Button
                                                     className="button"
                                                     title="Continue"
-                                                    onClick={() => this.handleContinue(wordCount)}
+                                                    onClick={() => this.handleContinue()}
                                                 />
                                             </div>
                                         );
@@ -535,8 +545,6 @@ export class GameHangman extends Component {
                             <div className="keypad-container">
                                 {ALPHABET.map((letter, index) => (
                                     <span
-                                        role="button"
-                                        tabIndex={1}
                                         key={index}
                                         className={
                                             (() => {
