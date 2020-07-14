@@ -62,12 +62,17 @@ export class GameHangman extends Component {
             haveWords,
             isNext,
             wordCount,
+            showWordResult,
+            isRoundEnd,
         } = this.state;
         if (!haveWords) {
             this.loadWords();
         }
         if (!isNext) {
             this.createDataForGame(wordCount);
+        }
+        if (!showWordResult && !isRoundEnd) {
+            document.addEventListener('keydown', this.keyBoardHandler);
         }
     }
 
@@ -76,6 +81,7 @@ export class GameHangman extends Component {
     }
 
     keyBoardHandler = (event) => {
+        console.log(event.key)
         this.keyHandler(event);
     }
 
@@ -291,6 +297,7 @@ export class GameHangman extends Component {
     }
 
     gameOverHandler = () => {
+        document.removeEventListener('keydown', this.keyBoardHandler);
         this.setState({ showWordResult: true });
     }
 
@@ -389,6 +396,7 @@ export class GameHangman extends Component {
             dataForGame,
             isAutoPronunciation,
         } = this.state;
+        document.removeEventListener('keydown', this.keyBoardHandler);
         this.setState({
             wrongCount: 6,
             showWordResult: true,
