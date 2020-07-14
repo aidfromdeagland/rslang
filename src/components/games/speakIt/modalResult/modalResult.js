@@ -12,19 +12,19 @@ export class ModalResult extends Component {
                     <div className="modal-content">
                         <div className="modal-body">
                             <div className="round-results">
-                                <div className="all-spoken-words">
+                                <div className="all-spoken-words speakit-result-field">
                                     Total words spoken:
                                     <span>
                                         {totalSpokenWords}
                                     </span>
                                 </div>
-                                <div className="correct-spoken-words">
+                                <div className="correct-spoken-words speakit-result-field">
                                     Number of correctly spoken words:
                                     <span>
                                         {correctWords}
                                     </span>
                                 </div>
-                                <div className="percent-correct-words">
+                                <div className="percent-correct-words speakit-result-field">
                                     Percentage of correctly spoken words:
                                     <span>
                                         {`${Math.floor((correctWords * 100) / totalSpokenWords)}%`}
