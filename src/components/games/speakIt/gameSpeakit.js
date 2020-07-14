@@ -107,8 +107,7 @@ export class GameSpeakit extends Component {
             totalSpokenWords,
             correctWords,
         } = this.state;
-
-        const statisticsField = StatisticService.createGameStat(totalSpokenWords - correctWords.length, correctWords.length);
+        const statisticsField = StatisticService.createGameStat(correctWords.length, totalSpokenWords - correctWords.length);
         this.gameStatistic.push(statisticsField);
         this.putStatistic();
     }
@@ -301,6 +300,10 @@ export class GameSpeakit extends Component {
 
     handleRoundEnd = () => {
         const { level, page } = this.state;
+        recognition.stop();
+        recognition.onend = () => {
+            recognition.stop();
+        };
         this.setState({
             isRoundEnd: true,
             listening: false,
