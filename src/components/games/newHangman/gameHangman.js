@@ -50,6 +50,7 @@ export class GameHangman extends Component {
 
     componentDidMount() {
         const { haveWords } = this.state;
+        document.addEventListener('keydown', (event) => this.keyHandler(event));
         if (!haveWords) {
             this.loadSettings();
             this.loadStatistic();
@@ -68,6 +69,10 @@ export class GameHangman extends Component {
         if (!isNext) {
             this.createDataForGame(wordCount);
         }
+    }
+
+    componentWillUnmount() {
+        document.removeEventListener('keydown', (event) => this.keyHandler(event));
     }
 
     loadSettings = async () => {
@@ -184,14 +189,21 @@ export class GameHangman extends Component {
         return Math.round(rand);
     }
 
-    addToResults = (result, word, audioUrl) => {
-        this.results[result].push({ word, audioUrl });
+    addToResults = (result, word, wordTranslate, audioUrl) => {
+        this.results[result].push({ word, wordTranslate, audioUrl });
     }
 
     checkBoxHandle = (prop) => {
         this.setState((prev) => ({
             [prop]: !prev[prop],
         }));
+    }
+
+    keyHandler = (event) => {
+        if (!ALPHABET.includes(event.key.toUpperCase())) {
+            return;
+        }
+        this.handleCheckLetter(event.key);
     }
 
     handleCheckLetter = (letter) => {
@@ -246,7 +258,7 @@ export class GameHangman extends Component {
             if (isAutoPronunciation) {
                 this.handlePlayAudio(urlAudio);
             }
-            this.addToResults('dontKnow', dataForGame.word, urlAudio);
+            this.addToResults('dontKnow', dataForGame.word, dataForGame.wordTranslate, urlAudio);
             this.gameOverHandler();
         }
 
@@ -264,7 +276,7 @@ export class GameHangman extends Component {
             if (isAutoPronunciation) {
                 this.handlePlayAudio(urlAudio);
             }
-            this.addToResults('know', dataForGame.word, urlAudio);
+            this.addToResults('know', dataForGame.word, dataForGame.wordTranslate, urlAudio);
             this.gameOverHandler();
         }
 
@@ -381,7 +393,7 @@ export class GameHangman extends Component {
             inCorrectLetters: [],
         });
         const urlAudio = `https://raw.githubusercontent.com/aidfromdeagland/rslang-data/master/${dataForGame.wordAudio}`;
-        this.addToResults('dontKnow', dataForGame.word, urlAudio);
+        this.addToResults('dontKnow', dataForGame.word, dataForGame.wordTranslate, urlAudio);
         if (isAutoPronunciation) {
             this.handlePlayAudio(urlAudio);
         }
@@ -517,30 +529,30 @@ export class GameHangman extends Component {
                             }
 
                             <div className="keypad-container">
-                                {ALPHABET.map((letter, index) => {
-                                    return (
-                                        <span
-                                            key={index}
-                                            className={
-                                                (() => {
-                                                    if (correctLetters.includes(letter.toLowerCase())
-                                                        || correctLetters.includes(letter.toUpperCase())) {
-                                                        return 'knob knob-letter knob-right';
-                                                    }
-                                                    if (inCorrectLetters.includes(letter.toLowerCase())
-                                                        || inCorrectLetters.includes(letter.toUpperCase())) {
-                                                        return 'knob knob-letter knob-wrong';
-                                                    }
-                                                    return 'knob knob-letter';
-                                                })()
+                                {ALPHABET.map((letter, index) => (
+                                    <span
+                                        role="button"
+                                        tabIndex={1}
+                                        key={index}
+                                        className={
+                                            (() => {
+                                                if (correctLetters.includes(letter.toLowerCase())
+                                                    || correctLetters.includes(letter.toUpperCase())) {
+                                                    return 'knob knob-letter knob-right';
+                                                }
+                                                if (inCorrectLetters.includes(letter.toLowerCase())
+                                                    || inCorrectLetters.includes(letter.toUpperCase())) {
+                                                    return 'knob knob-letter knob-wrong';
+                                                }
+                                                return 'knob knob-letter';
+                                            })()
 
-                                            }
-                                            onClick={() => this.handleCheckLetter(letter)}
-                                        >
-                                            {letter}
-                                        </span>
-                                    );
-                                })}
+                                        }
+                                        onClick={() => this.handleCheckLetter(letter)}
+                                    >
+                                        {letter}
+                                    </span>
+                                ))}
                             </div>
                             <div className="progress-bar-game">
                                 <div className="progress-percent-game" style={{ width: `${(wordCount + 1) * 10}%` }} />
