@@ -1,5 +1,6 @@
 .difficulty-evaluation {
   position: absolute;
+  z-index: 2;
   left: 50%;
   transform: translateX(-50%);
   max-width: 80vw;
@@ -18,12 +19,33 @@
       background-color: #99cc33;
     }
     &_hard {
-      background-color: #ffcc00;
+      background-color: #ff4f00;
     }
     &_again {
       color: white;
       background-color: #092c70;
       border: 2px solid #f00002;
+    }
+
+    &:hover {
+      filter: brightness(110%);
+    }
+  }
+}
+
+@media (max-width: 639px) {
+  .difficulty-evaluation {
+    margin-top: 10px;
+    flex-direction: column;
+
+    .difficulty-button {
+      margin: 0;
+      width: 70vw;
+      height: 40px;
+
+      &:not(:first-of-type) {
+        margin-top: 10px;
+      }
     }
   }
 }

@@ -6,7 +6,7 @@ import { DifficultyEvaluation } from './difficulty-evaluation';
 export class Answer extends Component {
     createContext = () => {
         const {
-            isCorrectWord, valueInput, checkWord,
+            isCorrectWord, valueInput, checkWord, showEvaluation,
             handleSubmit, handleChange, contextAudio, wordAudio,
         } = this.props;
         const context = this.props.context.split(/(\s+)/);
@@ -23,6 +23,7 @@ export class Answer extends Component {
                         valueInput={valueInput}
                         isCorrectWord={isCorrectWord}
                         key={index}
+                        showEvaluation={showEvaluation}
                     />
                 );
             }

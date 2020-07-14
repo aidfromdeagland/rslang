@@ -11,7 +11,7 @@ export class Progress extends Component {
                 <div className="progress-container_progress">
                     <div className="learned-words">
                         <div className="text">
-                            current progress:
+                            training progress:
                             {` ${learnedWordsQuantity} / ${needToLearnWordsQuantity}`}
                         </div>
                         <div className="progress-bar progress-bar_learned">
