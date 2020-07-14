@@ -146,6 +146,7 @@ export class SavannahStart extends Component {
                     onClick={this.startGame}
                     className="savannah__start-btn"
                     title="Start game"
+                    isDisabled={!isAvailableUserWords && (this.state.mode === 'userWords')}
                 />
             </div>
         );

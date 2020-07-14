@@ -12,6 +12,8 @@ import soundCorrect from '../../../assets/audio/correct.mp3';
 import soundError from '../../../assets/audio/error.mp3';
 import { SettingService } from '../../../services/settingServices';
 import { StatisticService } from '../../../services/statisticServices';
+import { Spinner } from '../../shared/spinner';
+
 import './savannah.scss';
 
 export class SavannahGame extends Component {
@@ -33,6 +35,7 @@ export class SavannahGame extends Component {
             wordInx: 0,
             allRightWords: 0,
             allWrongWords: 0,
+            isLoad: false,
         };
     }
 
@@ -109,28 +112,32 @@ export class SavannahGame extends Component {
     };
 
     handleClickByKeyboard =() => {
-        const { translateWords, word, keyPressed } = this.state;
-        this.stopTimer();
-        for (let i = 0; i < translateWords.length; i += 1) {
-            if (translateWords[i].id === word.id) {
-                if (keyPressed === i + 1) {
-                    this.getRightAnswer();
-                    this.showRightCard(i);
-                } else if (keyPressed !== i + 1 && keyPressed !== null) {
-                    this.getWrongAnswer();
-                    this.showRightCard(i);
-                    this.showWrongCard(keyPressed - 1);
+        if (this.state.isLoad && this.state.lives !== 0) {
+            const { translateWords, word, keyPressed } = this.state;
+            this.stopTimer();
+            for (let i = 0; i < translateWords.length; i += 1) {
+                if (translateWords[i].id === word.id) {
+                    if (keyPressed === i + 1) {
+                        this.getRightAnswer();
+                        this.showRightCard(i);
+                    } else if (keyPressed !== i + 1 && keyPressed !== null) {
+                        this.getWrongAnswer();
+                        this.showRightCard(i);
+                        this.showWrongCard(keyPressed - 1);
+                    }
                 }
             }
+            this.startTimer();
         }
-        this.startTimer();
     }
 
     showRightWordByClick = () => {
-        const { translateWords, word } = this.state;
-        for (let i = 0; i < translateWords.length; i += 1) {
-            if (translateWords[i].id === word.id) {
-                this.showRightCard(i);
+        if (this.state.isLoad) {
+            const { translateWords, word } = this.state;
+            for (let i = 0; i < translateWords.length; i += 1) {
+                if (translateWords[i].id === word.id) {
+                    this.showRightCard(i);
+                }
             }
         }
     };
@@ -160,7 +167,7 @@ export class SavannahGame extends Component {
     getRightAnswer = () => {
         this.getNextPage();
         const {
-            imageHeight, imageWidth, word, rightAnswers, wordInx, allRightWords,
+            imageHeight, imageWidth, word, rightAnswers, wordInx, allRightWords, isLoad,
         } = this.state;
         this.getNewCards();
         const row = {
@@ -176,6 +183,7 @@ export class SavannahGame extends Component {
             imageWidth: imageWidth + 10,
             wordInx: wordInx + 1,
             allRightWords: allRightWords + 1,
+            isLoad: false,
         });
         new Audio(soundCorrect).play();
     }
@@ -206,7 +214,9 @@ export class SavannahGame extends Component {
 
     getWrongAnswer = () => {
         this.getNextPage();
-        const { word, wrongAnswers, allWrongWords } = this.state;
+        const {
+            word, wrongAnswers, allWrongWords, isLoad,
+        } = this.state;
         this.getNewCards();
         const row = {
             word: word.word,
@@ -219,18 +229,19 @@ export class SavannahGame extends Component {
             lives: this.state.lives - 1,
             wrongAnswers: [...wrongAnswers, row],
             allWrongWords: allWrongWords + 1,
+            isLoad: false,
         });
         new Audio(soundError).play();
     }
 
     showRightCard = (card) => {
         this.setState({ isCorrect: card });
-        setTimeout(() => { this.setState({ isCorrect: null }); }, 1000);
+        setTimeout(() => { this.setState({ isCorrect: null }); }, 1400);
     }
 
     showWrongCard = (card) => {
         this.setState({ isWrong: card });
-        setTimeout(() => { this.setState({ isWrong: null }); }, 1000);
+        setTimeout(() => { this.setState({ isWrong: null }); }, 1400);
     }
 
     getClassName = (i) => {
@@ -286,6 +297,7 @@ export class SavannahGame extends Component {
                 translateWords: arrayOfWords.sort(() => 0.5 - Math.random()),
                 wordClass: 'savannah__card-transition card-bottom',
                 wordInx: wordInx + 1,
+                isLoad: true,
 
             }),
 
@@ -306,9 +318,11 @@ export class SavannahGame extends Component {
     }
 
     startTimer = () => {
-        this.timer = setInterval(() => {
-            this.getWrongAnswer();
-        }, 7000);
+        if (this.state.isLoad) {
+            this.timer = setInterval(() => {
+                this.getWrongAnswer();
+            }, 7000);
+        }
     }
 
     stopTimer= () => {
@@ -318,7 +332,7 @@ export class SavannahGame extends Component {
     render() {
         const {
             word, translateWords, lives, id, wordClass, imageHeight, imageWidth,
-            rightAnswers, wrongAnswers,
+            rightAnswers, wrongAnswers, isLoad,
         } = this.state;
 
         if (this.state.lives < 1) {
@@ -371,6 +385,7 @@ export class SavannahGame extends Component {
                             showRightCard={this.showRightCard}
                             showWrongCard={this.showWrongCard}
                             showRightWordByClick={this.showRightWordByClick}
+                            isLoad={isLoad}
                         />
                     )}
 

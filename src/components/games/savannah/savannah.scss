@@ -156,6 +156,15 @@ $btn-hover-color: #0f4ab4;
             &:hover {
                 background-color: $btn-hover-color;
             }
+
+            &:disabled,
+            &[disabled] {
+              background-color: #cccccc;
+              color: #666666;
+              cursor:auto;
+          
+            }
+
             @media (max-width: 720px) {
                 font-size: 0.8rem;
                 height: 3rem;
@@ -357,7 +366,7 @@ $btn-hover-color: #0f4ab4;
 
     &__card-transition {
         position: absolute;
-        top: -5rem;
+        top: -3.5rem;
         left: 40%;
         padding: 1rem;
         min-width: 10rem;
