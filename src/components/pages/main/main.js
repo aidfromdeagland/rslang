@@ -24,6 +24,7 @@ export class Main extends Component {
 
     getSettings = async () => {
         const settingsResponse = await SettingService.get();
+        this.settings = settingsResponse;
         this.setState({ settings: settingsResponse });
     }
 
@@ -133,6 +134,7 @@ export class Main extends Component {
         this.setState((prev) => ({
             isOpenModal: !prev.isOpenModal,
             isInvalidSettings: false,
+            settings: this.settings,
         }));
     }
 
@@ -157,11 +159,11 @@ export class Main extends Component {
                         needLearnWordsToday={needLearnWordsToday}
                         settings={settings.optional}
                         onChangeInput={this.handleInput}
-                        onchangeCheckbox={this.checkboxHandle}
+                        onChangeCheckbox={this.checkboxHandle}
                         clickSettings={this.handleClickSettings}
-                        closeModal={this.checkSettings}
+                        acceptSettings={this.checkSettings}
+                        handleCloseModal={this.handleCloseModal}
                         isOpenModal={isOpenModal}
-                        checkSettings={this.checkSettings}
                         isInvalidSettings={isInvalidSettings}
                     />
                 </div>
