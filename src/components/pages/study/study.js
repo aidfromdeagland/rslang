@@ -7,7 +7,7 @@ import { WordService } from '../../../services/wordServices';
 import { SettingService } from '../../../services/settingServices';
 import { Spinner } from '../../shared/spinner';
 import { Progress } from './progress';
-import { randomInteger, shuffle } from '../../../utils/utils';
+import { shuffle } from '../../../utils/utils';
 
 const newWordsQuery = { userWord: null };
 const totalLearnedWordsQuery = { 'userWord.optional.isDeleted': false };
@@ -40,6 +40,7 @@ export class Study extends Component {
             isLoadWords: false,
             isFirstTry: true,
             showEvaluation: false,
+            isWaitingForAudio: false,
         };
 
         this.audioPlayer = new Audio();
@@ -99,9 +100,7 @@ export class Study extends Component {
             }
         }
 
-        const wordsForTraining = newWordsforTraining.concat(learnedWordsForTraining);
-        this.stats.cardsLearned = wordsForTraining.length;
-        return wordsForTraining;
+        return newWordsforTraining.concat(learnedWordsForTraining);
     }
 
     getTotalWordsQuantity = async () => {
@@ -194,10 +193,12 @@ export class Study extends Component {
             }
             if (!this.state.showEvaluation) {
                 if (this.state.isFirstTry) {
+                    this.stats.cardsLearned += 1;
                     this.audioPlayer.src = this.dataForCard.audioContext;
                     this.setState({ showEvaluation: true });
                     if (this.settings.autoPronunciation) {
                         this.audioPlayer.play();
+                        this.setState({ isWaitingForAudio: true });
                         this.audioPlayer.addEventListener('ended', () => {
                             if (!this.state.showEvaluation) {
                                 this.goNextCard();
@@ -244,9 +245,13 @@ export class Study extends Component {
                 isCorrectWord: null,
                 valueInput: '',
                 isFirstTry: true,
+                isWaitingForAudio: false,
+                showEvaluation: false,
             });
         } else {
-            alert('FINISH!');
+            setTimeout(() => {
+                alert('FINISH!');
+            }, 500);
             console.log(this.stats);
             setTimeout(() => {
                 this.props.history.push('/main');
@@ -310,6 +315,7 @@ export class Study extends Component {
 
             WordService.postWord(this.actualCard.id, defaultDifficultWordPostTemplate);
         }
+        this.setState((prev) => ({ needToLearnWordsQuantity: prev.needToLearnWordsQuantity - 1 }));
         this.goNextCard();
     }
 
@@ -346,6 +352,7 @@ export class Study extends Component {
 
             WordService.postWord(this.actualCard.id, defaultWordPostTemplate);
         }
+        this.setState((prev) => ({ needToLearnWordsQuantity: prev.needToLearnWordsQuantity - 1 }));
         this.goNextCard();
     }
 
@@ -389,7 +396,8 @@ export class Study extends Component {
     render() {
         const {
             isLoadSettings, isLoadWords, valueInput, isCorrectWord, showEvaluation,
-            learnedWordsQuantity, needToLearnWordsQuantity, totalLearnedWordsQuantity,
+            isWaitingForAudio, learnedWordsQuantity, needToLearnWordsQuantity,
+            totalLearnedWordsQuantity,
         } = this.state;
         if (this.props.location.allowNewWords === undefined
             || this.props.location.allowLearnedWords === undefined
@@ -442,7 +450,7 @@ export class Study extends Component {
                                     <Button
                                         className="button delete-btn learn-btn"
                                         title="delete"
-                                        isDisabled={showEvaluation}
+                                        isDisabled={showEvaluation || isWaitingForAudio}
                                         onClick={this.handleToggleDeleteStatus}
                                     />
                                 )}
@@ -452,7 +460,7 @@ export class Study extends Component {
                                     <Button
                                         className="button hard-btn learn-btn"
                                         title="difficult"
-                                        isDisabled={showEvaluation || cardDifficultState}
+                                        isDisabled={showEvaluation || cardDifficultState || isWaitingForAudio}
                                         onClick={this.handleToggleDifficultyStatus}
                                     />
                                 )}
@@ -462,13 +470,13 @@ export class Study extends Component {
                                         className="button answer-btn learn-btn"
                                         title="answer"
                                         onClick={this.handleClickShowAnswer}
-                                        isDisabled={showEvaluation}
+                                        isDisabled={showEvaluation || isWaitingForAudio}
                                     />
                                 )}
                             </div>
                         </section>
                         <div className="navigate-next">
-                            <Button className="btn-next-card" onClick={(e) => this.handleClickNext(e)} isDisabled={showEvaluation}>
+                            <Button className="btn-next-card" onClick={(e) => this.handleClickNext(e)} isDisabled={showEvaluation || isWaitingForAudio}>
                                 <img src={next} alt="next" />
                             </Button>
                         </div>
