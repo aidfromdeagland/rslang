@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import './wordList.scss';
 import { VocabularyWord } from './word';
 
+const wordByDateComparator = (leftWordObj, rightWordObj) => rightWordObj.userWord.optional.prevDate - leftWordObj.userWord.optional.prevDate;
+
 export class WordList extends Component {
     render() {
         const {
@@ -11,17 +13,19 @@ export class WordList extends Component {
         return words
             ? (
                 <ul className="vocabulary__words">
-                    { words.map(
-                        (word) => (
-                            <VocabularyWord
-                                word={word}
-                                key={word.id}
-                                settings={settings}
-                                isSpecial={isSpecial}
-                                handleRestoreWord={handleRestoreWord}
-                            />
-                        ),
-                    ) }
+                    { words
+                        .sort(wordByDateComparator)
+                        .map(
+                            (word) => (
+                                <VocabularyWord
+                                    word={word}
+                                    key={word.id}
+                                    settings={settings}
+                                    isSpecial={isSpecial}
+                                    handleRestoreWord={handleRestoreWord}
+                                />
+                            ),
+                        ) }
                 </ul>
             )
             : null;
@@ -33,7 +37,6 @@ WordList.defaultProps = {
 };
 
 WordList.propTypes = {
-    // eslint-disable-next-line react/forbid-prop-types
     settings: PropTypes.object.isRequired,
     words: PropTypes.arrayOf(PropTypes.object).isRequired,
     isSpecial: PropTypes.bool,
