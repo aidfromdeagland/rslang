@@ -92,6 +92,20 @@
   }
 
   &__button {
+    line-height: 1;
+    display: flex;
+    align-items: center;
+  }
+
+  &__button_audio {
+    background: url("../../../assets/icons/dynamic.svg") center no-repeat;
+    width: 32px;
+    height: 1.5em;
+    border: none;
+    background-size: contain;
+    cursor: pointer;
+    transition: transform 0.3s, filter 0.2s;
+
     filter: invert(80%);
     &:hover {
       transform: scale(1.05);
@@ -104,31 +118,21 @@
     }
   }
 
-  &__button_audio {
-    background: url("../../../assets/icons/dynamic.svg") center no-repeat;
-    width: 32px;
-    height: 1.5em;
-    border: none;
-    background-size: contain;
-    cursor: pointer;
-    transition: transform 0.3s, filter 0.2s;
-  }
-
   &__button_restore {
     position: absolute;
     z-index: 1;
     left: 5px;
     top: 5px;
     align-self: flex-end;
+    height: 30px;
     display: flex;
+    padding: 5px;
     justify-content: center;
     align-items: center;
     background-color: #092c70;
     color: #fff;
     border-radius: 7px;
-    height: 1.5rem;
-    padding: 0 1.5rem;
-    border: none;
+    border: 2px solid #092c70;
     font-family: "OpenSans", sans-serif;
     cursor: pointer;
 
