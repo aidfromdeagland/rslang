@@ -113,18 +113,19 @@ export class SavannahGame extends Component {
     handleClickByKeyboard =() => {
         if (this.state.isLoad && this.state.lives !== 0) {
             const { translateWords, word, keyPressed } = this.state;
-            this.stopTimer();
             for (let i = 0; i < translateWords.length; i += 1) {
                 if (translateWords[i].id === word.id) {
                     if (keyPressed === i + 1) {
-                        this.startTimer();
+                        this.stopTimer();
                         this.getRightAnswer();
                         this.showRightCard(i);
-                    } else if (keyPressed !== i + 1 && keyPressed !== null) {
                         this.startTimer();
+                    } else if (keyPressed !== i + 1 && keyPressed !== null) {
+                        this.stopTimer();
                         this.getWrongAnswer();
                         this.showRightCard(i);
                         this.showWrongCard(keyPressed - 1);
+                        this.startTimer();
                     }
                 }
             }
@@ -318,11 +319,9 @@ export class SavannahGame extends Component {
     }
 
     startTimer = () => {
-        if (this.state.isLoad) {
-            this.timer = setInterval(() => {
-                this.getWrongAnswer();
-            }, 7000);
-        }
+        this.timer = setInterval(() => {
+            this.getWrongAnswer();
+        }, 7000);
     }
 
     stopTimer= () => {
