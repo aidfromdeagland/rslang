@@ -24,6 +24,8 @@ recognition.interimResults = false;
 recognition.continuous = false;
 recognition.maxAlternatives = 3;
 
+let timerId;
+
 export class GameSpeakit extends Component {
     constructor(props) {
         super(props);
@@ -39,6 +41,7 @@ export class GameSpeakit extends Component {
             totalSpokenWords: 0,
             correctWords: [],
             isRoundEnd: false,
+            isDisabled: false,
         };
     }
 
@@ -64,6 +67,7 @@ export class GameSpeakit extends Component {
         recognition.onend = () => {
             recognition.stop();
         };
+        clearTimeout(timerId);
     }
 
     loadSettings = async () => {
@@ -229,7 +233,13 @@ export class GameSpeakit extends Component {
             correctWords: [],
             isClickedCard: false,
             totalSpokenWords: 0,
+            isDisabled: true,
         }), this.handleListening);
+        timerId = setTimeout(this.deleteDisabled, 500);
+    }
+
+    deleteDisabled = () => {
+        this.setState({ isDisabled: false });
     }
 
     handleListening = () => {
@@ -347,6 +357,7 @@ export class GameSpeakit extends Component {
             page,
             isGameModeTrain,
             speakWord,
+            isDisabled,
         } = this.state;
         const {
             isGameWithLevels,
@@ -396,6 +407,7 @@ export class GameSpeakit extends Component {
                         <Button
                             className="speakit-content__button speakit-content__button_speak"
                             title={isGameModeTrain ? 'speak' : 'on air'}
+                            isDisabled={isDisabled}
                             onClick={this.changeGameMode}
                         />
                     </div>
