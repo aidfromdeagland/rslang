@@ -17,6 +17,9 @@ export class Vocabulary extends Component {
         super(props);
         this.state = {
             isDataReady: false,
+            learnedWords: [],
+            difficultWords: [],
+            deletedWords: [],
         };
     }
 
@@ -31,27 +34,54 @@ export class Vocabulary extends Component {
 
     getWords = async () => {
         const totalUserWordsAggregatedQuery = { userWord: { $exists: true } };
-        this.learnedWords = [];
-        this.difficultWords = [];
-        this.deletedWords = [];
 
         const totalWordsResponse = await WordService.getUserAggWords(
             '', totalUserWordsAggregatedQuery, maximumWordsQuantity,
         );
         const totalWords = totalWordsResponse[0].paginatedResults;
-        this.learnedWords = totalWords
-            .filter((wordObject) => (
-                wordObject.userWord.optional.isDeleted === false
-                && wordObject.userWord.optional.isDifficult === false));
-        this.difficultWords = totalWords
-            .filter((wordObject) => wordObject.userWord.optional.isDifficult === true);
-        this.deletedWords = totalWords
-            .filter((wordObject) => wordObject.userWord.optional.isDeleted === true);
+        this.setState({
+            learnedWords: totalWords
+                .filter((wordObject) => (
+                    wordObject.userWord.optional.isDifficult === false
+                    && wordObject.userWord.optional.isDeleted === false)),
+            difficultWords: totalWords
+                .filter((wordObject) => wordObject.userWord.optional.isDifficult === true
+                    && wordObject.userWord.optional.isDeleted === false),
+            deletedWords: totalWords
+                .filter((wordObject) => wordObject.userWord.optional.isDeleted === true),
+        });
     };
 
     getSettings = async () => {
         const settings = await SettingService.get();
         this.settings = settings.optional;
+    }
+
+    handleRestoreWord = (wordObject) => {
+        const { id, userWord: { optional } } = wordObject;
+        const objectToPut = { optional };
+        if (optional.isDeleted) {
+            optional.isDeleted = false;
+            WordService.putWord(id, objectToPut);
+            if (optional.isDifficult) {
+                this.setState((prev) => ({
+                    deletedWords: prev.deletedWords.filter((object) => object.id !== id),
+                    difficultWords: prev.difficultWords.concat(wordObject),
+                }));
+            } else {
+                this.setState((prev) => ({
+                    deletedWords: prev.deletedWords.filter((object) => object.id !== id),
+                    learnedWords: prev.learnedWords.concat(wordObject),
+                }));
+            }
+        } else if (optional.isDifficult) {
+            optional.isDifficult = false;
+            WordService.putWord(id, objectToPut);
+            this.setState((prev) => ({
+                difficultWords: prev.difficultWords.filter((object) => object.id !== id),
+                learnedWords: prev.learnedWords.concat(wordObject),
+            }));
+        }
     }
 
     render() {
@@ -68,27 +98,29 @@ export class Vocabulary extends Component {
 
                         <TabPanel className="vocabulary__panel">
                             <WordList
-                                words={this.learnedWords}
+                                words={this.state.learnedWords}
                                 settings={this.settings}
                             />
                         </TabPanel>
                         <TabPanel className="vocabulary__panel">
                             <WordList
-                                words={this.difficultWords}
+                                words={this.state.difficultWords}
                                 settings={this.settings}
                                 isSpecial
+                                handleRestoreWord={this.handleRestoreWord}
                             />
                         </TabPanel>
                         <TabPanel className="vocabulary__panel">
                             <WordList
-                                words={this.deletedWords}
+                                words={this.state.deletedWords}
                                 settings={this.settings}
                                 isSpecial
+                                handleRestoreWord={this.handleRestoreWord}
                             />
                         </TabPanel>
                     </Tabs>
                 </div>
             )
-            : <Spinner />;
+            : <Spinner optionalClassName="spinner_centered" />;
     }
 }
