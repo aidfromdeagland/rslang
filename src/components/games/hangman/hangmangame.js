@@ -32,6 +32,7 @@ export class HangmanGame extends Component {
                 trueLetters: [],
             },
             countGames: 0,
+            countletter: 6,
             level: this.props.level,
             page: this.props.page,
         };
@@ -51,7 +52,7 @@ export class HangmanGame extends Component {
         this.letterTrue = []; 
         Promise.all(arr).then( 
             gameWord = arr[ind].word.split(''),
-            gameWord = 'download'.split(''),
+            //gameWord = 'downloads'.split(''),
             this.setState({ 
                     wordStat:  {
                         word: arr[ind].word,
@@ -67,14 +68,12 @@ export class HangmanGame extends Component {
                         falseLetters: [],
                         trueLetters: [],
                     },
-                    currentWord: gameWord
+                    currentWord: gameWord,
+                    countletter: gameWord.length,
             }),    
-            this.letterTrue.push(gameWord[0]),
-            this.letterTrue.push(gameWord[gameWord.length-1]),
         );
         this.setState({isContinue: false});
         this.letterFalse = [];
-        this.countletter = 6;
         this.hangmanLS = (localStorage.getItem('hangmanLS') === null) ? [] : localStorage.getItem('hangmanLS');
     }
   
@@ -88,8 +87,8 @@ export class HangmanGame extends Component {
         event.preventDefault();
         let letter = event.key.toLowerCase();
         let ind = this.state.currentWord.indexOf(letter);
-        if ( ind > 0 ){
-            if (this.letterTrue.indexOf(letter) > 0){
+        if ( ind >= 0 ){
+            if (this.letterTrue.indexOf(letter) >= 0){
                 ind = -1;                
             }
             while ( ind !== -1){
@@ -116,26 +115,27 @@ export class HangmanGame extends Component {
 
 
     handleContinue() {
-        this.dataInit(2);
         document.addEventListener('keydown', this.listenerletter, false);
         document.querySelectorAll('div.letter').forEach(el => el.classList.remove('word-true'));
         document.querySelectorAll('div.letter').forEach(el => el.classList.remove('word-false'));
-        for (let i=1; i<=this.countletter; i++){
+        for (let i=0; i<this.state.countletter; i++){
             document.getElementById(`l${i}`).classList.remove('activ');
+        }; 
+        for (let i=1; i<=6; i++){
             document.getElementById(`pic${i}`).classList.remove('gallows-visible');
             document.getElementById(`pic${i}`).classList.add('gallows-hidden');
-        };    
+        }; 
+        this.dataInit(2);   
     };
 
     finishWord(){
-        
         if (this.state.currentWord.length === this.letterTrue.length){
             document.querySelectorAll('div.letter').forEach(el => el.classList.add('word-true'));
             this.setState({isContinue: true});
             document.removeEventListener('keydown', this.listenerletter, false);
             this.changeStatistics(true);
         };
-        if (this.letterFalse.length >= this.countletter){
+        if (this.letterFalse.length >= this.state.countletter){
             document.querySelectorAll('div.letter').forEach(el => el.classList.add('word-false'));
             document.removeEventListener('keydown', this.listenerletter, false);
             this.changeStatistics(false);
@@ -156,7 +156,7 @@ export class HangmanGame extends Component {
                 image: this.state.wordStat.image,
                 wordTranslate: this.state.wordStat.wordTranslate,
                 isGuess: value,
-                countMoves: this.letterFalse.length + this.letterTrue.length - 2,
+                countMoves: this.letterFalse.length + this.letterTrue.length,
                 unguessletters: [],
                 falseletters: this.letterFalse,
                 numberGame: this.state.countGames,
@@ -217,15 +217,13 @@ export class HangmanGame extends Component {
                 <Gallows/>
                 
                 <div id="word" className="word">
-                <div id="l0" className="letter activ">{this.state.currentWord[0]}</div>
-                    <div id="l1" className="letter">{this.state.currentWord[1]}</div>
-                    <div id="l2" className="letter">{this.state.currentWord[2]}</div>
-                    <div id="l3" className="letter">{this.state.currentWord[3]}</div>
-                    <div id="l4" className="letter">{this.state.currentWord[4]}</div>
-                    <div id="l5" className="letter">{this.state.currentWord[5]}</div>
-                    <div id="l6" className="letter">{this.state.currentWord[6]}</div>
-                    <div id="l7" className="letter activ">{this.state.currentWord[7]}</div>
+                    { this.state.currentWord.map((lt, ind) => (
+                        <div className="letter active" key={ind} id={`l${ind}`}>
+                            {lt}
+                        </div>    
+                    ))}
                 </div>
+
                 <Button id="btn-continue"  className={isContinue ? 'btn-continue btn-active' : 'btn-continue'}
                     onClick={() => {this.handleContinue()}}
                      title="Continue"

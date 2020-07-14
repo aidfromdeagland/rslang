@@ -11,18 +11,17 @@ export class Hangman extends Component {
         super(props);
         this.state = {
             isStart: false,
-            level: 0,
-            page: 0,
+            level: (localStorage.getItem('hangman_level') === null) ? 0 : localStorage.getItem('hangman_level'),
+            page:  (localStorage.getItem('hangman_page') === null) ? 0 : localStorage.getItem('hangman_page'),
         };
         this.handleStart = this.handleStart.bind(this);
         this.handleLevel = this.handleLevel.bind(this);
         this.handlePage = this.handlePage.bind(this);
     }
 
-    componentDidMount() {
-        //this.dataInit(1);
-        //document.addEventListener('keydown', this.listenerletter, false);
-
+    componentWillUnmount() {
+        localStorage.setItem('hangman_level', this.state.level);
+        localStorage.setItem('hangman_page', this.state.page);
     }
 
     handleStart() {
