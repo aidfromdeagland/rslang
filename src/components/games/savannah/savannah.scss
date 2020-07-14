@@ -156,6 +156,15 @@ $btn-hover-color: #0f4ab4;
             &:hover {
                 background-color: $btn-hover-color;
             }
+
+            &:disabled,
+            &[disabled] {
+              background-color: #cccccc;
+              color: #666666;
+              cursor:auto;
+          
+            }
+
             @media (max-width: 720px) {
                 font-size: 0.8rem;
                 height: 3rem;
