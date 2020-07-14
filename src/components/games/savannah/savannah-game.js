@@ -12,7 +12,6 @@ import soundCorrect from '../../../assets/audio/correct.mp3';
 import soundError from '../../../assets/audio/error.mp3';
 import { SettingService } from '../../../services/settingServices';
 import { StatisticService } from '../../../services/statisticServices';
-import { Spinner } from '../../shared/spinner';
 
 import './savannah.scss';
 
@@ -35,7 +34,7 @@ export class SavannahGame extends Component {
             wordInx: 0,
             allRightWords: 0,
             allWrongWords: 0,
-            isLoad: false,
+            isLoad: true,
         };
     }
 
@@ -191,19 +190,19 @@ export class SavannahGame extends Component {
     getNextPage = () => {
         const { page, group, getNextPage } = this.props;
         const { wordInx } = this.state;
-        if (wordInx > 19 && page <= 29) {
+        if (wordInx === 19 && page <= 29) {
             getNextPage((page + 1), group);
             this.setState({
                 wordInx: 0,
             });
         }
-        if (wordInx > 19 && page === 29 && group < 5) {
+        if (wordInx === 19 && page === 29 && group < 5) {
             getNextPage(0, (group + 1));
             this.setState({
                 wordInx: 0,
             });
         }
-        if (wordInx > 19 && page === 29 && group === 5) {
+        if (wordInx === 19 && page === 29 && group === 5) {
             getNextPage(0, group);
             this.setState({
                 wordInx: 0,
@@ -215,7 +214,7 @@ export class SavannahGame extends Component {
     getWrongAnswer = () => {
         this.getNextPage();
         const {
-            word, wrongAnswers, allWrongWords, isLoad,
+            word, wrongAnswers, allWrongWords,
         } = this.state;
         this.getNewCards();
         const row = {
