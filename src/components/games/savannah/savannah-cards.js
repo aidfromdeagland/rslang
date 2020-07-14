@@ -5,7 +5,7 @@ export class SavannahCards extends Component {
     render() {
         const {
             translateWords, word, getRightAnswer, getWrongAnswer, stopTimer,
-            startTimer, showRightCard, showWrongCard, getClassName, showRightWordByClick,
+            startTimer, showRightCard, showWrongCard, getClassName, showRightWordByClick, isLoad,
         } = this.props;
         return (
             <div className="savannah__cards">
@@ -16,16 +16,18 @@ export class SavannahCards extends Component {
                         aria-hidden
                         key={index}
                         onMouseDown={() => {
-                            showRightWordByClick();
-                            stopTimer();
-                            if (card.id === word.id) {
-                                showRightCard(index);
-                                getRightAnswer();
-                                startTimer();
-                            } else {
-                                showWrongCard(index);
-                                getWrongAnswer();
-                                startTimer();
+                            if (isLoad) {
+                                showRightWordByClick();
+                                stopTimer();
+                                if (card.id === word.id) {
+                                    showRightCard(index);
+                                    getRightAnswer();
+                                    startTimer();
+                                } else {
+                                    showWrongCard(index);
+                                    getWrongAnswer();
+                                    startTimer();
+                                }
                             }
                         }}
                         tabIndex="0"

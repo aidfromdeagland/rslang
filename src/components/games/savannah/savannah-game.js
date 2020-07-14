@@ -112,21 +112,23 @@ export class SavannahGame extends Component {
     };
 
     handleClickByKeyboard =() => {
-        const { translateWords, word, keyPressed } = this.state;
-        this.stopTimer();
-        for (let i = 0; i < translateWords.length; i += 1) {
-            if (translateWords[i].id === word.id) {
-                if (keyPressed === i + 1) {
-                    this.getRightAnswer();
-                    this.showRightCard(i);
-                } else if (keyPressed !== i + 1 && keyPressed !== null) {
-                    this.getWrongAnswer();
-                    this.showRightCard(i);
-                    this.showWrongCard(keyPressed - 1);
+        if (this.state.isLoad && this.state.lives !== 0) {
+            const { translateWords, word, keyPressed } = this.state;
+            this.stopTimer();
+            for (let i = 0; i < translateWords.length; i += 1) {
+                if (translateWords[i].id === word.id) {
+                    if (keyPressed === i + 1) {
+                        this.getRightAnswer();
+                        this.showRightCard(i);
+                    } else if (keyPressed !== i + 1 && keyPressed !== null) {
+                        this.getWrongAnswer();
+                        this.showRightCard(i);
+                        this.showWrongCard(keyPressed - 1);
+                    }
                 }
             }
+            this.startTimer();
         }
-        this.startTimer();
     }
 
     showRightWordByClick = () => {
@@ -234,12 +236,12 @@ export class SavannahGame extends Component {
 
     showRightCard = (card) => {
         this.setState({ isCorrect: card });
-        setTimeout(() => { this.setState({ isCorrect: null }); }, 1000);
+        setTimeout(() => { this.setState({ isCorrect: null }); }, 1400);
     }
 
     showWrongCard = (card) => {
         this.setState({ isWrong: card });
-        setTimeout(() => { this.setState({ isWrong: null }); }, 1000);
+        setTimeout(() => { this.setState({ isWrong: null }); }, 1400);
     }
 
     getClassName = (i) => {
