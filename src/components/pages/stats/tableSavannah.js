@@ -36,7 +36,6 @@ export class TableSavannah extends Component {
          this.setState({
              data,
          });
-         console.log(data.slice(1));
      }
 
      render() {

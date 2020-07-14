@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { WordService } from '../../../services/wordServices';
+import { totalLearnedWordsQuery } from '../../../constants/globalConstants';
 
 const Row = ({ maxNew, difficult, total }) => (
     <div className="row">
@@ -21,7 +22,8 @@ export class TableMain extends Component {
     }
 
     loadDatatoStatistic = async () => {
-        const userWord = await WordService.getUserWords();
+        const data = await WordService.getUserAggWords('', totalLearnedWordsQuery, 3600);
+        const userWord = data[0].paginatedResults;
         const difficultWords = await this.getDifficultWords();
         const maxNewWords = await this.getMaxNewWords();
 
