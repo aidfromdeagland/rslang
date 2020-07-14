@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import './timer.scss';
 
 export class Timer extends Component {
     constructor(props) {
@@ -17,8 +16,6 @@ export class Timer extends Component {
 
     componentWillUnmount() {
         clearInterval(this.timerID);
-        const { stopGame } = this.props;
-        stopGame();
     }
 
     tick() {
@@ -27,6 +24,10 @@ export class Timer extends Component {
             this.setState({
                 seconds: seconds - 1,
             });
+        }
+        else {
+            const { stopGame } = this.props;
+            stopGame();
         }
     }
 

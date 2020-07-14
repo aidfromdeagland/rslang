@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import './words.scss';
 
 export class Words extends Component {
     render() {
