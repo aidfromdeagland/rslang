@@ -37,12 +37,6 @@ export class GameHangman extends Component {
             isNext: true,
             isPlayingAudio: false,
             isAutoPronunciation: true,
-
-            isGameModeTrain: true,
-            isClickedCard: false,
-            indexClickedCard: null,
-            totalSpokenWords: 0,
-            correctWords: [],
             isRoundEnd: false,
             wordCount: 0,
         };
@@ -62,17 +56,12 @@ export class GameHangman extends Component {
             haveWords,
             isNext,
             wordCount,
-            showWordResult,
-            isRoundEnd,
         } = this.state;
         if (!haveWords) {
             this.loadWords();
         }
         if (!isNext) {
             this.createDataForGame(wordCount);
-        }
-        if (!showWordResult && !isRoundEnd) {
-            document.addEventListener('keydown', this.keyBoardHandler);
         }
     }
 
@@ -81,7 +70,22 @@ export class GameHangman extends Component {
     }
 
     keyBoardHandler = (event) => {
-        console.log(event.key)
+        const {
+            showWordResult,
+            isRoundEnd,
+        } = this.state;
+        if (isRoundEnd) {
+            if (event.key === 'Enter') {
+                this.handleByNextRound();
+            }
+            return;
+        }
+        if (showWordResult) {
+            if (event.key === 'Enter') {
+                this.handleContinue();
+            }
+            return;
+        }
         this.keyHandler(event);
     }
 
@@ -297,7 +301,6 @@ export class GameHangman extends Component {
     }
 
     gameOverHandler = () => {
-        document.removeEventListener('keydown', this.keyBoardHandler);
         this.setState({ showWordResult: true });
     }
 
@@ -396,7 +399,6 @@ export class GameHangman extends Component {
             dataForGame,
             isAutoPronunciation,
         } = this.state;
-        document.removeEventListener('keydown', this.keyBoardHandler);
         this.setState({
             wrongCount: 6,
             showWordResult: true,
@@ -531,7 +533,7 @@ export class GameHangman extends Component {
                                                 <Button
                                                     className="button"
                                                     title="Continue"
-                                                    onClick={() => this.handleContinue(wordCount)}
+                                                    onClick={() => this.handleContinue()}
                                                 />
                                             </div>
                                         );
@@ -543,8 +545,6 @@ export class GameHangman extends Component {
                             <div className="keypad-container">
                                 {ALPHABET.map((letter, index) => (
                                     <span
-                                        role="button"
-                                        tabIndex={1}
                                         key={index}
                                         className={
                                             (() => {
