@@ -6,11 +6,11 @@ import { Button } from '../../shared/button';
 export class ModalSettings extends Component {
     render() {
         const {
-            closeModal,
+            acceptSettings,
+            handleCloseModal,
             settings,
             onChangeInput,
-            checkSettings,
-            onchangeCheckbox,
+            onChangeCheckbox,
             isInvalidSettings,
         } = this.props;
         return (
@@ -18,25 +18,25 @@ export class ModalSettings extends Component {
                 <div className="modal-study-dialog">
                     <div className="modal-study-content">
                         <div className="modal-study-header">
-                            <Button className="modal-study-close" onClick={closeModal} title="×" />
+                            <Button className="modal-study-close" onClick={handleCloseModal} title="×" />
                         </div>
                         <div className="modal-study-body">
                             <div className="main-settings">
                                 <h3>Learning context</h3>
-                                <Checkbox text="word translation" onChange={() => onchangeCheckbox('showWordTranslate')} isChecked={settings.showWordTranslate} isInvalidSettings={isInvalidSettings} />
-                                <Checkbox text="word example of usage" onChange={() => onchangeCheckbox('showSentenceExample')} isChecked={settings.showSentenceExample} isInvalidSettings={isInvalidSettings} />
-                                <Checkbox text="word meaning" onChange={() => onchangeCheckbox('showSentenceMeaning')} isChecked={settings.showSentenceMeaning} isInvalidSettings={isInvalidSettings} />
+                                <Checkbox text="word translation" onChange={() => onChangeCheckbox('showWordTranslate')} isChecked={settings.showWordTranslate} isInvalidSettings={isInvalidSettings} />
+                                <Checkbox text="word example of usage" onChange={() => onChangeCheckbox('showSentenceExample')} isChecked={settings.showSentenceExample} isInvalidSettings={isInvalidSettings} />
+                                <Checkbox text="word meaning" onChange={() => onChangeCheckbox('showSentenceMeaning')} isChecked={settings.showSentenceMeaning} isInvalidSettings={isInvalidSettings} />
                             </div>
                             <div className="additional-settings">
                                 <h3>Additional settings</h3>
-                                <Checkbox text="word transcription" onChange={() => onchangeCheckbox('showWordTranscription')} isChecked={settings.showWordTranscription} />
-                                <Checkbox text="word illustration" onChange={() => onchangeCheckbox('showWordImage')} isChecked={settings.showWordImage} />
-                                <Checkbox text="evaluation buttons" onChange={() => onchangeCheckbox('showEvaluationButtons')} isChecked={settings.showEvaluationButtons} />
-                                <Checkbox text="answer button" onChange={() => onchangeCheckbox('showAnswerButton')} isChecked={settings.showAnswerButton} />
-                                <Checkbox text="difficult button" onChange={() => onchangeCheckbox('showDifficultButton')} isChecked={settings.showDifficultButton} />
-                                <Checkbox text="delete button" onChange={() => onchangeCheckbox('showDeleteButton')} isChecked={settings.showDeleteButton} />
-                                <Checkbox text="sentences translation" onChange={() => onchangeCheckbox('showSentencesTranslate')} isChecked={settings.showSentencesTranslate} />
-                                <Checkbox text="auto pronunciation" onChange={() => onchangeCheckbox('autoPronunciation')} isChecked={settings.autoPronunciation} />
+                                <Checkbox text="word transcription" onChange={() => onChangeCheckbox('showWordTranscription')} isChecked={settings.showWordTranscription} />
+                                <Checkbox text="word illustration" onChange={() => onChangeCheckbox('showWordImage')} isChecked={settings.showWordImage} />
+                                <Checkbox text="evaluation buttons" onChange={() => onChangeCheckbox('showEvaluationButtons')} isChecked={settings.showEvaluationButtons} />
+                                <Checkbox text="answer button" onChange={() => onChangeCheckbox('showAnswerButton')} isChecked={settings.showAnswerButton} />
+                                <Checkbox text="difficult button" onChange={() => onChangeCheckbox('showDifficultButton')} isChecked={settings.showDifficultButton} />
+                                <Checkbox text="delete button" onChange={() => onChangeCheckbox('showDeleteButton')} isChecked={settings.showDeleteButton} />
+                                <Checkbox text="sentences translation" onChange={() => onChangeCheckbox('showSentencesTranslate')} isChecked={settings.showSentencesTranslate} />
+                                <Checkbox text="auto pronunciation" onChange={() => onChangeCheckbox('autoPronunciation')} isChecked={settings.autoPronunciation} />
                             </div>
                             <div className="number-words-cards">
                                 <div className="number-words">
@@ -53,7 +53,7 @@ export class ModalSettings extends Component {
                                 </div>
                             </div>
                         </div>
-                        <Button className="close-modal-ok button" onClick={checkSettings} title="OK" />
+                        <Button className="close-modal-ok button" onClick={acceptSettings} title="OK" />
                     </div>
                 </div>
             </div>

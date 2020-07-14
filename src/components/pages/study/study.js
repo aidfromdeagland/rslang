@@ -9,6 +9,7 @@ import { Spinner } from '../../shared/spinner';
 import { Progress } from './progress';
 import { shuffle } from '../../../utils/utils';
 import { SessionStats } from './sessionStats';
+import { InfoMessage } from './infoMessage';
 
 const newWordsQuery = { userWord: null };
 const totalLearnedWordsQuery = { 'userWord.optional.isDeleted': false };
@@ -43,6 +44,7 @@ export class Study extends Component {
             showEvaluation: false,
             isWaitingForAudio: false,
             showStats: false,
+            showInfo: false,
         };
 
         this.audioPlayer = new Audio();
@@ -134,8 +136,7 @@ export class Study extends Component {
                     totalLearnedWordsQuantity: this.totalLearnedWordsQuantity,
                 });
             } else {
-                alert('There are no words for training right now. Try to change your settings or train another category of words');
-                this.props.history.push('/main');
+                this.setState({ showInfo: true });
             }
         }
     }
@@ -199,6 +200,9 @@ export class Study extends Component {
         if (actualValue === this.dataForCard.wordToCompare.toLowerCase()) {
             this.stats.correctAnswers += 1;
             this.stats.currentStreak += 1;
+            this.setState({
+                isCorrectWord: true,
+            });
             if (this.stats.currentStreak > this.stats.longestStreak) {
                 this.stats.longestStreak = this.stats.currentStreak;
             }
@@ -216,9 +220,6 @@ export class Study extends Component {
                         }, { once: true });
                     }
                 } else {
-                    this.setState({
-                        isCorrectWord: true,
-                    });
                     if (this.settings.autoPronunciation) {
                         this.audioPlayer.src = this.dataForCard.audioContext;
                         this.audioPlayer.play();
@@ -410,8 +411,17 @@ export class Study extends Component {
         const {
             isLoadSettings, isLoadWords, valueInput, isCorrectWord, showEvaluation,
             isWaitingForAudio, learnedWordsQuantity, needToLearnWordsQuantity,
-            totalLearnedWordsQuantity, showStats,
+            totalLearnedWordsQuantity, showStats, showInfo,
         } = this.state;
+
+        if (showInfo) {
+            return (
+                <InfoMessage
+                    message="There are no words for training right now. Try to change your settings or train another category of words"
+                    okClickHandler={this.goToMain}
+                />
+            );
+        }
 
         if (isLoadSettings && isLoadWords) {
             const cardDifficultState = (this.actualCard.userWord

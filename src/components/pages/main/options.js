@@ -8,12 +8,12 @@ export class Options extends Component {
     render() {
         const {
             isOpenModal,
-            closeModal,
+            acceptSettings,
+            handleCloseModal,
             settings,
             onChangeInput,
             clickSettings,
-            checkSettings,
-            onchangeCheckbox,
+            onChangeCheckbox,
             isInvalidSettings,
         } = this.props;
         return (
@@ -21,12 +21,12 @@ export class Options extends Component {
                 {isOpenModal
                     ? (
                         <ModalSettings
-                            closeModal={closeModal}
+                            acceptSettings={acceptSettings}
+                            handleCloseModal={handleCloseModal}
                             settings={settings}
                             onChangeInput={onChangeInput}
-                            onchangeCheckbox={onchangeCheckbox}
+                            onChangeCheckbox={onChangeCheckbox}
                             clickSettings={clickSettings}
-                            checkSettings={checkSettings}
                             isInvalidSettings={isInvalidSettings}
                         />
                     ) : null}
