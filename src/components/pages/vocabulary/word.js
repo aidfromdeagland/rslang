@@ -26,7 +26,7 @@ export class VocabularyWord extends Component {
 
     render() {
         const {
-            word, settings, isSpecial, removeWordHandler,
+            word, settings, isSpecial, handleRestoreWord,
         } = this.props;
         const imageSrc = `${MEDIA_PREFIX_URL}${word.image}`;
         const audioSrc = `${MEDIA_PREFIX_URL}${word.audio}`;
@@ -39,9 +39,9 @@ export class VocabularyWord extends Component {
                             ? (
                                 <Button
                                     className="vocabulary__button vocabulary__button_restore"
-                                    title="Restore"
+                                    title="restore"
                                     isDisabled={false}
-                                    onClick={() => removeWordHandler(word.id)}
+                                    onClick={() => handleRestoreWord(word)}
                                 />
                             )
                             : null }

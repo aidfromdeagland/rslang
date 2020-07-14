@@ -1,4 +1,5 @@
-const MILLISECONDS_PER_DAY = 1000 * 60 * 60 * 24;
+const MILLISECONDS_PER_HOUR = 1000 * 60 * 60;
+const MILLISECONDS_PER_DAY = MILLISECONDS_PER_HOUR * 24;
 const POWER_INDEX_GOOD = 1.4;
 const POWER_INDEX_EASY = 1.6;
 
@@ -30,6 +31,14 @@ export const getMemoInfo = (difficulty, prevRepetitions) => {
     default: result.nextRepetitionDate = currentDateStamp;
     }
 
+    if (result.repetitions === 1) {
+        result.nextRepetitionDate = currentDateStamp + MILLISECONDS_PER_HOUR;
+    }
+
+    if (result.nextRepetitionDate > currentDateStamp + 90 * MILLISECONDS_PER_DAY) {
+        result.nextRepetitionDate = currentDateStamp + 90 * MILLISECONDS_PER_DAY;
+    }
+
     return result;
 };
 
@@ -47,6 +56,10 @@ export const getMemoInfoMiniGames = (isCorrect, prevRepetitions, nextDate) => {
         prevRepetitionDate: currentDateStamp,
         nextRepetitionDate: resultedNextDate,
     };
+
+    if (result.nextRepetitionDate > currentDateStamp + 90 * MILLISECONDS_PER_DAY) {
+        result.nextRepetitionDate = currentDateStamp + 90 * MILLISECONDS_PER_DAY;
+    }
 
     return result;
 };
