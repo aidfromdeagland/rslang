@@ -40,6 +40,7 @@ export class Main extends Component {
             optional.showWordTranslate, optional.showSentenceMeaning, optional.showSentenceExample];
         if (mainSettingsValues.some((settingValue) => settingValue === true)) {
             this.putSettings();
+            this.settings = JSON.parse(JSON.stringify(this.state.settings));
             this.setState((prev) => ({
                 isOpenModal: !prev.isOpenModal,
                 isInvalidSettings: false,
@@ -131,6 +132,7 @@ export class Main extends Component {
     }
 
     handleCloseModal = () => {
+        console.log(this.state.settings.optional, this.settings.optional);
         this.setState((prev) => ({
             isOpenModal: !prev.isOpenModal,
             isInvalidSettings: false,
