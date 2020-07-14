@@ -8,6 +8,7 @@ import { SettingService } from '../../../services/settingServices';
 import { Spinner } from '../../shared/spinner';
 import { Progress } from './progress';
 import { shuffle } from '../../../utils/utils';
+import { SessionStats } from './sessionStats';
 
 const newWordsQuery = { userWord: null };
 const totalLearnedWordsQuery = { 'userWord.optional.isDeleted': false };
@@ -41,10 +42,13 @@ export class Study extends Component {
             isFirstTry: true,
             showEvaluation: false,
             isWaitingForAudio: false,
+            showStats: false,
         };
 
         this.audioPlayer = new Audio();
         this.stats = {
+            initialCards: 0,
+            initialNewWords: 0,
             cardsLearned: 0,
             correctAnswers: 0,
             incorrectAnswers: 0,
@@ -81,7 +85,6 @@ export class Study extends Component {
                 '', newWordsQuery, newWordsQuantity,
             );
             newWordsforTraining = newWordsAggResponse[0].paginatedResults;
-            this.stats.newWords = newWordsforTraining.length;
         }
         let learnedWordsForTraining = [];
         const learnedWordsQuantity = this.settings.totalWords - this.settings.newWords;
@@ -100,6 +103,7 @@ export class Study extends Component {
             }
         }
 
+        this.stats.initialNewWords = newWordsforTraining.length;
         return newWordsforTraining.concat(learnedWordsForTraining);
     }
 
@@ -111,21 +115,28 @@ export class Study extends Component {
     }
 
     startTraining = async () => {
-        this.settings = await this.getSettings();
-        const [words, totalLearnedWordsQuantity] = await Promise.all([this.getWords(), this.getTotalWordsQuantity()]);
-        this.words = shuffle(words);
-        this.totalLearnedWordsQuantity = totalLearnedWordsQuantity;
-        if (this.words.length) {
-            this.createCard();
-            this.setState({
-                isLoadWords: true,
-                isLoadSettings: true,
-                needToLearnWordsQuantity: this.words.length,
-                totalLearnedWordsQuantity: this.totalLearnedWordsQuantity,
-            });
-        } else {
-            alert('There are no words for training right now. Try to change your settings or train another category of words');
+        if (this.props.location.allowNewWords === undefined
+            || this.props.location.allowLearnedWords === undefined
+            || this.props.location.onlyDifficultWords === undefined) {
             this.props.history.push('/main');
+        } else {
+            this.settings = await this.getSettings();
+            const [words, totalLearnedWordsQuantity] = await Promise.all([this.getWords(), this.getTotalWordsQuantity()]);
+            this.words = shuffle(words);
+            this.stats.initialCards = this.words.length;
+            this.totalLearnedWordsQuantity = totalLearnedWordsQuantity;
+            if (this.words.length) {
+                this.createCard();
+                this.setState({
+                    isLoadWords: true,
+                    isLoadSettings: true,
+                    needToLearnWordsQuantity: this.words.length,
+                    totalLearnedWordsQuantity: this.totalLearnedWordsQuantity,
+                });
+            } else {
+                alert('There are no words for training right now. Try to change your settings or train another category of words');
+                this.props.history.push('/main');
+            }
         }
     }
 
@@ -193,7 +204,6 @@ export class Study extends Component {
             }
             if (!this.state.showEvaluation) {
                 if (this.state.isFirstTry) {
-                    this.stats.cardsLearned += 1;
                     this.audioPlayer.src = this.dataForCard.audioContext;
                     this.setState({ showEvaluation: true });
                     if (this.settings.autoPronunciation) {
@@ -249,17 +259,15 @@ export class Study extends Component {
                 showEvaluation: false,
             });
         } else {
-            setTimeout(() => {
-                alert('FINISH!');
-            }, 500);
-            console.log(this.stats);
-            setTimeout(() => {
-                this.props.history.push('/main');
-            }, 1000);
+            this.setState({ showStats: true });
         }
     }
 
     handleEvaluate = () => {
+        this.stats.cardsLearned += 1;
+        if (!this.actualCard.userWord) {
+            this.stats.newWords += 1;
+        }
         if (this.settings.autoPronunciation) {
             if (this.audioPlayer.ended) {
                 this.goNextCard();
@@ -319,6 +327,10 @@ export class Study extends Component {
         this.goNextCard();
     }
 
+    goToMain = () => {
+        this.props.history.push('/main');
+    }
+
     handleToggleDeleteStatus = () => {
         const currentTimeStamp = Date.now();
         if (this.actualCard.userWord) {
@@ -364,6 +376,7 @@ export class Study extends Component {
     }
 
     handleClickShowAnswer = () => {
+        this.stats.currentStreak = 0;
         this.setState({
             valueInput: this.dataForCard.wordToCompare,
             isFirstTry: false,
@@ -397,13 +410,8 @@ export class Study extends Component {
         const {
             isLoadSettings, isLoadWords, valueInput, isCorrectWord, showEvaluation,
             isWaitingForAudio, learnedWordsQuantity, needToLearnWordsQuantity,
-            totalLearnedWordsQuantity,
+            totalLearnedWordsQuantity, showStats,
         } = this.state;
-        if (this.props.location.allowNewWords === undefined
-            || this.props.location.allowLearnedWords === undefined
-            || this.props.location.onlyDifficultWords === undefined) {
-            this.props.history.push('/main');
-        }
 
         if (isLoadSettings && isLoadWords) {
             const cardDifficultState = (this.actualCard.userWord
@@ -486,6 +494,12 @@ export class Study extends Component {
                         needToLearnWordsQuantity={needToLearnWordsQuantity}
                         totalLearnedWordsQuantity={totalLearnedWordsQuantity}
                     />
+                    {showStats && (
+                        <SessionStats
+                            data={this.stats}
+                            okClickHandler={this.goToMain}
+                        />
+                    )}
                 </div>
             );
         }

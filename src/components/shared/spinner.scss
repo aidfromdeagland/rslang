@@ -39,7 +39,7 @@
 
 .spinner_centered {
   position: fixed;
-  left: 50vw;
-  top: 50vh;
-  transform: translate(-50%, -50%);
+  z-index: 9999;
+  left: calc(50vw - 25px);
+  top: calc(50vh - 25px);
 }
