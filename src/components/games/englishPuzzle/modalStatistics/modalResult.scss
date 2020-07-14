@@ -4,7 +4,6 @@
     right: 0;
     bottom: 0;
     left: 0;
-    background: rgba(0, 0, 0, 0.5);
     z-index: 1050;
 
     .modal:target {
@@ -26,16 +25,15 @@
         }
     }
 
-    .modal-content {
+    .puzzle-modal-content {
         position: relative;
         display: flex;
         flex-direction: column;
-        background-color: #fff;
         background-clip: padding-box;
         border: 1px solid rgba(0, 0, 0, 0.2);
         border-radius: 0.3rem;
         outline: 0;
-        background-color: #faede7;
+        background-color: #eacab9;
     }
 
     @media (min-width: 768px) {
@@ -87,6 +85,7 @@
         overflow: auto;
         display: flex;
         flex-wrap: wrap;
+        max-height: 475px;
         .number-words-cards {
             width: 100%;
             display: flex;
@@ -129,12 +128,19 @@
             margin-left: 10px;
         }
     }
-
-    .result {
-        border-bottom: #b99584 solid 2px;
+    .round-results {
+        .puzzle-result {
+            border-bottom: #b99584 solid 2px;
+        }
+        .dont-know__title {
+            color: #ff0c0c;
+        }
+        .know-title {
+            color: #2cab53;
+        }
     }
 
-    .result-body {
+    .puzzle-result-body {
         display: flex;
         flex-direction: column;
         div {
@@ -148,7 +154,7 @@
             background-size: contain;
             padding: 0;
             border: 0;
-            background-color: #faede7;
+            background-color: #eacab9;
             margin-right: 20px;
             width: 30px;
             height: 30px;

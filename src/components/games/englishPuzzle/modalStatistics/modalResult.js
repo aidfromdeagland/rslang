@@ -66,53 +66,49 @@ export class ModalResult extends Component {
         return (
             <div id="openModal" className="modal-result">
                 <div className="modal-dialog">
-                    <div className="modal-content">
+                    <div className="puzzle-modal-content">
                         <div className="modal-body">
                             <div className="round-results">
-                                <div className="dont-know result">
+                                <div className="dont-know puzzle-result">
                                     <div className="dont-know__title result-title">
                                         I don&apos;t know:
                                         <span>
                                             {results.dontKnow.length}
                                         </span>
                                     </div>
-                                    <div className="result-body">
-                                        {results.dontKnow.map((result, index) => {
-                                            return (
-                                                <div key={index}>
-                                                    <Button
-                                                        className={isPlayingAudio && playingIndex === index && playingResult === 'dontKnow'
-                                                            ? 'dynamic-btn playing'
-                                                            : 'dynamic-btn'}
-                                                        onClick={() => this.handleClickAudio('dontKnow', index)}
-                                                    />
-                                                    <span>{result.sentence}</span>
-                                                </div>
-                                            );
-                                        })}
+                                    <div className="puzzle-result-body">
+                                        {results.dontKnow.map((result, index) => (
+                                            <div key={index}>
+                                                <Button
+                                                    className={isPlayingAudio && playingIndex === index && playingResult === 'dontKnow'
+                                                        ? 'dynamic-btn playing'
+                                                        : 'dynamic-btn'}
+                                                    onClick={() => this.handleClickAudio('dontKnow', index)}
+                                                />
+                                                <span>{result.sentence}</span>
+                                            </div>
+                                        ))}
                                     </div>
                                 </div>
-                                <div className="know result">
+                                <div className="know puzzle-result">
                                     <div className="know-title result-title">
                                         I know:
                                         <span>
                                             {results.know.length}
                                         </span>
                                     </div>
-                                    <div className="result-body">
-                                        {results.know.map((result, index) => {
-                                            return (
-                                                <div key={index}>
-                                                    <Button
-                                                        className={isPlayingAudio && playingIndex === index && playingResult === 'know'
-                                                            ? 'dynamic-btn playing'
-                                                            : 'dynamic-btn'}
-                                                        onClick={() => this.handleClickAudio('know', index)}
-                                                    />
-                                                    <span>{result.sentence}</span>
-                                                </div>
-                                            );
-                                        })}
+                                    <div className="puzzle-result-body">
+                                        {results.know.map((result, index) => (
+                                            <div key={index}>
+                                                <Button
+                                                    className={isPlayingAudio && playingIndex === index && playingResult === 'know'
+                                                        ? 'dynamic-btn playing'
+                                                        : 'dynamic-btn'}
+                                                    onClick={() => this.handleClickAudio('know', index)}
+                                                />
+                                                <span>{result.sentence}</span>
+                                            </div>
+                                        ))}
                                     </div>
                                 </div>
                             </div>
