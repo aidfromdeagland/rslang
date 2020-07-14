@@ -19,7 +19,7 @@
   margin: auto;
   height: 100%;
   font-family: "Literata-Regular", sans-serif;
-  .speakit-title {
+  .hangman-title {
     font-family: "Literata-Bold", sans-serif;
     text-transform: uppercase;
     font-size: 6rem;
@@ -28,7 +28,7 @@
     color: #000000;
     text-shadow: 1px 1px 4px #bf0707, 1px 1px 4px #ad1616;;
   }
-  .speakit-description {
+  .hangman-description {
     color: #000000;
     margin-bottom: 20px;
     font-size: 3rem;
@@ -40,7 +40,7 @@
     }
   }
 
-  .speakit-start {
+  .hangman-start {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
@@ -63,11 +63,11 @@
 
 @media (max-width: 500px) {
   #start-page {
-    .speakit-title {
+    .hangman-title {
       font-size: 4rem;
       margin-bottom: 20px;
     }
-    .speakit-description {
+    .hangman-description {
       margin-bottom: 20px;
       font-size: 2rem;
       font-weight: 400;

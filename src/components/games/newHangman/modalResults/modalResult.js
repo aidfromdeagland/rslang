@@ -61,22 +61,22 @@ export class ModalResult extends Component {
     }
 
     render() {
-        const { results, handleByNextRound } = this.props;
+        const { results, handleByNextRound, wordTranslate } = this.props;
         const { isPlayingAudio, playingIndex, playingResult } = this.state;
         return (
             <div id="openModal" className="modal-result">
                 <div className="modal-dialog">
-                    <div className="modal-content">
+                    <div className="hangman-modal-content">
                         <div className="modal-body">
                             <div className="round-results">
-                                <div className="dont-know result">
+                                <div className="dont-know hangman-result">
                                     <div className="dont-know__title result-title">
                                         I don&apos;t know:
                                         <span>
                                             {results.dontKnow.length}
                                         </span>
                                     </div>
-                                    <div className="result-body">
+                                    <div className="hangman-result-body">
                                         {results.dontKnow.map((result, index) => {
                                             return (
                                                 <div key={index}>
@@ -87,19 +87,21 @@ export class ModalResult extends Component {
                                                         onClick={() => this.handleClickAudio('dontKnow', index)}
                                                     />
                                                     <span>{result.word}</span>
+                                                    -
+                                                    <span>{result.wordTranslate}</span>
                                                 </div>
                                             );
                                         })}
                                     </div>
                                 </div>
-                                <div className="know result">
+                                <div className="know hangman-result">
                                     <div className="know-title result-title">
                                         I know:
                                         <span>
                                             {results.know.length}
                                         </span>
                                     </div>
-                                    <div className="result-body">
+                                    <div className="hangman-result-body">
                                         {results.know.map((result, index) => {
                                             return (
                                                 <div key={index}>
@@ -110,6 +112,8 @@ export class ModalResult extends Component {
                                                         onClick={() => this.handleClickAudio('know', index)}
                                                     />
                                                     <span>{result.word}</span>
+                                                    -
+                                                    <span>{result.wordTranslate}</span>
                                                 </div>
                                             );
                                         })}

@@ -57,13 +57,15 @@ export class StartPage extends Component {
         if (isChecked) {
             return (
                 <div id="start-page">
-                    <div className="speakit-title">Hangman</div>
-                    <div className="speakit-description">
+                    <div className="hangman-title">Hangman</div>
+                    <div className="hangman-description">
                         <p>Guess the hidden word in English by selecting the letters of which it consists.</p>
+                        <br />
+                        <p>You can select letters using the keyboard or mouse.</p>
                         <br />
                         <p>If you have already learned 10 or more words, you can use them in the game mode with learned words</p>
                     </div>
-                    <div className="speakit-start">
+                    <div className="hangman-start">
                         <Button
                             className="button btn-start"
                             onClick={() => this.handleClick('isGameWithLevels')}

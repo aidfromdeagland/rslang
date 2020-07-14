@@ -10,7 +10,7 @@
 }
 
 .hangman {
-  background: url('../../../assets/images/hangman/hangman-bg.jpeg');
+  background: url("../../../assets/images/hangman/hangman-bg.jpeg");
   padding: 0 10px;
   background-repeat: no-repeat;
   background-size: cover;
@@ -65,7 +65,6 @@
 
   .hangman-content_container {
     padding-top: 50px;
-
   }
 
   .hangman-content {
@@ -106,6 +105,14 @@
       margin: 0 7px;
       font-size: 35px;
       border-bottom: 1px solid #333;
+      @media (max-width: 420px) {
+        width: 13px;
+        font-size: 19px;
+      }
+      &:active,
+      &:focus {
+        outline: none !important;
+      }
     }
   }
 
@@ -185,10 +192,20 @@
     .knob-right {
       color: #480;
       background-color: #c1ff8d;
+      &:hover {
+        color: #480;
+        border-color: #ddd #ccc #ccc #ddd;
+        background-color: #c1ff8d;
+      }
     }
     .knob-wrong {
       color: #b12525;
       background-color: #fbc2af;
+      &:hover {
+        color: #b12525;
+        border-color: #ddd #ccc #ccc #ddd;
+        background-color: #fbc2af;
+      }
     }
   }
 
