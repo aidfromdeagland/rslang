@@ -50,7 +50,7 @@ export class GameHangman extends Component {
 
     componentDidMount() {
         const { haveWords } = this.state;
-        document.addEventListener('keydown', (event) => this.keyHandler(event));
+        document.addEventListener('keydown', this.keyBoardHandler);
         if (!haveWords) {
             this.loadSettings();
             this.loadStatistic();
@@ -72,7 +72,11 @@ export class GameHangman extends Component {
     }
 
     componentWillUnmount() {
-        document.removeEventListener('keydown', (event) => this.keyHandler(event));
+        document.removeEventListener('keydown', this.keyBoardHandler);
+    }
+
+    keyBoardHandler = (event) => {
+        this.keyHandler(event);
     }
 
     loadSettings = async () => {
