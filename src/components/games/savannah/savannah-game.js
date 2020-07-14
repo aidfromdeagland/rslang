@@ -12,7 +12,6 @@ import soundCorrect from '../../../assets/audio/correct.mp3';
 import soundError from '../../../assets/audio/error.mp3';
 import { SettingService } from '../../../services/settingServices';
 import { StatisticService } from '../../../services/statisticServices';
-import { Spinner } from '../../shared/spinner';
 
 import './savannah.scss';
 
@@ -35,7 +34,7 @@ export class SavannahGame extends Component {
             wordInx: 0,
             allRightWords: 0,
             allWrongWords: 0,
-            isLoad: false,
+            isLoad: true,
         };
     }
 
