@@ -28,7 +28,7 @@ const dataAboutTeam = [
     {
         photo: olegAvatar,
         name: 'Oleg',
-        description: 'all project services, error logger, authorisation page, mini game "Audio call",  other minor features',
+        description: 'all project services, authorisation page, mini game "Audio call", testing, other minor features',
         github: 'https://github.com/OlegD89',
     },
     {
@@ -40,7 +40,7 @@ const dataAboutTeam = [
     {
         photo: artemAvatar,
         name: 'Artem',
-        description: 'main page, study page, about team page, mini games page, mini game "English puzzle", mini game "Hangman", mini game "Speak it", other minor features',
+        description: 'main page, study page, about team page, mini games page, mini game "English puzzle", mini game "Hangman", mini game "Speak it", testing, other minor features',
         github: 'https://github.com/Dirtymalka',
     },
     {
