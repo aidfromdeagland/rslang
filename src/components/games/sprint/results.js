@@ -28,7 +28,7 @@ export class Results extends Component {
     }
     
     render() {
-        const { score, wrongAnswers, correctAnswers, results } = this.props;
+        const { score, wrongAnswers, correctAnswers, results, percent } = this.props;
         if(this.state.isRepeat) {
             return (
                 <SprintStart />
@@ -47,6 +47,7 @@ export class Results extends Component {
                     <p className="result_score">{ score }</p>
                     <p className="errors">Right answers: {correctAnswers}</p>
                     <p className="errors">Wrong answers: {wrongAnswers}</p>
+                    <p className="percent">This result is in the top {percent}%.</p>
                     <ResultsTable results={results} />
                     <p className="question">Do you want to play this game again?</p>
                     <div className="buttons">

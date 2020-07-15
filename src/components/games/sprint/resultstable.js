@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import { TableRow } from './tablerow';
 
-export class ResultsTable extends React.Component {
+export class ResultsTable extends Component {
   render() {
     const rows = [];    
     this.props.results.forEach((result, idx) => {
