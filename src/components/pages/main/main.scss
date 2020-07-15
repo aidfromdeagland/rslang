@@ -1,3 +1,52 @@
-.main {
+.main-page {
+  min-height: calc(100vh - 100px);
+  width: 100%;
+  height: 100%;
+  background-color: #faede7;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  & * {
+    box-sizing: border-box;
+  }
+  .main-page-container {
+    max-width: 1020px;
+    h2 {
+      font-family: "Literata", sans-serif;
+      font-size: 32px;
+      line-height: 48px;
+      color: #092c70;
+    }
 
+    .button {
+      margin: 10px 0;
+    }
+
+    .btn-start {
+      margin-bottom: 40px;
+      color: #ffcc00;
+    }
+  }
+
+  .main-page_options {
+    height: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    border-radius: 5px;
+    .options-settings {
+      display: flex;
+      flex-direction: column;
+    }
+    .options-learning {
+      margin-top: 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+  }
 }

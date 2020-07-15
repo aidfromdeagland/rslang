@@ -1,0 +1,37 @@
+.custom {
+    // margin: 0;
+    // display: flex;
+    // flex-direction: column;
+    // justify-content: space-between;
+    align-items: center;
+    /*width: 30%;
+    margin-left: 60%;*/
+
+    &-group {
+        display: flex;
+        /*flex-direction: column;*/
+        justify-content: center;
+        list-style: none;
+        font-size:  16px; 
+        color: black;
+        /*text-align: left;*/
+        align-items: center;
+        margin-top: 70px;
+        font-family: "OpenSans", sans-serif;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #fff;
+  
+   
+        &-option {
+            
+            width: 40px;
+            height: 30px;
+            border: 1px solid #34495E;
+            /*padding-left: 60px;*/
+            margin-left: 20px;
+   
+        }
+    }
+}    
+  

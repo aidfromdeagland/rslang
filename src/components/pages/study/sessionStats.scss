@@ -1,0 +1,95 @@
+@font-face {
+  font-family: "Literata", "Roboto";
+  src: url("../../../assets/fonts/Literata-Bold.ttf") format("ttf"),
+  url("../../../assets/fonts/Literata-Regular.ttf") format("ttf"),
+  url("../../../assets/fonts/Literata-VariableFont.ttf") format("ttf"),
+  url("../../../assets/fonts/RobotoMono-Bold.ttf") format("ttf"),
+  url("../../../assets/fonts/RobotoMono-Regular.ttf") format("ttf");
+  font-weight: normal;
+  font-style: normal;
+}
+
+.study-stats {
+  position: fixed;
+  z-index: 5;
+  left: 50vw;
+  top: 50vh;
+  transform: translate(-50%, -50%);
+  width: 40vw;
+  max-width: 1020px;
+  min-width: 500px;
+  min-height: 40vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  background: #FAEDE7;
+  border-radius: 7px;
+  box-shadow: 0 0 7px 3px #092c70;
+  transition: all 0.3s;
+
+  &__heading {
+    font-size: 36px;
+    color: #092c70;
+    text-align: center;
+  }
+
+  &__table {
+    font-size: 26px;
+    min-width: 50%;
+    border-collapse: collapse;
+
+    tr {
+      border-bottom: 2px solid #092c70;
+      border-collapse: collapse;
+
+      &:first-of-type {
+        border-top: none;
+      }
+    }
+
+    td {
+
+    }
+  }
+
+  &__label {
+    font-weight: 500;
+  }
+
+  &__data {
+    font-weight: 700;
+    padding-left: 10px;
+  }
+
+  &__button {
+    margin: 15px 0;
+    background: #092c70;
+    line-height: 1;
+
+    &:hover {
+      background: #0f4ab4;
+    }
+  }
+
+  .color-modificator {
+    &_success {
+      color: #339900;
+    }
+
+    &_warning {
+      color: #ff4f00;
+    }
+
+    &_error {
+      color: #f00002;
+    }
+  }
+}
+
+@media (max-width: 639px) {
+  .study-stats {
+    width: 90vw;
+    min-width: 300px;
+  }
+}

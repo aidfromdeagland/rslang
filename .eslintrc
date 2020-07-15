@@ -28,6 +28,10 @@
         "react/jsx-filename-extension": [1, { "extensions": [".js"] }],
         "react/prefer-stateless-function": 0,
         "indent": [1, 4],
-        "react/jsx-indent": [1, 4]
-    }
+        "react/jsx-indent": [1, 4],
+        "react/jsx-indent-props": [1, 4],
+        "curly": [2, "all"],
+        "camelcase": 1
+    },
+    "parser": "babel-eslint"
 }

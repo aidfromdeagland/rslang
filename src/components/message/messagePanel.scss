@@ -1,0 +1,20 @@
+.message-panel {
+    position: fixed;
+    right: 0;
+    bottom: 50px;
+    margin: 0 20px;
+    padding: 5px 15px;
+    border-radius: 3px;
+    opacity: 1;
+    transition: none;
+    &_error {
+        background-color: rgba(200,0,0,0.3);
+    }
+    &_success {
+        background-color: rgba(0, 200, 10, 0.3);
+    }
+    &_hide {
+        transition: opacity 2s ease-in 2.5s;
+        opacity: 0;
+    }
+}

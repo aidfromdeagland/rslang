@@ -1,0 +1,76 @@
+@font-face {
+  font-family: "Literata", "Roboto";
+  src: url("../../../assets/fonts/Literata-Bold.ttf") format("ttf"),
+    url("../../../assets/fonts/Literata-Regular.ttf") format("ttf"),
+    url("../../../assets/fonts/Literata-VariableFont.ttf") format("ttf"),
+    url("../../../assets/fonts/RobotoMono-Bold.ttf") format("ttf"),
+    url("../../../assets/fonts/RobotoMono-Regular.ttf") format("ttf");
+  font-weight: normal;
+  font-style: normal;
+}
+
+#start-page {
+  color: rgb(255, 255, 255);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  max-width: 1020px;
+  margin: auto;
+  height: 100%;
+  font-family: "Literata-Regular", sans-serif;
+  .hangman-title {
+    font-family: "Literata-Bold", sans-serif;
+    text-transform: uppercase;
+    font-size: 6rem;
+    margin-bottom: 20px;
+    font-weight: 700;
+    color: #000000;
+    text-shadow: 1px 1px 4px #bf0707, 1px 1px 4px #ad1616;;
+  }
+  .hangman-description {
+    color: #000000;
+    margin-bottom: 20px;
+    font-size: 3rem;
+    font-weight: 400;
+    background: linear-gradient(to bottom, rgba(183, 46, 46, 0.8), rgba(255, 255, 255, 0.6));
+    p {
+      text-align: center;
+      margin: 0;
+    }
+  }
+
+  .hangman-start {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    & > .button {
+      margin: 10px;
+      border: 2px solid #ffffff;
+    }
+  }
+  button:disabled,
+  button[disabled] {
+    border: 1px solid #999999;
+    background-color: #cccccc;
+    color: #666666;
+  }
+  button {
+    width: auto;
+  }
+}
+
+@media (max-width: 500px) {
+  #start-page {
+    .hangman-title {
+      font-size: 4rem;
+      margin-bottom: 20px;
+    }
+    .hangman-description {
+      margin-bottom: 20px;
+      font-size: 2rem;
+      font-weight: 400;
+    }
+  }
+}

@@ -1,0 +1,25 @@
+@font-face {
+    font-family: "OpenSans";
+    src: url("./../../assets/fonts/OpenSans-Regular.ttf");
+  }
+
+$bg-color: #DAD5D3;
+$text-color: #092C70;
+$secondary-color: #092c70;
+.footer {
+    position: relative;
+    width: 100%;
+    height: 40px;
+    display: flex;
+    justify-content: flex-end;
+  align-items: center;
+    padding: 0 1rem;
+    background-color: $bg-color;
+    border-top: 2px solid $secondary-color;
+      p {
+        margin: 0;
+        font-family: "OpenSans", sans-serif;
+        color: $text-color;
+        font-size: 1.1rem;
+      }
+    }

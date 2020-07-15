@@ -1,7 +1,18 @@
-.App {
+.app {
   position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  align-items: stretch;
+  min-width: 320px;
+  min-height: 100vh;
+  box-sizing: border-box;
+
+  *, *:before, *:after {
+    box-sizing: inherit;
+  }
+
+  & > main {
+    flex-grow: 1;
+    margin-top: 60px;
+  }
 }
