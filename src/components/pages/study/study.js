@@ -147,6 +147,7 @@ export class Study extends Component {
         this.context = this.chooseLearnMethod();
         this.audioContext = audioPrefixMap[this.context];
         this.dataForCard = {
+            contextValue: this.context,
             context: this.actualCard[contextMap[this.context]],
             word: this.actualCard.word,
             wordToCompare: this.actualCard.word,
@@ -439,8 +440,15 @@ export class Study extends Component {
                                     {this.settings.showWordTranscription
                                         && <span>{this.dataForCard.transcription}</span>}
                                 </div>
+                                <div className="sentence-translation-helper">
+                                    { <p>{this.actualCard.wordTranslate}</p> }
+                                </div>
                                 <div className="sentence-translation">
-                                    <span>{this.dataForCard.translationContext}</span>
+                                    {' '}
+                                    {this.settings.showSentencesTranslate
+                                    && this.dataForCard.contextValue !== 'showWordTranslate'
+                                    && this.state.isCorrectWord
+                                    && <span>{this.dataForCard.translationContext}</span>}
                                 </div>
                             </div>
                             <div className="learn-content">
