@@ -3,21 +3,22 @@
   justify-content: center;
   flex-direction: column;
   align-items: center;
-  width: 100vw;
-  height: calc(100vh - 100px);
+  width: 100%;
+  min-height: calc(100vh - 100px);
   background-color: rgba(0, 0, 0, 0.5);
   background-image: url('../../../assets/images/sprint_background.jpg');
   background-size: cover;
   background-repeat: no-repeat;
-  background-blend-mode: multiply;  
+  background-blend-mode: multiply;
 }
 
-h1, h2, h3 {
+.sprint h1, .sprint h2, .sprint h3 {
   font-family: 'Literata', serif;
   text-align: center;
 }
 
-p, label, span, button, table, tr, th {
+.sprint p, .sprint label, .sprint span, .sprint button, 
+.sprint table, .sprint tr, .sprint th {
   font-family: 'Open Sans', sans-serif;
 }
 
@@ -29,6 +30,7 @@ p, label, span, button, table, tr, th {
   flex-direction: column;
   align-items: center;  
   width: 400px;
+  margin: 20px 0;
   background-color: #FAEDE7;
   border-radius: 50px;
 }
@@ -91,6 +93,11 @@ p, label, span, button, table, tr, th {
 .splash button {
   margin: 30px 0;
   background-color: green;
+}
+
+.splash button:disabled {
+  background: #dddddd;
+  cursor: default;  
 }
 
 .sprint__start-warning {
@@ -369,7 +376,7 @@ p, label, span, button, table, tr, th {
   align-items: center;
 }
 
-button {
+.sprint button {
   cursor: pointer;
   height: 50px;
   padding: 0 30px;
@@ -426,6 +433,7 @@ button {
   flex-direction: column;
   align-items: center;  
   width: 400px;
+  margin: 20px 0;
   background-color: #FAEDE7;
   border-radius: 50px;
 }
