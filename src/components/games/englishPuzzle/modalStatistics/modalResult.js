@@ -13,6 +13,14 @@ export class ModalResult extends Component {
         };
     }
 
+    componentWillUnmount() {
+        if (audioPlay) {
+            audioPlay.then(() => {
+                audio.pause();
+            });
+        }
+    }
+
     handleCloseModal = () => {
         this.setState((prev) => ({
             isOpenModal: !prev.isOpenModal,
