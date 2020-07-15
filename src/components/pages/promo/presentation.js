@@ -13,7 +13,7 @@ export class Presentation extends Component {
                     <iframe
                         title="presentation"
                         className="presentation__video"
-                        src="https://www.youtube.com/embed/VSW7cSMdKiA"
+                        src="https://www.youtube.com/embed/r-pz91ZVhT0"
                     />
                     <p className="presentation__text">
                         check this out on
