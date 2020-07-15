@@ -24,6 +24,17 @@
   }
 
   &__text {
+    font-size: 20px;
     font-weight: 700;
+    transition: all 0.3s;
+  }
+}
+
+@media (max-width: 639px) {
+  .advantage {
+
+    &__text {
+      font-size: 16px;
+    }
   }
 }

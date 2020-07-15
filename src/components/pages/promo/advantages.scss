@@ -21,9 +21,10 @@
     border-radius: 7px;
     border: 2px solid #092c70;
   }
+
 }
 
-@media (max-width: 699px) {
+@media (max-width: 639px) {
   .promo__advantages {
     &-list {
       grid-template-columns: 1fr;

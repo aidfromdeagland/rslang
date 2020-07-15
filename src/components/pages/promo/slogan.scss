@@ -4,12 +4,14 @@
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
+  transition: all 0.3s;
 
   .slogan__text {
     margin: 0;
     font-size: 28px;
     font-weight: 600;
     text-shadow: 1px 1px 1px #ffffff, -1px -1px 1px #ffffff, 1px -1px 1px #ffffff, -1px 1px 1px #ffffff;
+    transition: all 0.3s;
   }
 
   .slogan__image {
@@ -40,6 +42,7 @@
     .slogan__image {
       width: 225px;
       height: 150px;
+      transition: all 0.3s;
     }
   }
 }
@@ -50,6 +53,7 @@
     .slogan__text {
       font-size: 22px;
       font-weight: 600;
+      transition: all 0.3s;
     }
 
     .slogan__image {

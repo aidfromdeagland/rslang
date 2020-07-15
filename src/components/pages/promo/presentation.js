@@ -8,7 +8,7 @@ export class Presentation extends Component {
                 <div className="content-container">
                     <h2 className="presentation__heading">Still doubt?</h2>
                     <p className="presentation__text">
-                        Just watch the presentation below and click the Register button!
+                        Just watch the presentation below and click the Authentication button!
                     </p>
                     <iframe
                         title="presentation"

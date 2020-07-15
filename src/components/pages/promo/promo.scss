@@ -35,6 +35,7 @@
   display: inline-block;
   color: #092C70;
   font-weight: 700;
+  text-shadow: rgb(255, 255, 255) 1px 1px 1px, rgb(255, 255, 255) -1px -1px 1px, rgb(255, 255, 255) 1px -1px 1px, rgb(255, 255, 255) -1px 1px 1px;
 
   &:first-letter {
     color: #f00002;

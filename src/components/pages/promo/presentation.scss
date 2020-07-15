@@ -2,11 +2,11 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: repeating-linear-gradient(-45deg,
-    rgba(9, 44, 122, 0.75) 0px, rgba(9, 44, 122, 0.75) 7%,
-    rgba(240, 0, 2, 0.75) 7%, rgba(240, 0, 2, 0.75) 7.5%,
+  background: repeating-linear-gradient(135deg,
+    rgba(255, 255, 255, 1) 0px, rgba(255, 255, 255, 1) 7%,
+    rgba(9, 44, 122, 0.75) 7%, rgba(9, 44, 122, 0.75) 7.5%,
     rgba(255, 255, 255, 1) 7.5%, rgba(255, 255, 255, 1) 10%,
-    rgba(240, 0, 2, 0.75) 10%, rgba(240, 0, 2, 0.75) 20%,
+    rgba(9, 44, 122, 0.75) 10%, rgba(9, 44, 122, 0.75) 20%,
     rgba(255, 255, 255, 1) 20%, rgba(255, 255, 255, 1) 20.5%,
     rgba(9, 44, 122, 0.75) 20.5%, rgba(9, 44, 122, 0.75) 21%,
     rgba(255, 255, 255, 1) 21%, rgba(255, 255, 255, 1) 25%
@@ -16,12 +16,29 @@
     margin: 0;
     font-size: 30px;
     color: #092C70;
+    text-shadow: 1px 1px 1px #ffffff, -1px -1px 1px #ffffff, 1px -1px 1px #ffffff, -1px 1px 1px #ffffff;
   }
 
   &__video {
+    border: 2px solid #092c70;
     border-radius: 10px;
     min-width: 300px;
     min-height: 240px;
+  }
+
+  &__text {
+    font-size: 20px;
+    font-weight: 600;
+    text-shadow: 1px 1px 1px #ffffff, -1px -1px 1px #ffffff, 1px -1px 1px #ffffff, -1px 1px 1px #ffffff;
+  }
+}
+
+@media (max-width: 639px) {
+  .presentation {
+
+    &__text {
+      font-size: 16px;
+    }
   }
 }
 
