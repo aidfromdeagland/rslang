@@ -132,11 +132,10 @@ export class Main extends Component {
     }
 
     handleCloseModal = () => {
-        console.log(this.state.settings.optional, this.settings.optional);
         this.setState((prev) => ({
             isOpenModal: !prev.isOpenModal,
             isInvalidSettings: false,
-            settings: this.settings,
+            settings: this.settings ? this.settings : prev.settings,
         }));
     }
 
