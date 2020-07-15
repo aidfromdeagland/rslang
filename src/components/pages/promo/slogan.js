@@ -15,7 +15,7 @@ export class Slogan extends Component {
         return (
             <li className="slogan__item">
                 <img className="slogan__image" src={this.image} alt={defaultAltAttr} />
-                <p className="slogan__text">{this.image}</p>
+                <p className="slogan__text">{this.text}</p>
             </li>
         );
     }

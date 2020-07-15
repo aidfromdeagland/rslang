@@ -11,12 +11,16 @@
   width: 100%;
   display: grid;
   grid-template-columns: 1fr;
-  color: #111111;
+  color: #092C70;
   font-family: Literata, "Open Sans", sans-serif;
 
 
   > * {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     padding: 30px 0;
+    min-height: 66vh;
   }
 }
 

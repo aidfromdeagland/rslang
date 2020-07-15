@@ -10,8 +10,8 @@ export class Promo extends Component {
         return (
             <div className="promo">
                 <Slogans />
-                <Description />
                 <Advantages />
+                <Description />
                 <Presentation />
             </div>
         );
