@@ -17,11 +17,11 @@ export class Presentation extends Component {
                     />
                     <p className="presentation__text">
                         check this out on
-                        <a href="https://github.com/aidfromdeagland/rslang" className="github-link">
-                            <div className="github-icon" />
-                            GitHub
-                        </a>
                     </p>
+                    <a href="https://github.com/aidfromdeagland/rslang" className="github-link">
+                        <div className="github-icon" />
+                        GitHub
+                    </a>
                 </div>
             </section>
         );
