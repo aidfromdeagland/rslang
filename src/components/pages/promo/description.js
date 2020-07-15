@@ -107,7 +107,7 @@ export class Description extends Component {
                         <p className="app-description__text">
                             <span className="app-description__text_code">IS_CORRECT</span>
                             {' '}
-                            - флаг, приавильный ли был дан ответ;
+                            - флаг, правильный ли был дан ответ;
                         </p>
                         <p className="app-description__text">
                             <span className="app-description__text_code">DATE_CHECKPOINT</span>

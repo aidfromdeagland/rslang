@@ -15,6 +15,13 @@ export class Presentation extends Component {
                         className="presentation__video"
                         src="https://www.youtube.com/embed/VSW7cSMdKiA"
                     />
+                    <p className="presentation__text">
+                        check this out on
+                        <a href="https://github.com/aidfromdeagland/rslang" className="github-link">
+                            <div className="github-icon" />
+                            GitHub
+                        </a>
+                    </p>
                 </div>
             </section>
         );

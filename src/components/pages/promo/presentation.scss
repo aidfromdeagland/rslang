@@ -31,7 +31,31 @@
     font-weight: 600;
     text-shadow: 1px 1px 1px #ffffff, -1px -1px 1px #ffffff, 1px -1px 1px #ffffff, -1px 1px 1px #ffffff;
   }
+
+  .github-link {
+    align-self: center;
+    margin-top: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    font-size: 22px;
+    font-weight: 700;
+    color: #f00002;
+
+
+    .github-icon {
+      background-image: url("../../../assets/icons/github-icon-red.png");
+    }
+
+    &:hover .github-icon {
+      background-image: url("../../../assets/icons/github-icon-blue.png");
+    }
+  }
 }
+
+
+
 
 @media (max-width: 639px) {
   .presentation {
