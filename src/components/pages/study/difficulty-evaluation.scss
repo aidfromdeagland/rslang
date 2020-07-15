@@ -1,3 +1,14 @@
+@font-face {
+  font-family: "Literata", "Roboto";
+  src: url("../../../assets/fonts/Literata-Bold.ttf") format("ttf"),
+  url("../../../assets/fonts/Literata-Regular.ttf") format("ttf"),
+  url("../../../assets/fonts/Literata-VariableFont.ttf") format("ttf"),
+  url("../../../assets/fonts/RobotoMono-Bold.ttf") format("ttf"),
+  url("../../../assets/fonts/RobotoMono-Regular.ttf") format("ttf");
+  font-weight: normal;
+  font-style: normal;
+}
+
 .difficulty-evaluation {
   position: absolute;
   z-index: 2;
@@ -5,12 +16,18 @@
   transform: translateX(-50%);
   max-width: 80vw;
   display: flex;
+  font-family: "RobotoMono-Regular", serif;
 
   .difficulty-button {
     width: 130px;
     height: 30px;
     border: 2px solid #092c70;
     color: #000000;
+    font-family: "RobotoMono-Regular", serif;
+    font-size: 20px;
+    font-weight: 600;
+    border-radius: 7px;
+    cursor: pointer;
 
     &_easy {
       background-color: #339900;

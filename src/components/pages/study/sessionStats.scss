@@ -27,6 +27,7 @@
   border-radius: 7px;
   box-shadow: 0 0 7px 3px #092c70;
   transition: all 0.3s;
+  font-family: "RobotoMono-Regular", serif;
 
   &__heading {
     font-size: 36px;
@@ -63,9 +64,16 @@
   }
 
   &__button {
-    margin: 15px 0;
+    width: 130px;
+    height: 30px;
+    border: 2px solid #092c70;
+    color: #ffffff;
+    font-family: "RobotoMono-Regular", serif;
+    font-size: 20px;
+    font-weight: 600;
     background: #092c70;
-    line-height: 1;
+    border-radius: 7px;
+    cursor: pointer;
 
     &:hover {
       background: #0f4ab4;
