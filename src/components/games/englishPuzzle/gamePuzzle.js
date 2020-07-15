@@ -220,6 +220,7 @@ export class GamePuzzle extends Component {
                 isDontKnowBtn: true,
                 isResultBtn: false,
             });
+            this.putSettings(level, page);
         }
         if (isGameWithUserWords) {
             this.setState(() => ({
@@ -233,7 +234,6 @@ export class GamePuzzle extends Component {
         }
         this.results.know = [];
         this.results.dontKnow = [];
-        this.putSettings(level, page);
     }
 
     checkBoxHandle = (prop) => {
@@ -248,15 +248,19 @@ export class GamePuzzle extends Component {
 
     showResults = () => {
         const { level, page } = this.state;
+        const {
+            isGameWithLevels,
+        } = this.props;
         this.setState({ isRoundEnd: true });
         this.addStatisticsData();
-        if (level === 6 && page === 60) {
-            this.putSettings(1, 1);
-        }
-        if (page < 60) {
-            this.putSettings(level, parseFloat(page) + 1);
-        } else {
-            this.putSettings(level + 1, 1);
+        if (isGameWithLevels) {
+            if (level === 6 && page === 60) {
+                this.putSettings(1, 1);
+            } else if (page < 60) {
+                this.putSettings(level, parseFloat(page) + 1);
+            } else {
+                this.putSettings(level + 1, 1);
+            }
         }
     }
 
@@ -268,8 +272,7 @@ export class GamePuzzle extends Component {
         this.setState({ isRoundEnd: false });
         if (level === 6 && page === 60) {
             this.selectLevel(1, 1);
-        }
-        if (page < 60) {
+        } else if (page < 60) {
             this.selectLevel(level, parseFloat(page) + 1);
         } else {
             this.selectLevel(level + 1, 1);
