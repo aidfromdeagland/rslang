@@ -1,0 +1,253 @@
+.audio-call {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 0;
+    min-height: calc(100vh - 100px);
+    span, button {
+        font-family: 'OpenSans', sans-serif;
+        text-align: center;
+    }
+    &_start-page {
+        background-image: url("./../../../assets/images/call.jpg");
+        background-position: center;
+        background-size: cover;
+        background-repeat: no-repeat;
+    }
+    &__word {
+        background-color: rgba(255, 255, 255, 0.6);
+    }
+    &__buttons {
+        margin-top: 20px;
+        display: flex;
+        .audio-call__setting-button {
+            margin-left: 10px;
+            padding: 20px;
+            width: 70px;
+            background-image: url("./../../../assets/icons/settings.svg");
+            background-position: center;
+            background-size: 32px 32px;
+            background-repeat: no-repeat;
+        }
+    }
+    &__button {
+        width: auto;
+        height: auto;
+        font-weight: bold;
+        padding: 10px 20px;
+        font-size: 20px;
+        border-radius: 7px;
+        color: #ffffff;
+        background-color: #092C70;
+        box-shadow: 0 0 10px rgba(0,0,0,0.5);
+        border: none;
+        outline: none;
+        user-select: none;
+        cursor: pointer;
+        @media (hover: hover) {
+            &:hover {
+                background-color: #0F4AB4;
+            }
+        }
+    }
+    .list {
+        margin: 5px 15px;
+        font-size: 20px;
+    }
+    &__header {
+        color: #0F4AB4;
+        text-shadow: 1px 1px 4px #ffffff, 1px 1px 4px #ffffff;
+        font-size: 5rem;
+        text-align: center;
+        user-select: none;
+    }
+    &__start-game {
+        padding: 20px;
+        font-size: 32px;
+    }
+    &__full-description {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(to bottom, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.4));
+        font-size: 2rem;
+        padding: 10px;
+        @media (max-width: 500px) {
+            font-size: 1.5rem;
+        }
+    }
+    &__levels {
+        display: flex;
+        margin-bottom: 10px;
+    }
+    &__dinamic {
+        display: block;
+        width: 94px;
+        height: 94px;
+        background: url("./../../../assets/icons/dynamicPlaying.svg") center no-repeat;
+        background-size: 64px 64px;
+        background-position: center;
+        background-color: rgba(0, 0, 0, 0.2);
+        box-shadow: 0 0 10px rgba(0,0,0,0.5);
+        border-radius: 50%;
+        outline: none;
+        cursor: pointer;
+        transition: background-color 0.5s ease-in-out;
+        @media (hover: hover) {
+            &:hover {
+                background-color: rgba($color: #0F4AB4, $alpha: 0.2);
+            }
+        }
+    }
+    &__word-image {
+        display: block;
+        width: 128px;
+        height: 105px;
+        opacity: 0;
+        background-size: cover;
+        outline: none;
+        border: 2px solid #0F4AB4;
+        border-radius: 50%;
+        background-repeat: no-repeat;
+        &_show {
+        height: 128px;
+            opacity: 1;
+        }
+    }
+    &__quest {
+        display: flex;
+        align-items: center;
+        .audio-call__quest-word {
+            display: none;
+        }
+    }
+    &__quest_show {
+        .audio-call__dinamic {
+            width: 40px;
+            height: 40px;
+            background-size: 32px 32px;
+            background-position: center;
+        }
+        .audio-call__quest-word {
+            display: inline-block;
+            margin: 10px;
+            padding: 5px;
+            border-radius: 5px;
+            font-size: 30px;
+            color: #0F4AB4;
+        }
+    }
+    &__words {
+        margin: 40px 0;
+        @media (max-width: 750px) {
+            display: flex;
+            flex-direction: column;
+            .audio-call__word {
+                margin: 5px;
+            }
+        }
+        &_column {
+            display: flex;
+            flex-direction: column;
+            .audio-call__word {
+                margin: 5px;
+            }
+        }
+    }
+    &__word {
+        padding: 15px;
+        margin: 0 15px;
+        border-radius: 7px;
+        display: inline;
+        cursor: pointer;
+        box-shadow: 0 0 10px rgba(0,0,0,0.5);
+        transition: all 0.5s ease-in-out;
+        outline: none;
+        user-select: none;
+        @media (hover: hover) {
+            &:hover {
+                background-color: rgba($color: #0F4AB4, $alpha: 0.2);
+            }
+        }
+        .word__number {
+            margin-right: 10px;
+            color: #777777;
+            width: 23px;
+            display: inline-block;
+        }
+        .word__text {
+            outline: none;
+            font-weight: bold;
+        }
+    }
+    &__word_excess {
+        background-color: transparent;
+    }
+    &__word_correct {
+        background-color: rgba($color: #00F102, $alpha: 0.4);
+        .word__number {
+            color: transparent;
+            background: url("./../../../assets/icons/yes.svg") center no-repeat;
+            background-size: contain;
+        }
+    }
+    &__word_error {
+        background-color: rgba($color: #F10002, $alpha: 0.4);
+        .word__number {
+            color: transparent;
+            background: url("./../../../assets/icons/no.svg") center no-repeat;
+            background-size: contain;
+        }
+    }
+    &__result {
+        .audio-call__button {
+            width: 200px;
+            margin: 0 calc(50% - 100px);
+        }
+    }
+    &__result-list {
+        display: flex;
+        flex-direction: column;
+        align-items: end;
+        margin-bottom: 30px;
+    }
+    &__result-word {
+        display: flex;
+        align-items: center;
+        .audio-call__dinamic {
+            box-shadow: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 0;
+            background-size: contain;
+            background-color: #ffffff;
+        }
+        .result-word__word {
+            margin-left: 10px;
+        }
+        .result-word__separator {
+            margin: 10px 20px;
+        }
+        .result-word__translate {
+            color: #777777;
+        }
+    }
+    .result-subheader__count {
+        padding: 5px;
+        border-radius: 30%;
+        width: 45px;
+        display: inline-block;
+        text-align: center;
+        margin-left: 10px;
+        color: #ffffff;
+        font-weight: bold;
+        &_error{
+            background-color: #F10002;
+        }
+        &_success{
+            background-color: #00F102;
+        }
+    }
+}

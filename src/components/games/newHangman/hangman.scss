@@ -1,0 +1,273 @@
+@font-face {
+  font-family: "Literata", "Roboto";
+  src: url("../../../assets/fonts/Literata-Bold.ttf") format("ttf"),
+    url("../../../assets/fonts/Literata-Regular.ttf") format("ttf"),
+    url("../../../assets/fonts/Literata-VariableFont.ttf") format("ttf"),
+    url("../../../assets/fonts/RobotoMono-Bold.ttf") format("ttf"),
+    url("../../../assets/fonts/RobotoMono-Regular.ttf") format("ttf");
+  font-weight: normal;
+  font-style: normal;
+}
+
+.hangman {
+  background: url("../../../assets/images/hangman/hangman-bg.jpeg");
+  padding: 0 10px;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  width: 100%;
+  min-height: calc(100vh - 100px);
+  flex-grow: 1;
+  justify-content: center;
+  align-items: center;
+  user-select: none;
+  font-family: "RobotoMono", sans-serif;
+  padding-bottom: 10px;
+}
+
+.hangman-container {
+  margin-top: 30px;
+  .hangman_header {
+    position: fixed;
+    z-index: 2;
+    top: 60px;
+    left: 0;
+    height: 60px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(to top, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7));
+    border-bottom: 2px solid #000000;
+    .dropdown__options_container {
+      padding-right: 50px;
+      display: flex;
+      align-items: center;
+      @media (max-width: 710px) {
+        padding-right: 3px;
+      }
+    }
+    @media (max-width: 710px) {
+      flex-direction: column;
+      height: 140px;
+      position: static;
+    }
+    @media (max-width: 420px) {
+      flex-direction: column;
+      height: 200px;
+    }
+
+    .select-level {
+      width: auto;
+    }
+  }
+
+  .hangman-content_container {
+    padding-top: 50px;
+  }
+
+  .hangman-content {
+    padding: 10px;
+    background: #ffffffdb;
+    box-shadow: 0 3px 0.5rem #b7a8a8;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .word-task {
+    font-size: 28px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #066c99;
+  }
+
+  .main-image-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0;
+    img {
+      width: 36%;
+    }
+  }
+
+  .game-word {
+    display: flex;
+    justify-content: center;
+    span {
+      text-align: center;
+      width: 27px;
+      margin: 0 7px;
+      font-size: 35px;
+      border-bottom: 1px solid #333;
+      @media (max-width: 420px) {
+        width: 13px;
+        font-size: 19px;
+      }
+      &:active,
+      &:focus {
+        outline: none !important;
+      }
+    }
+  }
+
+  .game-hint {
+    margin: 20px 0;
+    text-align: center;
+    color: #999;
+    font-size: 15px;
+    height: 123px;
+    line-height: 123px;
+  }
+
+  .game-over {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 10px auto;
+    min-width: 280px;
+    line-height: 1.6;
+    padding: 8px;
+    background-color: #f5f5f5;
+    border-radius: 10px;
+    &.game-over-correct {
+      background-color: #e5f7d6;
+    }
+    .correct-result {
+      color: #480;
+    }
+    &.game-over-incorrect {
+      background-color: #ffebe4;
+    }
+    .incorrect-result {
+      color: #b12525;
+    }
+    .correct-word {
+      display: contents;
+      margin-left: 10px;
+      font-size: 20px;
+      font-weight: 700;
+    }
+    .button {
+      width: auto;
+    }
+  }
+
+  .keypad-container {
+    max-width: 768px;
+    margin: 0 auto 15px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    .knob {
+      background-color: white;
+      margin: 5px;
+      display: inline-block;
+      padding: 13px 0;
+      color: #066c99;
+      border: 1px solid;
+      border-color: #ddd #ccc #ccc #ddd;
+      border-radius: 3px;
+      white-space: nowrap;
+      background-clip: padding-box;
+      cursor: pointer;
+      &:hover {
+        color: #066c99;
+        border-color: #ccc;
+        background-color: #e4f5fe;
+      }
+    }
+    .knob-letter {
+      width: 45px;
+      padding-left: 0;
+      padding-right: 0;
+      text-align: center;
+      text-transform: uppercase;
+    }
+    .knob-right {
+      color: #480;
+      background-color: #c1ff8d;
+      &:hover {
+        color: #480;
+        border-color: #ddd #ccc #ccc #ddd;
+        background-color: #c1ff8d;
+      }
+    }
+    .knob-wrong {
+      color: #b12525;
+      background-color: #fbc2af;
+      &:hover {
+        color: #b12525;
+        border-color: #ddd #ccc #ccc #ddd;
+        background-color: #fbc2af;
+      }
+    }
+  }
+
+  .progress-bar-game {
+    width: 100%;
+    position: relative;
+    height: 0.25rem;
+    background-color: #dcdcdc;
+    border-radius: 0.125rem;
+    box-shadow: 0 3px 0.5rem #000000;
+    margin-bottom: 20px;
+    .progress-percent-game {
+      border-radius: 0.125rem;
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 0.25rem;
+      width: 0;
+      transition: width 200ms ease;
+      z-index: 10;
+      background-color: #092c70;
+    }
+  }
+
+  .buttons-block {
+    background-color: #c0c3c5;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 9px;
+    border-radius: 5px;
+    .dynamic-btn {
+      background-image: url(../../../assets/icons/dynamic.svg);
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: contain;
+      padding: 0;
+      border: 0;
+      background-color: #c0c3c5;
+      margin: 5px 0;
+      margin-right: 20px;
+      width: 30px;
+      height: 30px;
+      margin-left: auto;
+      height: 60px;
+      &.playing {
+        background-image: url(../../../assets/icons/dynamicPlaying.svg);
+      }
+      &:hover {
+        cursor: pointer;
+      }
+      &:active,
+      &:focus {
+        outline: none !important;
+      }
+    }
+  }
+
+  .button {
+    width: auto;
+  }
+}

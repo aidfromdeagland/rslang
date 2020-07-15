@@ -1,0 +1,69 @@
+.hangman_header {
+  .mainmenubtn {
+    background: #ffffff;
+    font-size: 12px;
+    color: #092c70;
+    width: 50px;
+    padding: 0;
+    padding-left: 3px;
+    padding-right: 20px;
+    text-align: left;
+    &:hover {
+      background-color: #0f4ab4;
+      color: #ffffff;
+    }
+  }
+  .dropdown {
+    position: relative;
+    display: inline-block;
+    margin: 0 10px;
+    &::after {
+      position: absolute;
+      top: 50%;
+      right: 14px;
+      @media (max-width: 397px) {
+        right: 50%;
+      }
+      content: "";
+      background: url("https://image.flaticon.com/icons/svg/271/271210.svg");
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: 50%;
+      height: 16px;
+      width: 16px;
+      color: #f5f6fa;
+      transform: translateY(-50%);
+      transition: all 0.4s;
+      pointer-events: none;
+    }
+    &.open::after {
+      transform: translateY(-50%) rotate(180deg);
+    }
+  }
+  .dropdown-child {
+    background-color: black;
+    position: absolute;
+    z-index: 100;
+    max-height: 220px;
+    overflow-y: scroll;
+    right: 0;
+    width: 75px;
+    border-radius: 5px;
+    border: 1px solid #092c70;
+  }
+  .dropdown-child div {
+    color: white;
+    padding: 20px;
+    text-decoration: none;
+    display: block;
+    text-align: center;
+    background-color: #ffffff;
+    color: #092c70;
+    border-bottom: 1px solid;
+    &:hover {
+      cursor: pointer;
+      background-color: #0f4ab4;
+      color: #ffffff;
+    }
+  }
+}

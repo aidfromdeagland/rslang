@@ -1,0 +1,69 @@
+@font-face {
+  font-family: "Literata", "Roboto";
+  src: url("../../../assets/fonts/Literata-Bold.ttf") format("ttf"),
+  url("../../../assets/fonts/Literata-Regular.ttf") format("ttf"),
+  url("../../../assets/fonts/Literata-VariableFont.ttf") format("ttf"),
+  url("../../../assets/fonts/RobotoMono-Bold.ttf") format("ttf"),
+  url("../../../assets/fonts/RobotoMono-Regular.ttf") format("ttf");
+  font-weight: normal;
+  font-style: normal;
+}
+
+.study-info {
+  position: fixed;
+  z-index: 5;
+  left: 50vw;
+  top: 50vh;
+  transform: translate(-50%, -50%);
+  width: 40vw;
+  padding: 5vw;
+  max-width: 1020px;
+  min-width: 500px;
+  min-height: 40vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  background: #FAEDE7;
+  border-radius: 7px;
+  box-shadow: 0 0 7px 3px #092c70;
+  transition: all 0.3s;
+  font-family: "RobotoMono-Regular", serif;
+
+  &__message {
+    font-size: 24px;
+    text-align: center;
+    font-weight: 700;
+  }
+
+  &__button {
+    margin: 15px 0;
+    width: 120px;
+    height: 60px;
+    padding: 0;
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1;
+    color: #ffffff;
+    background-color: #092c70;
+    text-decoration: none;
+    cursor: pointer;
+    font-family: "RobotoMono-Regular", serif;
+    border-radius: 7px;
+    border: 2px solid #092c70;
+
+
+    &:hover {
+      background: #0f4ab4;
+    }
+  }
+
+
+}
+
+@media (max-width: 639px) {
+  .study-info {
+    width: 90vw;
+    min-width: 300px;
+  }
+}

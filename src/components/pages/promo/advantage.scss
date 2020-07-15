@@ -1,0 +1,40 @@
+.advantage {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 5px;
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 7px;
+  border: 2px solid #092c70;
+
+
+  &__image {
+    width: 50px;
+    height: 50px;
+  }
+
+  &__header {
+
+  }
+
+  &__heading {
+    margin: 0;
+    text-transform: uppercase;
+    color: #092C70;
+  }
+
+  &__text {
+    font-size: 20px;
+    font-weight: 700;
+    transition: all 0.3s;
+  }
+}
+
+@media (max-width: 639px) {
+  .advantage {
+
+    &__text {
+      font-size: 16px;
+    }
+  }
+}

@@ -1,0 +1,93 @@
+@font-face {
+  font-family: "Literata", "Roboto";
+  src: url("../../../assets/fonts/Literata-Bold.ttf") format("ttf"),
+  url("../../../assets/fonts/Literata-Regular.ttf") format("ttf"),
+  url("../../../assets/fonts/Literata-VariableFont.ttf") format("ttf"),
+  url("../../../assets/fonts/RobotoMono-Bold.ttf") format("ttf"),
+  url("../../../assets/fonts/RobotoMono-Regular.ttf") format("ttf");
+  font-weight: normal;
+  font-style: normal;
+}
+
+.progress-container {
+  font-family: "RobotoMono-Regular", serif;
+  font-size: 25px;
+  line-height: 34px;
+  font-weight: 400;
+  color: #000000;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  padding: 50px 60px;
+  border-radius: 5px;
+
+  .progress-container_progress {
+    padding-right: 50px;
+    @media (max-width: 1030px) {
+      width: 100%;
+      margin-bottom: 50px;
+      padding-right: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .learned-words,
+    .need-words {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 30px;
+      .text {
+        margin-right: 30px;
+        @media (max-width: 1020px) {
+          margin-bottom: 10px;
+        }
+        @media (max-width: 600px) {
+          margin-right: 0;
+        }
+      }
+      @media (max-width: 600px) {
+        flex-direction: column;
+      }
+    }
+  }
+  .progress-container_level {
+    width: 30%;
+    .level-rank {
+      margin-bottom: 20px;
+    }
+    @media (max-width: 1020px) {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+  @media (max-width: 1020px) {
+    justify-content: center;
+  }
+  @media (max-width: 700px) {
+    padding: 10px 10px;
+  }
+}
+
+.progress-bar {
+  box-sizing: border-box;
+  position: relative;
+  height: 10px;
+  border-radius: 5px;
+  border: 2px solid #f00002;
+  width: 180px;
+  z-index: 5;
+  .progress-percent {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 0;
+    transition: width 200ms ease;
+    z-index: 10;
+    background-color: #092c70;
+  }
+}

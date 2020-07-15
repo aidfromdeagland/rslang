@@ -1,0 +1,45 @@
+@font-face {
+	font-family: 'icomoon';
+  src:url('../../assets/fonts/icomoon.woff') format('woff');
+}
+
+@keyframes anim-rotate {
+  0% {
+    transform: rotate(0);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.spinner {
+  font-family: 'icomoon', sans-serif;
+  display: inline-block;
+  font-size: 50px;
+  height: 50px;
+  line-height: 1;
+  margin: 10px;
+  animation: anim-rotate 2s infinite linear;
+  color: #092C70;
+  text-shadow: 0 0 10px rgba(200, 200, 200, 0.3);
+}
+
+.spinner::before {
+  content: "\e004";
+}
+
+.spinner--steps {
+  animation: anim-rotate 1s infinite steps(8);
+}
+
+.spinner--steps2 {
+  animation: anim-rotate 1s infinite steps(12);
+}
+
+.spinner_centered {
+  position: fixed;
+  z-index: 9999;
+  left: calc(50vw - 25px);
+  top: calc(50vh - 25px);
+}

@@ -1,0 +1,190 @@
+@font-face {
+  font-family: "Literata", "Roboto";
+  src: url("../../../assets/fonts/Literata-Bold.ttf") format("ttf"),
+  url("../../../assets/fonts/Literata-Regular.ttf") format("ttf"),
+  url("../../../assets/fonts/Literata-VariableFont.ttf") format("ttf"),
+  url("../../../assets/fonts/RobotoMono-Bold.ttf") format("ttf"),
+  url("../../../assets/fonts/RobotoMono-Regular.ttf") format("ttf");
+  font-weight: normal;
+  font-style: normal;
+}
+
+.modal-study {
+  position: fixed;
+  width: 320px;
+  max-height: calc(100vh - 50px);
+  top: 10px;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1050;
+  display: flex;
+  flex-direction: column;
+  background-color: #faede7;
+  justify-content:center ;
+  box-shadow: 0 0 3px 2px #092c70;
+  border-radius: 3px;
+  font-family: "RobotoMono-Regular", serif;
+
+  .modal-study-dialog {
+    position: relative;
+    height: 100%;
+    width: auto;
+  }
+
+  .modal-study-body {
+    overflow-y: auto;
+    max-height: calc(100vh - 190px);
+    border-bottom: 2px solid #092c70;
+    font-family: "RobotoMono-Regular", serif;
+  }
+
+  .modal-study-close {
+    float: right;
+    margin: 0;
+    width: 60px;
+    height: 40px;
+    padding: 0;
+    font-size: 36px;
+    font-weight: 700;
+    line-height: 1;
+    color: #ffffff;
+    background-color: #092c70;
+    text-decoration: none;
+    cursor: pointer;
+    font-family: "RobotoMono-Regular", serif;
+    border-radius: 7px;
+    border: 2px solid #092c70;
+  }
+
+  .modal-study-close:focus,
+  .modal-study-close:hover {
+    color: #f00002;
+    text-decoration: none;
+  }
+
+  .counter-control {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    margin: 0;
+    background-color: #092c70;
+    font-family: "RobotoMono-Regular", serif;
+    font-size: 20px;
+    font-weight: 600;
+    border-radius: 7px;
+    cursor: pointer;
+    border: 2px solid #092c70;
+
+    &_plus {
+      color: #ffffff;
+    }
+
+    &_minus {
+      color: #f00002;
+    }
+
+    &:hover {
+      background-color: #0f4Ab4;
+    }
+  }
+
+  .modal-study-content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background-clip: padding-box;
+    border-radius: 0.3rem;
+    outline: 0;
+    background-color: #faede7;
+  }
+
+  .modal-study-header {
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px;
+    box-shadow: 0 3px 3px 0 #092c70;
+  }
+
+  .modal-study-title {
+    margin-top: 0;
+    margin-bottom: 0;
+    line-height: 1.5;
+    font-size: 1.25rem;
+    font-weight: 500;
+  }
+
+  .modal-study-body {
+    position: relative;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    .number-words-cards {
+      width: 100%;
+      display: flex;
+      justify-content: space-around;
+      margin: 20px 0;
+      input {
+        width: 50px;
+        height: 30px;
+        border-radius: 7px;
+        text-align: center;
+        font-size: 18px;
+        font-weight: 700;
+      }
+      .number-words {
+        width: 40%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .number-cards {
+        width: 40%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+  }
+
+  .close-modal-ok {
+    box-sizing: border-box;
+    width: 50%;
+    align-self: center;
+    height: 50px;
+    background: #092c70;
+    border: none !important;
+    border-radius: 7px;
+    font-family: "OpenSans", sans-serif;
+    font-weight: bold;
+    padding: 10px;
+    cursor: pointer;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 20px;
+    line-height: 27px;
+    color: #ffffff;
+    &:hover {
+      cursor: pointer;
+      background-color: #0F4AB4;
+    }
+    &:active, &:focus {
+      outline: none !important;
+    }
+  }
+
+  input[type="number"]::-webkit-outer-spin-button,
+  input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+    opacity: 1;
+  }
+
+}
+
+.modal-study:target {
+  opacity: 1;
+  pointer-events: auto;
+  overflow-y: auto;
+}
+

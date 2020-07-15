@@ -1,0 +1,69 @@
+.presentation {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: repeating-linear-gradient(135deg,
+    rgba(255, 255, 255, 1) 0px, rgba(255, 255, 255, 1) 7%,
+    rgba(9, 44, 122, 0.75) 7%, rgba(9, 44, 122, 0.75) 7.5%,
+    rgba(255, 255, 255, 1) 7.5%, rgba(255, 255, 255, 1) 10%,
+    rgba(9, 44, 122, 0.75) 10%, rgba(9, 44, 122, 0.75) 20%,
+    rgba(255, 255, 255, 1) 20%, rgba(255, 255, 255, 1) 20.5%,
+    rgba(9, 44, 122, 0.75) 20.5%, rgba(9, 44, 122, 0.75) 21%,
+    rgba(255, 255, 255, 1) 21%, rgba(255, 255, 255, 1) 25%
+  );
+
+  &__heading {
+    margin: 0;
+    font-size: 30px;
+    color: #092C70;
+    text-shadow: 1px 1px 1px #ffffff, -1px -1px 1px #ffffff, 1px -1px 1px #ffffff, -1px 1px 1px #ffffff;
+  }
+
+  &__video {
+    border: 2px solid #092c70;
+    border-radius: 10px;
+    min-width: 300px;
+    min-height: 240px;
+  }
+
+  &__text {
+    font-size: 20px;
+    font-weight: 600;
+    text-shadow: 1px 1px 1px #ffffff, -1px -1px 1px #ffffff, 1px -1px 1px #ffffff, -1px 1px 1px #ffffff;
+  }
+
+  .github-link {
+    align-self: center;
+    margin-top: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    font-size: 22px;
+    font-weight: 700;
+    color: #f00002;
+
+
+    .github-icon {
+      background-image: url("../../../assets/icons/github-icon-red.png");
+    }
+
+    &:hover .github-icon {
+      background-image: url("../../../assets/icons/github-icon-blue.png");
+    }
+  }
+}
+
+
+
+
+@media (max-width: 639px) {
+  .presentation {
+
+    &__text {
+      font-size: 16px;
+    }
+  }
+}
+
+

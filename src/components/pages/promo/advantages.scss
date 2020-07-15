@@ -1,0 +1,34 @@
+.promo__advantages {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-bottom: 2px solid #092C70;
+
+  &-heading {
+    margin: 0;
+    font-size: 30px;
+    color: #092C70;
+  }
+
+  &-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    padding: 10px;
+    list-style: none;
+    background: url("../../../assets/images/promo__uk-flag-waving.gif") center no-repeat;
+    background-size: cover;
+    border-radius: 7px;
+    border: 2px solid #092c70;
+  }
+
+}
+
+@media (max-width: 639px) {
+  .promo__advantages {
+    &-list {
+      grid-template-columns: 1fr;
+    }
+  }
+}
+

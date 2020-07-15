@@ -1,0 +1,101 @@
+@font-face {
+  font-family: "OpenSans";
+  src: url("./../../assets/fonts/OpenSans-Bold.ttf");
+}
+
+
+$bg-color: #faede7;
+$main-color: #e08d9d;
+$text-color: #111111;
+$secondary-color: #092c70;
+
+.navigation {
+  &__list {
+    background: $bg-color;
+    width: 17rem;
+    position: fixed;
+    z-index: 10;
+    left: -1000px;
+    top: 0;
+    list-style: none;
+    margin: 0;
+    padding: 40px 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    transition: all 0.5s ease-in-out;
+    box-shadow: 0 0 8px 1px $secondary-color;
+
+    &-showed {
+      left: 0;
+    }
+
+    li {
+      display: flex;
+    }
+
+    .navigation__link {
+      text-decoration: none;
+      color: $text-color;
+      font-family: "OpenSans", sans-serif;
+      font-size: 20px;
+      text-transform: uppercase;
+      padding: 1rem 2.5rem;
+      display: flex;
+      align-items: center;
+      width: 100%;
+      cursor: pointer;
+
+      &:hover {
+        background-color: #fff;
+      }
+
+      &_active {
+        color: #ffffff;
+        background-color: #092c70;
+        cursor: default;
+
+        &:hover {
+          background-color: #092c70;
+        }
+      }
+
+      &_disabled {
+        cursor: default;
+        pointer-events: none;
+        filter: grayscale(100%);
+      }
+    }
+  }
+
+  &__icon {
+    background-color: $main-color;
+    width: 33px;
+    height: 33px;
+    background-size: 21px 21px;
+    background-repeat: no-repeat;
+    background-position: center;
+    margin-right: 1rem;
+    border-radius: 50%;
+
+    &_main {
+      background-image: url("./../../assets/icons/main.svg");
+    }
+    &_vocabulary {
+      background-image: url("./../../assets/icons/vocabulary.svg");
+    }
+    &_mini-games {
+      background-image: url("./../../assets/icons/minigames.svg");
+    }
+    &_statistics {
+      background-image: url("./../../assets/icons/statistics.svg");
+    }
+    &_promo {
+      background-image: url("./../../assets/icons/promo.svg");
+    }
+    &_about-team {
+      background-image: url("./../../assets/icons/aboutteam.svg");
+    }
+  }
+}

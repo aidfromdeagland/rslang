@@ -1,0 +1,43 @@
+@font-face {
+  font-family: "Literata";
+  src: url("../../../assets/fonts/Literata-Bold.ttf") format("ttf"),
+  url("../../../assets/fonts/Literata-Regular.ttf") format("ttf"),
+  url("../../../assets/fonts/Literata-VariableFont.ttf") format("ttf");
+  font-weight: normal;
+  font-style: normal;
+}
+
+.promo {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr;
+  color: #092C70;
+  font-family: Literata, "Open Sans", sans-serif;
+
+
+  > * {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 30px 0;
+    min-height: 66vh;
+  }
+}
+
+.content-container {
+  display: flex;
+  flex-direction: column;
+  max-width: 1020px;
+  text-align: center;
+}
+
+.brand {
+  display: inline-block;
+  color: #092C70;
+  font-weight: 700;
+  text-shadow: rgb(255, 255, 255) 1px 1px 1px, rgb(255, 255, 255) -1px -1px 1px, rgb(255, 255, 255) 1px -1px 1px, rgb(255, 255, 255) -1px 1px 1px;
+
+  &:first-letter {
+    color: #f00002;
+  }
+}
