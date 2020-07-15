@@ -1,3 +1,14 @@
+@font-face {
+  font-family: "Literata", "Roboto";
+  src: url("../../../assets/fonts/Literata-Bold.ttf") format("ttf"),
+  url("../../../assets/fonts/Literata-Regular.ttf") format("ttf"),
+  url("../../../assets/fonts/Literata-VariableFont.ttf") format("ttf"),
+  url("../../../assets/fonts/RobotoMono-Bold.ttf") format("ttf"),
+  url("../../../assets/fonts/RobotoMono-Regular.ttf") format("ttf");
+  font-weight: normal;
+  font-style: normal;
+}
+
 .study-info {
   position: fixed;
   z-index: 5;
@@ -17,6 +28,7 @@
   border-radius: 7px;
   box-shadow: 0 0 7px 3px #092c70;
   transition: all 0.3s;
+  font-family: "RobotoMono-Regular", serif;
 
   &__message {
     font-size: 24px;
@@ -26,9 +38,20 @@
 
   &__button {
     margin: 15px 0;
-    background: #092c70;
-    font-size: 24px;
+    width: 120px;
+    height: 60px;
+    padding: 0;
+    font-size: 28px;
+    font-weight: 700;
     line-height: 1;
+    color: #ffffff;
+    background-color: #092c70;
+    text-decoration: none;
+    cursor: pointer;
+    font-family: "RobotoMono-Regular", serif;
+    border-radius: 7px;
+    border: 2px solid #092c70;
+
 
     &:hover {
       background: #0f4ab4;
