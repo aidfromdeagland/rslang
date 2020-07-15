@@ -202,6 +202,7 @@ export class GameSpeakit extends Component {
                 isClickedCard: false,
                 totalSpokenWords: 0,
             }, this.handleListening);
+            this.putSettings(level, page);
         }
         if (isGameWithUserWords) {
             this.setState(() => ({
@@ -213,7 +214,6 @@ export class GameSpeakit extends Component {
                 totalSpokenWords: 0,
             }), this.handleListening);
         }
-        this.putSettings(level, page);
     }
 
     handleClickCard = (index, audioUrl, imageUrl, translate) => {
@@ -310,6 +310,9 @@ export class GameSpeakit extends Component {
 
     handleRoundEnd = () => {
         const { level, page } = this.state;
+        const {
+            isGameWithLevels,
+        } = this.props;
         recognition.stop();
         recognition.onend = () => {
             recognition.stop();
@@ -319,6 +322,15 @@ export class GameSpeakit extends Component {
             listening: false,
         });
         this.addStatisticsData(level, page);
+        if (isGameWithLevels) {
+            if (level === 6 && page === 60) {
+                this.putSettings(1, 1);
+            } else if (page < 60) {
+                this.putSettings(level, parseFloat(page) + 1);
+            } else {
+                this.putSettings(level + 1, 1);
+            }
+        }
     }
 
     handleByNextRound = () => {
@@ -328,8 +340,7 @@ export class GameSpeakit extends Component {
         } = this.state;
         if (level === 6 && page === 60) {
             this.selectLevel(1, 1);
-        }
-        if (page < 60) {
+        } else if (page < 60) {
             this.selectLevel(level, parseFloat(page) + 1);
         } else {
             this.selectLevel(level + 1, 1);
