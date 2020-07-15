@@ -15,6 +15,15 @@ export class ButtonsBlock extends Component {
         };
     }
 
+
+    componentWillUnmount() {
+        if (audioPlay) {
+            audioPlay.then(() => {
+                audio.pause();
+            });
+        }
+    }
+
     handleCheck = () => {
         const {
             correctSentence,
