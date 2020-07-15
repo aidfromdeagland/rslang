@@ -14,8 +14,8 @@ https://rslang-team31-aidfromdeagland.netlify.app/
      -  accesible and easy to use
      -  settings for state control
   -  react-table (statistics page)
-    -  easy to use
-    -  good documentation
+     -  easy to use
+     -  good documentation
   -  react-chartjs-2 (statistics page)
       -  easy to use
       -  good documentation
