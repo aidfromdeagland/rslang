@@ -1,15 +1,20 @@
 .advantage {
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  padding: 10px;
-  border-radius: 5px;
-  background-color: #fAedE7;
-  box-shadow: 5px 9px 30px 0 rgba(0, 0, 0, 0.19);
+  justify-content: center;
+  padding: 5px;
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 7px;
+  border: 2px solid #092c70;
+
 
   &__image {
     width: 50px;
     height: 50px;
+  }
+
+  &__header {
+
   }
 
   &__heading {
@@ -19,6 +24,17 @@
   }
 
   &__text {
+    font-size: 20px;
+    font-weight: 700;
+    transition: all 0.3s;
+  }
+}
 
+@media (max-width: 639px) {
+  .advantage {
+
+    &__text {
+      font-size: 16px;
+    }
   }
 }

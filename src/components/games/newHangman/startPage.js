@@ -59,11 +59,13 @@ export class StartPage extends Component {
                 <div id="start-page">
                     <div className="hangman-title">Hangman</div>
                     <div className="hangman-description">
-                        <p>Guess the hidden word in English by selecting the letters of which it consists.</p>
+                        <p>Guess the hidden word by selecting the letters it consists of</p>
                         <br />
-                        <p>You can select letters using the keyboard or mouse.</p>
+                        <p>You can select letters using the keyboard or mouse</p>
                         <br />
                         <p>If you have already learned 10 or more words, you can use them in the game mode with learned words</p>
+                        <br />
+                        <p>Make sure that you have english language activated for you keyboard</p>
                     </div>
                     <div className="hangman-start">
                         <Button
