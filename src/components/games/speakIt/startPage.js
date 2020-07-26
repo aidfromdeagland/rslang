@@ -5,6 +5,8 @@ import { WordService } from '../../../services/wordServices';
 import { GameSpeakit } from './gameSpeakit';
 import { Spinner } from '../../shared/spinner';
 
+const isRegintitionAvailable = window.SpeechRecognition || window.webkitSpeechRecognition;
+
 export class StartPage extends Component {
     constructor(props) {
         super(props);
@@ -46,6 +48,9 @@ export class StartPage extends Component {
             isStart,
             isChecked,
         } = this.state;
+        if (!isRegintitionAvailable) {
+            return <h2 className="speakit__no-recognition">Please, use desktop Google Chrome browser to play this mini game</h2>;
+        }
         if (isStart) {
             return (
                 <GameSpeakit
@@ -61,9 +66,17 @@ export class StartPage extends Component {
                     <div className="speakit-description">
                         <p>Click on the words to hear their sound</p>
                         <br />
-                        <p>Press the button and say the words to check your pronunciation. Select difficulty levels in the menu.</p>
+                        <p>
+                            Press the button and say the words to check your pronunciation.
+                            {' '}
+                            Select difficulty levels in the menu.
+                        </p>
                         <br />
-                        <p>If you have already learned 10 or more words, you can use them in the game mode with learned words</p>
+                        <p>
+                            If you have already learned 10 or more words,
+                            {' '}
+                            you can use them in the game mode with learned words
+                        </p>
                     </div>
                     <div className="speakit-start">
                         <Button

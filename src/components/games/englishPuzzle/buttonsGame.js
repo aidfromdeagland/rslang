@@ -15,7 +15,6 @@ export class ButtonsBlock extends Component {
         };
     }
 
-
     componentWillUnmount() {
         if (audioPlay) {
             audioPlay.then(() => {
@@ -59,7 +58,11 @@ export class ButtonsBlock extends Component {
             }
             addToResults('know', correctSentence, urlAudio);
             if (isGameWithUserWords) {
-                const result = getMemoInfoMiniGames(true, wordForGameRound.userWord.optional.repeats, wordForGameRound.userWord.optional.nextDate);
+                const result = getMemoInfoMiniGames(
+                    true,
+                    wordForGameRound.userWord.optional.repeats,
+                    wordForGameRound.userWord.optional.nextDate,
+                );
                 const wordPut = { ...wordForGameRound };
                 wordPut.userWord.optional.repeats = result.repetitions;
                 wordPut.userWord.optional.prevDate = result.prevRepetitionDate;
@@ -110,6 +113,7 @@ export class ButtonsBlock extends Component {
         correctSentence.split(' ').map((word) => {
             const wordPuzzle = `<div class="drag-word completed"><span class="word-text">${word}</span></div>`;
             document.querySelector('.puzzle-container-sentence').insertAdjacentHTML('beforeend', wordPuzzle);
+            return word;
         });
         showButton('isContinueBtn', true);
         const urlAudio = `https://raw.githubusercontent.com/aidfromdeagland/rslang-data/master/${audioSentence}`;
@@ -120,7 +124,11 @@ export class ButtonsBlock extends Component {
         showButton('isCheckBtn', false);
         addToResults('dontKnow', correctSentence, urlAudio);
         if (isGameWithUserWords) {
-            const result = getMemoInfoMiniGames(false, wordForGameRound.userWord.optional.repeats, wordForGameRound.userWord.optional.nextDate);
+            const result = getMemoInfoMiniGames(
+                false,
+                wordForGameRound.userWord.optional.repeats,
+                wordForGameRound.userWord.optional.nextDate,
+            );
             const wordPut = { ...wordForGameRound };
             wordPut.userWord.optional.repeats = result.repetitions;
             wordPut.userWord.optional.prevDate = result.prevRepetitionDate;
@@ -170,12 +178,32 @@ export class ButtonsBlock extends Component {
         } = this.props;
         return (
             <div className="game-board__btn-block">
-                {isCheckBtn && <Button className="check-sentence puzzle-btn button" title="Check" onClick={this.handleCheck} />}
-                {isDontKnowBtn && <Button className="dont-know-sentence puzzle-btn button" title="Don't know" onClick={this.handleDontKnow} />}
-                {isContinueBtn && <Button className="continue-sentence puzzle-btn button" title="Continue" onClick={this.handleContinue} />}
+                {isCheckBtn && (
+                    <Button
+                        className="check-sentence puzzle-btn button"
+                        title="Check"
+                        onClick={this.handleCheck}
+                    />
+                )}
+                {isDontKnowBtn && (
+                    <Button
+                        className="dont-know-sentence puzzle-btn button"
+                        title="Don't know"
+                        onClick={this.handleDontKnow}
+                    />
+                )}
+                {isContinueBtn && (
+                    <Button
+                        className="continue-sentence puzzle-btn button"
+                        title="Continue"
+                        onClick={this.handleContinue}
+                    />
+                )}
                 <Button
                     className={isPlayingAudio ? 'dynamic-btn playing' : 'dynamic-btn'}
-                    onClick={() => this.handlePlayAudio(`https://raw.githubusercontent.com/aidfromdeagland/rslang-data/master/${audioSentence}`)}
+                    onClick={() => this.handlePlayAudio(
+                        `https://raw.githubusercontent.com/aidfromdeagland/rslang-data/master/${audioSentence}`,
+                    )}
                 />
             </div>
         );

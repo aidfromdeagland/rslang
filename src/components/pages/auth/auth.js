@@ -50,7 +50,8 @@ export class Auth extends Component {
 
         if (!validatePassword(password.value)) {
             this.setState({
-                errorPassword: 'the password must contain at least 8 characters, at least one uppercase letter, one digit, and one special character',
+                errorPassword: 'the password must contain at least 8 characters,'
+                    + ' at least one uppercase letter, one digit, and one special character',
                 errorMain: undefined,
             });
         } else if (!validateEmail(login.value)) {
@@ -121,13 +122,25 @@ export class Auth extends Component {
         const buttons = this.state.isAuthentication
             ? (
                 <div className="auth__buttons">
-                    <button className="auth__button button__registration" type="button" onClick={() => this.showRegistration()}>Register</button>
+                    <button
+                        className="auth__button button__registration"
+                        type="button"
+                        onClick={() => this.showRegistration()}
+                    >
+                        Register
+                    </button>
                     <button className="auth__button button__log-in" type="submit">Login</button>
                 </div>
             )
             : (
                 <div className="auth__buttons">
-                    <button className="auth__button button__registration" type="button" onClick={() => this.showAuthentication()}>Login</button>
+                    <button
+                        className="auth__button button__registration"
+                        type="button"
+                        onClick={() => this.showAuthentication()}
+                    >
+                        Login
+                    </button>
                     <button className="auth__button button__log-in" type="submit">Register</button>
                 </div>
             );
@@ -145,11 +158,26 @@ export class Auth extends Component {
                 <span className="auth-description">Insert your e-mail and password.</span>
                 <form className="auth-form" onSubmit={(e) => this.handleSubmit(e)}>
                     <div className="auth__inputs">
-                        <input id="auth-email" className="auth-form__input auth-form__login-input" name="login" type="email" placeholder="youremail@domain.com" defaultValue={login} />
+                        <input
+                            id="auth-email"
+                            className="auth-form__input auth-form__login-input"
+                            name="login"
+                            type="email"
+                            placeholder="youremail@domain.com"
+                            defaultValue={login}
+                        />
                         { this.state.errorEmail && <span className="auth-form__error">{ this.state.errorEmail }</span> }
-                        <input id="auth-password" className="auth-form__input auth-form__password-input" name="password" type="password" placeholder="**************" />
-                        { this.state.errorPassword && <span className="auth-form__error">{ this.state.errorPassword }</span> }
-                        { this.state.errorMain && <span className="auth-form__error">{ this.state.errorMain }</span> }
+                        <input
+                            id="auth-password"
+                            className="auth-form__input auth-form__password-input"
+                            name="password"
+                            type="password"
+                            placeholder="**************"
+                        />
+                        { this.state.errorPassword
+                        && <span className="auth-form__error">{ this.state.errorPassword }</span> }
+                        { this.state.errorMain
+                        && <span className="auth-form__error">{ this.state.errorMain }</span> }
                     </div>
                     { buttons }
                 </form>

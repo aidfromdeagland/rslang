@@ -77,8 +77,16 @@ export class Study extends Component {
     getWords = async () => {
         const { allowNewWords, allowLearnedWords, onlyDifficultWords } = this.props.location;
         const todayEndBorderDate = new Date(Date.now()).setHours(23, 59, 59, 999);
-        const learnedWordsDateLimitedQuery = { $and: [{ 'userWord.optional.isDeleted': false, 'userWord.optional.nextDate': { $lt: todayEndBorderDate } }] };
-        const totalDifficultWordsDateLimitedQuery = { $and: [{ 'userWord.optional.isDeleted': false, 'userWord.optional.isDifficult': true, 'userWord.optional.nextDate': { $lt: todayEndBorderDate } }] };
+        const learnedWordsDateLimitedQuery = {
+            $and: [{ 'userWord.optional.isDeleted': false, 'userWord.optional.nextDate': { $lt: todayEndBorderDate } }],
+        };
+        const totalDifficultWordsDateLimitedQuery = {
+            $and: [{
+                'userWord.optional.isDeleted': false,
+                'userWord.optional.isDifficult': true,
+                'userWord.optional.nextDate': { $lt: todayEndBorderDate },
+            }],
+        };
 
         let newWordsforTraining = [];
         if (this.settings.newWords && allowNewWords) {
@@ -123,7 +131,9 @@ export class Study extends Component {
             this.props.history.push('/main');
         } else {
             this.settings = await this.getSettings();
-            const [words, totalLearnedWordsQuantity] = await Promise.all([this.getWords(), this.getTotalWordsQuantity()]);
+            const [words, totalLearnedWordsQuantity] = await Promise.all(
+                [this.getWords(), this.getTotalWordsQuantity()],
+            );
             this.words = shuffle(words);
             this.stats.initialCards = this.words.length;
             this.totalLearnedWordsQuantity = totalLearnedWordsQuantity;
@@ -152,6 +162,7 @@ export class Study extends Component {
             word: this.actualCard.word,
             wordToCompare: this.actualCard.word,
             wordTranslate: this.actualCard.wordTranslate,
+            // eslint-disable-next-line max-len
             audioContext: `https://raw.githubusercontent.com/aidfromdeagland/rslang-data/master/${this.actualCard[this.audioContext]}`,
             audioWord: `https://raw.githubusercontent.com/aidfromdeagland/rslang-data/master/${this.actualCard.audio}`,
             translationContext: this.actualCard[`${contextMap[this.context]}Translate`],
@@ -160,7 +171,9 @@ export class Study extends Component {
             transcription: this.actualCard.transcription,
         };
         if (this.context === 'showSentenceMeaning' || this.context === 'showSentenceExample') {
-            this.dataForCard.wordToCompare = this.dataForCard.context.match(tagPlusContentReg)[0].replace(/(<(\/?[^>]+)>)/g, '').trim();
+            this.dataForCard.wordToCompare = this.dataForCard.context
+                .match(tagPlusContentReg)[0]
+                .replace(/(<(\/?[^>]+)>)/g, '').trim();
         }
     };
 
@@ -168,7 +181,9 @@ export class Study extends Component {
         const actualValue = this.prevValue.toLowerCase();
         const studiedWord = this.dataForCard.wordToCompare;
 
-        const errorSymbolQuantity = studiedWord.split('').filter((letter, index) => letter.toLowerCase() !== actualValue[index]).length;
+        const errorSymbolQuantity = studiedWord
+            .split('')
+            .filter((letter, index) => letter.toLowerCase() !== actualValue[index]).length;
         const totalSymbolQuantity = studiedWord.length;
         const classNameForIncorrect = errorSymbolQuantity / totalSymbolQuantity <= 0.2
             ? 'warning-letter check-letter'
@@ -220,18 +235,16 @@ export class Study extends Component {
                             }
                         }, { once: true });
                     }
-                } else {
-                    if (this.settings.autoPronunciation) {
-                        this.audioPlayer.src = this.dataForCard.audioContext;
-                        this.audioPlayer.play();
-                        this.audioPlayer.addEventListener('ended', () => {
-                            this.pushWordToEnd();
-                            this.goNextCard();
-                        }, { once: true });
-                    } else {
+                } else if (this.settings.autoPronunciation) {
+                    this.audioPlayer.src = this.dataForCard.audioContext;
+                    this.audioPlayer.play();
+                    this.audioPlayer.addEventListener('ended', () => {
                         this.pushWordToEnd();
                         this.goNextCard();
-                    }
+                    }, { once: true });
+                } else {
+                    this.pushWordToEnd();
+                    this.goNextCard();
                 }
             }
         } else {
@@ -418,7 +431,8 @@ export class Study extends Component {
         if (showInfo) {
             return (
                 <InfoMessage
-                    message="There are no words for training right now. Try to change your settings or train another category of words"
+                    message="There are no words for training right now.
+                    Try to change your settings or train another category of words"
                     okClickHandler={this.goToMain}
                 />
             );
@@ -434,14 +448,20 @@ export class Study extends Component {
                             <div className="hints-container">
                                 <div className="img-container">
                                     {this.settings.showWordImage
-                                        && <img className="card__image" src={this.dataForCard.wordImage} alt="illustration" />}
+                                        && (
+                                            <img
+                                                className="card__image"
+                                                src={this.dataForCard.wordImage}
+                                                alt="illustration"
+                                            />
+                                        )}
                                 </div>
                                 <div className="transcription">
                                     {this.settings.showWordTranscription
                                         && <span>{this.dataForCard.transcription}</span>}
                                 </div>
                                 <div className="sentence-translation-helper">
-                                    { <p>{this.actualCard.wordTranslate}</p> }
+                                    <p>{this.actualCard.wordTranslate}</p>
                                 </div>
                                 <div className="sentence-translation">
                                     {' '}
@@ -502,7 +522,11 @@ export class Study extends Component {
                             </div>
                         </section>
                         <div className="navigate-next">
-                            <Button className="btn-next-card" onClick={(e) => this.handleClickNext(e)} isDisabled={showEvaluation || isWaitingForAudio}>
+                            <Button
+                                className="btn-next-card"
+                                onClick={(e) => this.handleClickNext(e)}
+                                isDisabled={showEvaluation || isWaitingForAudio}
+                            >
                                 <img src={next} alt="next" />
                             </Button>
                         </div>

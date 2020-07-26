@@ -4,9 +4,7 @@ import PropTypes from 'prop-types';
 export class Factor extends Component {
     render() {
         const { runners } = this.props;
-        const divs = Array(runners).fill(1).map((item, index) => {
-            return <div key={index} className="factor">&nbsp;</div>;
-        });
+        const divs = Array(runners).fill(1).map((item, index) => <div key={index} className="factor">&nbsp;</div>);
 
         return (
             <div className="factors">

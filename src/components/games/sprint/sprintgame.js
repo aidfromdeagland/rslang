@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { Component } from 'react';
 
 import * as Constants from './constants';
@@ -36,10 +37,7 @@ export class SprintGame extends Component {
             correctAnswers: 0,
             results: [],
             percent: 100,
-        };    }
-    
-    getAudio = (url) => {
-        new Audio(Constants.AUDIO_URL + url).play();
+        };
     }
 
     componentDidMount() {
@@ -52,19 +50,22 @@ export class SprintGame extends Component {
         };
         this.saveSettingsSprint(settings);
     }
-    
+
     componentWillUnmount() {
         document.removeEventListener('keydown', this.handleKeyDown);
-    }    
+    }
+
+    getAudio = (url) => {
+        new Audio(Constants.AUDIO_URL + url).play();
+    }
 
     async getWords(group, page) {
         const { mode } = this.props;
-        if(mode === 'userWords') {
+        if (mode === 'userWords') {
             const totalLearnedWordsQuery = { 'userWord.optional.isDeleted': false };
             const wordsResponse = await WordService.getUserAggWords('', totalLearnedWordsQuery, 100);
-            this.words = wordsResponse[0].paginatedResults;          
-        }
-        else {
+            this.words = wordsResponse[0].paginatedResults;
+        } else {
             this.words = await WordService.getWordsExt(group, page, 100, 100);
         }
         this.wordOrder = Utils.generateRandomArray(this.words.length);
@@ -78,7 +79,7 @@ export class SprintGame extends Component {
     }
 
     getNextWord() {
-        const word = this.words[this.wordOrder[0]].word;
+        const { word } = this.words[this.wordOrder[0]];
         const right = Math.random() >= 0.5;
         let wordTranslate = '';
         if (right) {
@@ -91,26 +92,18 @@ export class SprintGame extends Component {
             wordTranslate = this.words[rand].wordTranslate;
         }
         this.getAudio(this.words[this.wordOrder[0]].audio);
-        this.wordOrder.shift();        
+        this.wordOrder.shift();
         return { word, wordTranslate, right };
-    }
-
-    handleSuccessClick() {
-        if (this.state.right === true) {
-            this.successUpdate();
-        } else {
-            this.failureUpdate();
-        }
     }
 
     successUpdate() {
         const score = this.state.score + this.state.wordScore;
         const correctAnswers = this.state.correctAnswers + 1;
         new Audio(soundCorrect).play();
-        let factor = this.state.factor;
-        let count = this.state.count;
-        let wordScore = this.state.wordScore;
-        
+        let { factor } = this.state;
+        let { count } = this.state;
+        let { wordScore } = this.state;
+
         if (factor < Constants.MAX_FACTOR) {
             if (this.state.count === Constants.MAX_ATTEMPT) {
                 factor += 1;
@@ -119,7 +112,7 @@ export class SprintGame extends Component {
             wordScore = Constants.BEGINNING_WORD_SCORE * 2 ** (factor - 1);
         }
         const curWord = this.getNextWord();
-        
+
         this.setState(
             {
                 score,
@@ -129,7 +122,7 @@ export class SprintGame extends Component {
                 wordRus: curWord.wordTranslate,
                 wordEng: curWord.word,
                 right: curWord.right,
-                correctAnswers: correctAnswers,
+                correctAnswers,
             },
         );
     }
@@ -154,21 +147,22 @@ export class SprintGame extends Component {
             wordRus: curWord.wordTranslate,
             wordEng: curWord.word,
             right: curWord.right,
-            wrongAnswers: wrongAnswers,
+            wrongAnswers,
         });
     }
 
     stopGame() {
         document.removeEventListener('keydown', this.handleKeyDown);
         const {
-            score, wrongAnswers, correctAnswers
+            score, wrongAnswers, correctAnswers,
         } = this.state;
         const sprintStats = StatisticService.createGameStat(correctAnswers, wrongAnswers, score);
         this.saveStatisticsSprint(sprintStats);
         this.setState({
             isLoad: true,
             gameOver: true,
-        });    }
+        });
+    }
 
     handleKeyDown(event) {
         if (event.key === Constants.ARROW_LEFT_KEY) {
@@ -176,64 +170,76 @@ export class SprintGame extends Component {
         }
         if (event.key === Constants.ARROW_RIGHT_KEY) {
             this.handleSuccessClick();
-        }    }
-    
+        }
+    }
+
     saveSettingsSprint = async (sprintSettings) => {
         const settings = await SettingService.get();
         settings.optional.sprint = JSON.stringify(sprintSettings);
-        await SettingService.put(settings);    }
-    
+        await SettingService.put(settings);
+    }
+
     saveStatisticsSprint = async (sprintStats) => {
-        const stats = await StatisticService.get();        
+        const stats = await StatisticService.get();
         const statsSprintSaved = stats.optional.sprint;
         let arrayStats = [];
         if (statsSprintSaved !== undefined) {
             arrayStats = JSON.parse(statsSprintSaved);
         }
-        if(arrayStats.length === 1 && arrayStats[0].Date === null) arrayStats.pop();
+        if (arrayStats.length === 1 && arrayStats[0].Date === null) { arrayStats.pop(); }
         arrayStats.push(sprintStats);
         stats.optional.sprint = JSON.stringify(arrayStats);
         await StatisticService.put(stats);
-        this.loadStatisticsSprint();    }
-    
+        this.loadStatisticsSprint();
+    }
+
     loadStatisticsSprint = async () => {
         let arr = [];
         const stats = await StatisticService.get();
         const statsSprintSaved = stats.optional.sprint;
         if (statsSprintSaved !== undefined) {
             arr = JSON.parse(statsSprintSaved);
-        }       
-                
-        arr = arr.sort((a, b) => { return b.Score - a.Score; });
-        
+        }
+
+        arr = arr.sort((a, b) => b.Score - a.Score);
+
         const len = arr.length;
-        const index = arr.findIndex((elem, idx) => { return elem.Score === this.state.score; });
+        const index = arr.findIndex((elem, idx) => elem.Score === this.state.score);
         const percent = (index + 1) * 100 / len;
         const percentRounded = Math.round(percent * 100) / 100;
         arr = arr.slice(0, 3);
-        
+
         this.setState({
             results: arr,
             isLoad: false,
             percent: percentRounded,
         });
-    }    
+    }
+
+    handleSuccessClick() {
+        if (this.state.right === true) {
+            this.successUpdate();
+        } else {
+            this.failureUpdate();
+        }
+    }
 
     render() {
         const {
-            isLoad, gameOver, score, wordScore, count, factor, wordEng, 
-            wordRus, wrongAnswers, correctAnswers, results, percent
+            isLoad, gameOver, score, wordScore, count, factor, wordEng,
+            wordRus, wrongAnswers, correctAnswers, results, percent,
         } = this.state;
-        
+
         if (isLoad) {
             return (
                 <div className="sprint">
-                    <Spinner />;
+                    <Spinner />
+                    ;
                 </div>
-            )
+            );
         }
-        
-        if (!gameOver)
+
+        if (!gameOver) {
             return (
                 <div className="sprint">
                     <div className="panel">
@@ -257,10 +263,15 @@ export class SprintGame extends Component {
                     </div>
                 </div>
             );
-        else
-            return (
-                <Results score={score} wrongAnswers={wrongAnswers} correctAnswers={correctAnswers} 
-                results={results} percent={percent}/>
-            );
+        }
+        return (
+            <Results
+                score={score}
+                wrongAnswers={wrongAnswers}
+                correctAnswers={correctAnswers}
+                results={results}
+                percent={percent}
+            />
+        );
     }
 }

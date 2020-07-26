@@ -46,14 +46,21 @@ export class VocabularyWord extends Component {
                             )
                             : null }
                         <h4>{ word.word }</h4>
-                        <Button title="" className="vocabulary__button vocabulary__button_audio" isDisabled={false} onClick={() => this.onAudioClickHandler(audioSrc)} />
+                        <Button
+                            title=""
+                            className="vocabulary__button vocabulary__button_audio"
+                            isDisabled={false}
+                            onClick={() => this.onAudioClickHandler(audioSrc)}
+                        />
                         {settings.showWordTranscription && <p>{ word.transcription }</p>}
                         {settings.showWordTranslate && <p>{ word.wordTranslate }</p>}
                     </div>
-                    {settings.showWordImage && <img className="word-card__image" src={imageSrc} alt={`an illustration for "${word.word}"`} />}
+                    {settings.showWordImage
+                    && <img className="word-card__image" src={imageSrc} alt={`an illustration for "${word.word}"`} />}
                 </div>
                 <div className="word-card__additionalContainer">
-                    {settings.showSentenceExample && <p className="word-card__example" dangerouslySetInnerHTML={{ __html: word.textExample }} />}
+                    {settings.showSentenceExample
+                    && <p className="word-card__example" dangerouslySetInnerHTML={{ __html: word.textExample }} />}
                     {settings.showSentenceExample && settings.showSentencesTranslate
                     && (
                         <p className="word-card__example word-card__example_translate">
@@ -74,8 +81,14 @@ export class VocabularyWord extends Component {
                     )}
                     <div className="word-card__training-info">
                         <div className="word-card__bottom-left-container">
-                            <p className="word-card__last-used">{ `last used: ${new Date(word.userWord.optional.prevDate).toLocaleString(defaultLocale, defaultDateFormat)}` }</p>
-                            <p className="word-card__next-use">{ `scheduled: ${new Date(word.userWord.optional.nextDate).toLocaleString(defaultLocale, shortDateFormat)}` }</p>
+                            <p className="word-card__last-used">
+                                {/* eslint-disable-next-line max-len */}
+                                { `last used: ${new Date(word.userWord.optional.prevDate).toLocaleString(defaultLocale, defaultDateFormat)}` }
+                            </p>
+                            <p className="word-card__next-use">
+                                {/* eslint-disable-next-line max-len */}
+                                { `scheduled: ${new Date(word.userWord.optional.nextDate).toLocaleString(defaultLocale, shortDateFormat)}` }
+                            </p>
                         </div>
                         <div className="word-card__bottom-right-container">
                             <p className="word-card__repetitions">{ `repeats: ${word.userWord.optional.repeats}` }</p>
@@ -101,7 +114,6 @@ VocabularyWord.defaultProps = {
         },
     },
     isSpecial: false,
-    removeWordHandler: PropTypes.func,
 };
 
 VocabularyWord.propTypes = {
@@ -120,5 +132,4 @@ VocabularyWord.propTypes = {
         }),
     }),
     isSpecial: PropTypes.bool,
-    removeWordHandler: PropTypes.func,
 };

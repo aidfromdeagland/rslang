@@ -10,7 +10,7 @@ import { GameBoardAction } from './gameBoardAction';
 import { ButtonsBlock } from './buttonsGame';
 import { ModalResult } from './modalStatistics/modalResult';
 import { SettingService } from '../../../services/settingServices';
-import { settingsDefault } from '../../../constants/globalConstants';
+import { settingsDefault, MEDIA_PREFIX_URL } from '../../../constants/globalConstants';
 import { StatisticService } from '../../../services/statisticServices';
 import { convertStatisticJson } from '../../../utils/utils';
 
@@ -346,7 +346,10 @@ export class GamePuzzle extends Component {
                             <div className="game-board">
                                 {isPicture && (
                                     <div className="image-container">
-                                        <img src={`https://raw.githubusercontent.com/aidfromdeagland/rslang-data/master/${image}`} alt="img" />
+                                        <img
+                                            src={`${MEDIA_PREFIX_URL}${image}`}
+                                            alt="img"
+                                        />
                                     </div>
                                 )}
                                 <div className="game-board__translation">

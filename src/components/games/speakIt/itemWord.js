@@ -1,52 +1,21 @@
-/* eslint-disable jsx-a11y/click-events-have-key-events, jsx-a11y/no-noninteractive-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events,
+jsx-a11y/no-noninteractive-element-interactions */
 
 import React, { Component } from 'react';
-
-let audio;
-let audioPlay;
 
 export class ItemWord extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            isPlayingAudio: false,
-        };
-    }
-
-    handlePlayAudio = (url) => {
-        if (audioPlay) {
-            audioPlay.then(() => {
-                audio.pause();
-                audio = new Audio(url);
-                audioPlay = audio.play();
-                audio.onplaying = () => {
-                    this.setState({ isPlayingAudio: true });
-                };
-                audio.onended = () => {
-                    this.setState({ isPlayingAudio: false });
-                };
-                audio.onpause = () => {
-                    this.setState({ isPlayingAudio: false });
-                };
-            });
-        } else {
-            audio = new Audio(url);
-            audioPlay = audio.play();
-            audio.onplaying = () => {
-                this.setState({ isPlayingAudio: true });
-            };
-            audio.onended = () => {
-                this.setState({ isPlayingAudio: false });
-            };
-            audio.onpause = () => {
-                this.setState({ isPlayingAudio: false });
-            };
-        }
+        this.audioPlayer = new Audio();
     }
 
     handleClickCard = (index, audioUrl, imageUrl, translate) => {
-        this.props.handleClickCard(index, audioUrl, imageUrl, translate);
-        this.handlePlayAudio(`https://raw.githubusercontent.com/aidfromdeagland/rslang-data/master/${audioUrl}`);
+        const { handleClickCard } = this.props;
+        handleClickCard(index, audioUrl, imageUrl, translate);
+        if (this.audioPlayer.src !== `https://raw.githubusercontent.com/aidfromdeagland/rslang-data/master/${audioUrl}`) {
+            this.audioPlayer.src = `https://raw.githubusercontent.com/aidfromdeagland/rslang-data/master/${audioUrl}`;
+        }
+        this.audioPlayer.play();
     }
 
     render() {
@@ -80,7 +49,12 @@ export class ItemWord extends Component {
                     if (!isGameModeTrain) {
                         return null;
                     }
-                    return this.handleClickCard(cardIndex, wordData.wordAudio, wordData.wordImage, wordData.wordTranslate)
+                    return this.handleClickCard(
+                        cardIndex,
+                        wordData.wordAudio,
+                        wordData.wordImage,
+                        wordData.wordTranslate,
+                    );
                 }}
             >
                 <p className="speakit-card__word">{wordData.word}</p>

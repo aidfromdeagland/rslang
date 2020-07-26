@@ -7,12 +7,8 @@ export class Wordscore extends Component {
     render() {
         const { count, wordScore } = this.props;
 
-        const classYes = Array(count).fill(1).map((item, index) => {
-            return <div key={index} className="yes">&nbsp;</div>;
-        });
-        const classEmpty = Array(Constants.MAX_ATTEMPT - count).fill(1).map((item, index) => {
-            return <div key={index} className="empty">&nbsp;</div>;
-        });
+        const classYes = Array(count).fill(1).map((item, index) => <div key={index} className="yes">&nbsp;</div>);
+        const classEmpty = Array(Constants.MAX_ATTEMPT - count).fill(1).map((item, index) => <div key={index} className="empty">&nbsp;</div>);
 
         return (
             <div className="wordscore">

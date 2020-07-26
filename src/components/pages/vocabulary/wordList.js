@@ -3,7 +3,9 @@ import PropTypes from 'prop-types';
 import './wordList.scss';
 import { VocabularyWord } from './word';
 
-const wordByDateComparator = (leftWordObj, rightWordObj) => rightWordObj.userWord.optional.prevDate - leftWordObj.userWord.optional.prevDate;
+const wordByDateComparator = (leftWordObj, rightWordObj) => (
+    rightWordObj.userWord.optional.prevDate - leftWordObj.userWord.optional.prevDate
+);
 
 export class WordList extends Component {
     render() {

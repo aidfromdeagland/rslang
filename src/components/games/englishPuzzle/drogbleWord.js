@@ -1,4 +1,5 @@
-import React, { Component, useImperativeHandle } from 'react';
+/* eslint-disable max-len */
+import React, { Component } from 'react';
 import './startPage.scss';
 import './game-puzzle.scss';
 
@@ -61,18 +62,17 @@ export class DraggableWord extends Component {
                     const elemBelow = document.elementFromPoint(event.clientX, event.clientY);
                     dragBlock.hidden = false;
 
-                    if (!elemBelow) return;
+                    if (!elemBelow) { return; }
 
                     const droppablePazzle = elemBelow.closest('.drag-word');
                     const droppableClone = elemBelow.closest('.clone');
 
-                    if (currentWord != droppablePazzle || currentWord != droppableClone) {
-
+                    if (currentWord !== droppablePazzle || currentWord !== droppableClone) {
                         if (droppableClone) {
                             return;
                         }
 
-                        if (droppablePazzle && currentWord == droppablePazzle && droppablePazzle.nextElementSibling && droppablePazzle.nextElementSibling.classList.contains('clone')) {
+                        if (droppablePazzle && currentWord === droppablePazzle && droppablePazzle.nextElementSibling && droppablePazzle.nextElementSibling.classList.contains('clone')) {
                             if (event.pageX >= droppablePazzle.getBoundingClientRect().left && event.pageX <= droppablePazzle.getBoundingClientRect().left + droppablePazzle.getBoundingClientRect().width / 2) {
                                 clone.remove();
                                 droppablePazzle.before(clone);
@@ -80,7 +80,7 @@ export class DraggableWord extends Component {
                             return;
                         }
 
-                        if (droppablePazzle && currentWord == droppablePazzle && droppablePazzle.previousElementSibling && droppablePazzle.previousElementSibling.classList.contains('clone')) {
+                        if (droppablePazzle && currentWord === droppablePazzle && droppablePazzle.previousElementSibling && droppablePazzle.previousElementSibling.classList.contains('clone')) {
                             if (event.pageX >= droppablePazzle.getBoundingClientRect().left + (droppablePazzle.getBoundingClientRect().width / 2) && event.pageX <= droppablePazzle.getBoundingClientRect().left + droppablePazzle.getBoundingClientRect().width) {
                                 clone.remove();
                                 droppablePazzle.after(clone);

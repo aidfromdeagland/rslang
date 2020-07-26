@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import './startPage.scss';
-// import PropTypes from 'prop-types';
 import { ItemWord } from './itemWord';
 import question from '../../../assets/images/speakit/question-mark.png';
 import { Dropdown } from './dropdown/dropDown';
@@ -16,13 +15,15 @@ import { convertStatisticJson } from '../../../utils/utils';
 
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 const SpeechGrammarList = window.SpeechGrammarList || window.webkitSpeechGrammarList;
-const recognition = new SpeechRecognition();
-const speechRecognitionList = new SpeechGrammarList();
-recognition.grammars = speechRecognitionList;
-recognition.lang = 'en-US';
-recognition.interimResults = false;
-recognition.continuous = false;
-recognition.maxAlternatives = 3;
+const recognition = SpeechRecognition ? new SpeechRecognition() : undefined;
+const speechRecognitionList = SpeechGrammarList ? new SpeechGrammarList() : undefined;
+if (recognition) {
+    recognition.grammars = speechRecognitionList;
+    recognition.lang = 'en-US';
+    recognition.interimResults = false;
+    recognition.continuous = false;
+    recognition.maxAlternatives = 3;
+}
 
 let timerId;
 
@@ -111,7 +112,8 @@ export class GameSpeakit extends Component {
             totalSpokenWords,
             correctWords,
         } = this.state;
-        const statisticsField = StatisticService.createGameStat(correctWords.length, totalSpokenWords - correctWords.length);
+        const statisticsField = StatisticService
+            .createGameStat(correctWords.length, totalSpokenWords - correctWords.length);
         this.gameStatistic.push(statisticsField);
         this.putStatistic();
     }
@@ -278,7 +280,7 @@ export class GameSpeakit extends Component {
     checkWords = (word) => {
         const { isGameWithUserWords } = this.props;
         const correctWords = this.state.correctWords.slice();
-        let totalSpokenWords = this.state.totalSpokenWords;
+        let { totalSpokenWords } = this.state;
         this.dataForGameRound.forEach((wordData) => {
             if (wordData.word.toLowerCase() === word.toLowerCase()) {
                 correctWords.push(word.toLowerCase());
@@ -288,7 +290,11 @@ export class GameSpeakit extends Component {
                     isClickedCard: true,
                 });
                 if (isGameWithUserWords) {
-                    const result = getMemoInfoMiniGames(true, wordData.userWord.optional.repeats, wordData.userWord.optional.nextDate);
+                    const result = getMemoInfoMiniGames(
+                        true,
+                        wordData.userWord.optional.repeats,
+                        wordData.userWord.optional.nextDate,
+                    );
                     const wordPut = { ...wordData };
                     wordPut.userWord.optional.repeats = result.repetitions;
                     wordPut.userWord.optional.prevDate = result.prevRepetitionDate;

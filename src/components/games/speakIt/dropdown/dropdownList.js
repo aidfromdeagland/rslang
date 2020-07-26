@@ -18,18 +18,16 @@ export class DropdownList extends Component {
         const numbers = Array(parseFloat(totalNumber)).fill(null);
         return (
             <div className="dropdown-child">
-                {numbers.map((number, index) => {
-                    return (
-                        <div
-                            onClick={() => {
-                                this.dropdownChildHandle(index);
-                            }}
-                            key={index}
-                        >
-                            {index + 1}
-                        </div>
-                    );
-                })}
+                {numbers.map((number, index) => (
+                    <div
+                        onClick={() => {
+                            this.dropdownChildHandle(index);
+                        }}
+                        key={index}
+                    >
+                        {index + 1}
+                    </div>
+                ))}
             </div>
         );
     }

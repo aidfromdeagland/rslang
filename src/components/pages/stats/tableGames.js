@@ -12,6 +12,7 @@ export class TableGames extends Component {
         const data = [];
         for (let i = 0; i < amountsOfround; i += 1) {
             const percent = (Math.round((game[i].Correct * 100) / (game[i].Correct + game[i].Incorrect)));
+            // eslint-disable-next-line no-restricted-globals
             const resSuccess = isNaN(percent) ? '' : percent;
             data.push(
                 {
@@ -25,6 +26,7 @@ export class TableGames extends Component {
         return data;
     }
 
+    // eslint-disable-next-line consistent-return
     getTimeFormat = (timestamp) => {
         const options = {
             day: 'numeric',

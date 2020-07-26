@@ -61,7 +61,13 @@ export class StartPage extends Component {
                     <div className="description">
                         <p>Click on words, collect phrases.</p>
                         <br />
-                        <p>Words can be drag and drop. Select difficulty levels in the menu. If you have already learned 10 or more words, you can use them in the game mode with learned words</p>
+                        <p>
+                            Words can be drag and drop. Select difficulty levels in the menu.
+                            {' '}
+                            If you have already learned 10 or more words,
+                            {' '}
+                            you can use them in the game mode with learned words
+                        </p>
                     </div>
                     <div className="start">
                         <Button

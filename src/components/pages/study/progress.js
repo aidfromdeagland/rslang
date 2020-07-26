@@ -15,7 +15,10 @@ export class Progress extends Component {
                             {` ${learnedWordsQuantity} / ${needToLearnWordsQuantity}`}
                         </div>
                         <div className="progress-bar progress-bar_learned">
-                            <div className="progress-percent" style={{ width: `calc(${learnedWordsQuantity} / ${needToLearnWordsQuantity} * 100%)` }} />
+                            <div
+                                className="progress-percent"
+                                style={{ width: `calc(${learnedWordsQuantity} / ${needToLearnWordsQuantity} * 100%)` }}
+                            />
                         </div>
                     </div>
                     <div className="all-learned-words">
