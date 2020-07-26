@@ -43,7 +43,7 @@ export class Dropdown extends Component {
 
     handleButtonSelect = () => {
         const {
-            selectLevel
+            selectLevel,
         } = this.props;
         const {
             numberLevel,
@@ -63,13 +63,37 @@ export class Dropdown extends Component {
             <div className="dropdown__options_container">
                 <div className={`dropdown ${isDropLevelOpen ? 'open' : ''}`}>
                     Level:
-                    <Button className="mainmenubtn button" title={`${numberLevel}`} onClick={this.handleClickDropdownLevels} />
-                    {isDropLevelOpen ? <DropdownList chooseNumber={this.chooseNumberLevels} closeDropdown={this.handleClickDropdownLevels} totalNumber="6" /> : null}
+                    <Button
+                        className="mainmenubtn button"
+                        title={`${numberLevel}`}
+                        onClick={this.handleClickDropdownLevels}
+                    />
+                    {isDropLevelOpen
+                        ? (
+                            <DropdownList
+                                chooseNumber={this.chooseNumberLevels}
+                                closeDropdown={this.handleClickDropdownLevels}
+                                totalNumber="6"
+                            />
+                        )
+                        : null}
                 </div>
                 <div className={`dropdown ${isDropPageOpen ? 'open' : ''}`}>
                     Page:
-                    <Button className="mainmenubtn button" title={`${numberPage}`} onClick={this.handleClickDropdownPages} />
-                    {isDropPageOpen ? <DropdownList chooseNumber={this.chooseNumberPages} closeDropdown={this.handleClickDropdownPages} totalNumber="60" /> : null}
+                    <Button
+                        className="mainmenubtn button"
+                        title={`${numberPage}`}
+                        onClick={this.handleClickDropdownPages}
+                    />
+                    {isDropPageOpen
+                        ? (
+                            <DropdownList
+                                chooseNumber={this.chooseNumberPages}
+                                closeDropdown={this.handleClickDropdownPages}
+                                totalNumber="60"
+                            />
+                        )
+                        : null}
                 </div>
                 <Button className="button select-level" title="Select" onClick={this.handleButtonSelect} />
             </div>

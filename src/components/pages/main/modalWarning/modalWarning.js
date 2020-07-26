@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-/* import '../modal.scss'; */
 import { Button } from '../../../shared/button';
 
 export class ModalWarning extends Component {
@@ -27,7 +26,7 @@ export class ModalWarning extends Component {
                         <div className="modal-body">
                             {this.props.children}
                         </div>
-                        <Button className="close-modal-ok button" onClick={(e) => this.props.onClick} title="OK" />
+                        <Button className="close-modal-ok button" onClick={() => this.props.onClick} title="OK" />
                     </div>
                 </div>
             </div>

@@ -12,9 +12,10 @@ export class Person extends Component {
                     {this.props.data.name}
                     {' '}
                 </div>
-                <ul className="person-responsibilities">{this.props.data.description
-                    .split(',')
-                    .map((responsibility, index) => <li className="person-task" key={index}>{responsibility}</li>)}
+                <ul className="person-responsibilities">
+                    {this.props.data.description
+                        .split(',')
+                        .map((responsibility, index) => <li className="person-task" key={index}>{responsibility}</li>)}
                 </ul>
                 <a href={this.props.data.github} className="github-link">
                     <div className="github-icon" />

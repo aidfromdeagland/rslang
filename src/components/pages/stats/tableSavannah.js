@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { StatisticService } from '../../../services/statisticServices';
 import { statisticsDefault } from '../../../constants/globalConstants';
 

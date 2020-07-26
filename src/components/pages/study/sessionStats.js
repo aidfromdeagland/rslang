@@ -1,17 +1,7 @@
+/* eslint-disable max-len */
 import React, { Component } from 'react';
 import { Button } from '../../shared/button';
 import './sessionStats.scss';
-
-/*
-*  this.stats = {
-            cardsLearned: 0,
-            correctAnswers: 0,
-            incorrectAnswers: 0,
-            newWords: 0,
-            currentStreak: 0,
-            longestStreak: 0,
-        };
-* */
 
 export class SessionStats extends Component {
     defineColorModificator = (relativeValue) => {
@@ -23,6 +13,7 @@ export class SessionStats extends Component {
         }
         return 'color-modificator_success';
     }
+
     render() {
         const { data, okClickHandler } = this.props;
         const learnedCardsToInitialCardsRatio = data.cardsLearned / data.initialCards;

@@ -44,12 +44,34 @@ export class Dropdown extends Component {
         return (
             <div className="settings__options_container">
                 <div className={`dropdown ${isDropWordOpen ? 'open' : ''}`}>
-                    <Button className="mainmenubtn button" title={`Learn words a day: ${numberWords}`} onClick={this.handleClickDropdownWords} />
-                    {isDropWordOpen ? <DropdownList chooseNumber={this.chooseNumberWords} closeDropdown={this.handleClickDropdownWords} /> : null}
+                    <Button
+                        className="mainmenubtn button"
+                        title={`Learn words a day: ${numberWords}`}
+                        onClick={this.handleClickDropdownWords}
+                    />
+                    {isDropWordOpen
+                        ? (
+                            <DropdownList
+                                chooseNumber={this.chooseNumberWords}
+                                closeDropdown={this.handleClickDropdownWords}
+                            />
+                        )
+                        : null}
                 </div>
                 <div className={`dropdown ${isDropCardsOpen ? 'open' : ''}`}>
-                    <Button className="mainmenubtn button" title={`Number of cards a day: ${numberCards}`} onClick={this.handleClickDropdownCards} />
-                    {isDropCardsOpen ? <DropdownList chooseNumber={this.chooseNumberCards} closeDropdown={this.handleClickDropdownCards} /> : null}
+                    <Button
+                        className="mainmenubtn button"
+                        title={`Number of cards a day: ${numberCards}`}
+                        onClick={this.handleClickDropdownCards}
+                    />
+                    {isDropCardsOpen
+                        ? (
+                            <DropdownList
+                                chooseNumber={this.chooseNumberCards}
+                                closeDropdown={this.handleClickDropdownCards}
+                            />
+                        )
+                        : null}
                 </div>
             </div>
         );

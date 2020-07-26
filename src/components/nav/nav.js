@@ -40,25 +40,49 @@ export class Nav extends Component {
                     className={isOpen ? 'navigation__list navigation__list-showed' : 'navigation__list'}
                 >
                     <li>
-                        <NavLink exact className={isAuth ? 'navigation__link' : 'navigation__link navigation__link_disabled'} activeClassName="navigation__link_active" to="/main" onClick={this.closeByLink}>
+                        <NavLink
+                            exact
+                            className={isAuth ? 'navigation__link' : 'navigation__link navigation__link_disabled'}
+                            activeClassName="navigation__link_active"
+                            to="/main"
+                            onClick={this.closeByLink}
+                        >
                             <div className="navigation__icon navigation__icon_main" />
                             <span>Main</span>
                         </NavLink>
                     </li>
                     <li>
-                        <NavLink exact className={isAuth ? 'navigation__link' : 'navigation__link navigation__link_disabled'} activeClassName="navigation__link_active" to="/vocabulary" onClick={this.closeByLink}>
+                        <NavLink
+                            exact
+                            className={isAuth ? 'navigation__link' : 'navigation__link navigation__link_disabled'}
+                            activeClassName="navigation__link_active"
+                            to="/vocabulary"
+                            onClick={this.closeByLink}
+                        >
                             <div className="navigation__icon navigation__icon_vocabulary" />
                             <span>Vocabulary</span>
                         </NavLink>
                     </li>
                     <li>
-                        <NavLink exact className={isAuth ? 'navigation__link' : 'navigation__link navigation__link_disabled'} activeClassName="navigation__link_active" to="/mini-games" onClick={this.closeByLink}>
+                        <NavLink
+                            exact
+                            className={isAuth ? 'navigation__link' : 'navigation__link navigation__link_disabled'}
+                            activeClassName="navigation__link_active"
+                            to="/mini-games"
+                            onClick={this.closeByLink}
+                        >
                             <div className="navigation__icon navigation__icon_mini-games" />
                             <span>Mini games</span>
                         </NavLink>
                     </li>
                     <li>
-                        <NavLink exact className={isAuth ? 'navigation__link' : 'navigation__link navigation__link_disabled'} activeClassName="navigation__link_active" to="/stats" onClick={this.closeByLink}>
+                        <NavLink
+                            exact
+                            className={isAuth ? 'navigation__link' : 'navigation__link navigation__link_disabled'}
+                            activeClassName="navigation__link_active"
+                            to="/stats"
+                            onClick={this.closeByLink}
+                        >
                             <div className="navigation__icon navigation__icon_statistics" />
                             <span>Statistic</span>
                         </NavLink>

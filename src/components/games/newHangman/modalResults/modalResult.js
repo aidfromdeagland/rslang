@@ -61,7 +61,7 @@ export class ModalResult extends Component {
     }
 
     render() {
-        const { results, handleByNextRound, wordTranslate } = this.props;
+        const { results, handleByNextRound } = this.props;
         const { isPlayingAudio, playingIndex, playingResult } = this.state;
         return (
             <div id="openModal" className="modal-result">
@@ -77,21 +77,19 @@ export class ModalResult extends Component {
                                         </span>
                                     </div>
                                     <div className="hangman-result-body">
-                                        {results.dontKnow.map((result, index) => {
-                                            return (
-                                                <div key={index}>
-                                                    <Button
-                                                        className={isPlayingAudio && playingIndex === index && playingResult === 'dontKnow'
-                                                            ? 'dynamic-btn playing'
-                                                            : 'dynamic-btn'}
-                                                        onClick={() => this.handleClickAudio('dontKnow', index)}
-                                                    />
-                                                    <span>{result.word}</span>
-                                                    -
-                                                    <span>{result.wordTranslate}</span>
-                                                </div>
-                                            );
-                                        })}
+                                        {results.dontKnow.map((result, index) => (
+                                            <div key={index}>
+                                                <Button
+                                                    className={isPlayingAudio && playingIndex === index && playingResult === 'dontKnow'
+                                                        ? 'dynamic-btn playing'
+                                                        : 'dynamic-btn'}
+                                                    onClick={() => this.handleClickAudio('dontKnow', index)}
+                                                />
+                                                <span>{result.word}</span>
+                                                -
+                                                <span>{result.wordTranslate}</span>
+                                            </div>
+                                        ))}
                                     </div>
                                 </div>
                                 <div className="know hangman-result">
@@ -102,21 +100,19 @@ export class ModalResult extends Component {
                                         </span>
                                     </div>
                                     <div className="hangman-result-body">
-                                        {results.know.map((result, index) => {
-                                            return (
-                                                <div key={index}>
-                                                    <Button
-                                                        className={isPlayingAudio && playingIndex === index && playingResult === 'know'
-                                                            ? 'dynamic-btn playing'
-                                                            : 'dynamic-btn'}
-                                                        onClick={() => this.handleClickAudio('know', index)}
-                                                    />
-                                                    <span>{result.word}</span>
-                                                    -
-                                                    <span>{result.wordTranslate}</span>
-                                                </div>
-                                            );
-                                        })}
+                                        {results.know.map((result, index) => (
+                                            <div key={index}>
+                                                <Button
+                                                    className={isPlayingAudio && playingIndex === index && playingResult === 'know'
+                                                        ? 'dynamic-btn playing'
+                                                        : 'dynamic-btn'}
+                                                    onClick={() => this.handleClickAudio('know', index)}
+                                                />
+                                                <span>{result.word}</span>
+                                                -
+                                                <span>{result.wordTranslate}</span>
+                                            </div>
+                                        ))}
                                     </div>
                                 </div>
                             </div>

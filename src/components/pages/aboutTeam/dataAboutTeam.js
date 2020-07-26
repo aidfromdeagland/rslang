@@ -40,6 +40,7 @@ const dataAboutTeam = [
     {
         photo: artemAvatar,
         name: 'Artem',
+        // eslint-disable-next-line max-len
         description: 'main page, study page, about team page, mini games page, mini game "English puzzle", mini game "Hangman", mini game "Speak it", testing, other minor features',
         github: 'https://github.com/Dirtymalka',
     },

@@ -3,7 +3,6 @@ import './modalResult.scss';
 import { Button } from '../../../shared/button';
 
 export class ModalResult extends Component {
-
     render() {
         const { handleByNextRound, totalSpokenWords, correctWords } = this.props;
         return (

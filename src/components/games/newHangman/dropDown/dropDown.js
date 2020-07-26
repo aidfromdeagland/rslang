@@ -43,7 +43,7 @@ export class Dropdown extends Component {
 
     handleButtonSelect = () => {
         const {
-            selectLevel
+            selectLevel,
         } = this.props;
         const {
             numberLevel,

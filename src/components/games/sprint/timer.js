@@ -24,8 +24,7 @@ export class Timer extends Component {
             this.setState({
                 seconds: seconds - 1,
             });
-        }
-        else {
+        } else {
             const { stopGame } = this.props;
             stopGame();
         }

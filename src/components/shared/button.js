@@ -13,6 +13,7 @@ export class Button extends Component {
                 disabled={isDisabled}
                 onClick={onClick}
                 title={toolTip}
+                type="button"
             >
                 {title}
                 {children}

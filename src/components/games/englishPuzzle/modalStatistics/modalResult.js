@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 import React, { Component } from 'react';
 import './modalResult.scss';
 import { Button } from '../../../shared/button';
@@ -88,7 +89,8 @@ export class ModalResult extends Component {
                                         {results.dontKnow.map((result, index) => (
                                             <div key={index}>
                                                 <Button
-                                                    className={isPlayingAudio && playingIndex === index && playingResult === 'dontKnow'
+                                                    className={isPlayingAudio
+                                                    && playingIndex === index && playingResult === 'dontKnow'
                                                         ? 'dynamic-btn playing'
                                                         : 'dynamic-btn'}
                                                     onClick={() => this.handleClickAudio('dontKnow', index)}

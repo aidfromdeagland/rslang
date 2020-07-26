@@ -6,12 +6,14 @@ import './miniGames.scss';
 export class GameList extends Component {
     render() {
         return (
-            <div className='games-catalog'>
-                { dataGames.map((game, index) => <Game
-                data={game}
-                key={index}
-                />) }
+            <div className="games-catalog">
+                { dataGames.map((game, index) => (
+                    <Game
+                        data={game}
+                        key={index}
+                    />
+                )) }
             </div>
-        )
+        );
     }
 }

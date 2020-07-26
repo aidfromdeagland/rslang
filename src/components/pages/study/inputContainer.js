@@ -18,7 +18,7 @@ export class InputContainer extends Component {
                     <input
                         className="answer-input"
                         type="text"
-                        autoFocus={true}
+                        autoFocus
                         value={valueInput}
                         onChange={(e) => handleChange(e)}
                         readOnly={showEvaluation}

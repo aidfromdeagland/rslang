@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Button } from '../../shared/button';
+// eslint-disable-next-line import/no-cycle
 import { SavannahStart } from './savannah-start';
 
 export class SavannahStatistics extends Component {

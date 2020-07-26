@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { Button } from '../../shared/button';
 import './hangman.scss';
-import {HangmanGame} from './hangmangame';
-import {HangmanCustom} from './hangmancustom';
+// eslint-disable-next-line import/no-cycle
+import { HangmanGame } from './hangmangame';
+import { HangmanCustom } from './hangmancustom';
 
 import './hangmanstat.scss';
 
@@ -12,7 +13,7 @@ export class Hangman extends Component {
         this.state = {
             isStart: false,
             level: (localStorage.getItem('hangman_level') === null) ? 0 : localStorage.getItem('hangman_level'),
-            page:  (localStorage.getItem('hangman_page') === null) ? 0 : localStorage.getItem('hangman_page'),
+            page: (localStorage.getItem('hangman_page') === null) ? 0 : localStorage.getItem('hangman_page'),
         };
         this.handleStart = this.handleStart.bind(this);
         this.handleLevel = this.handleLevel.bind(this);
@@ -25,19 +26,18 @@ export class Hangman extends Component {
     }
 
     handleStart() {
-        this.setState({ isStart: true});
+        this.setState({ isStart: true });
     }
 
-    handleLevel(value){
-        this.setState({level: value});
+    handleLevel(value) {
+        this.setState({ level: value });
     }
 
-    handlePage(value){
-        this.setState({page: value});
+    handlePage(value) {
+        this.setState({ page: value });
     }
 
     render() {
-
         if (this.state.isStart) {
             return (
                 <HangmanGame
@@ -60,9 +60,10 @@ export class Hangman extends Component {
                         page={this.state.page}
                         handlePage={this.handlePage}
                     />
-                    <Button className="hangman-start-btn"
-                     onClick={this.handleStart}
-                     title="Start"
+                    <Button
+                        className="hangman-start-btn"
+                        onClick={this.handleStart}
+                        title="Start"
                     />
                 </div>
 
